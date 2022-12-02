@@ -9,10 +9,10 @@
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            // "preLaunchTask": "build",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/AlleGutta.Api/bin/Debug/net7.0/AlleGutta.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/AlleGutta.Api/",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
