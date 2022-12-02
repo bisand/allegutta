@@ -10,7 +10,7 @@
             "type": "coreclr",
             "request": "launch",
             // "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net7.0/allegutta.dll",
+            "program": "${workspaceFolder}/AlleGutta.Api/bin/Debug/net7.0/AlleGutta.Api.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
