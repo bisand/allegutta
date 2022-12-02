@@ -1,20 +1,23 @@
 {
 	"name": "C# (.NET)",
-	"image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
-	"features": {
-		"ghcr.io/devcontainers/features/node:1": {
-			"version": "lts"
+	"build": {
+		"dockerfile": "Dockerfile.debian",
+		"args": {
+			"VARIANT": "lts-slim",
+			"USERNAME": "node"
 		},
-		"ghcr.io/devcontainers/features/git:1": {},
-		"ghcr.io/devcontainers/features/git-lfs:1": {},
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+		"context": ".."
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [5000, 5001],
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "dotnet restore",
 	// Configure tool-specific properties.
+	"mounts": [
+		// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/>
+		// "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		"source=tds-zshhistory,target=/commandhistory,type=volume"
+	],
 	"customizations": {
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
@@ -23,10 +26,12 @@
 				"ms-vscode.vs-keybindings",
 				"github.vscode-pull-request-github",
 				"eamodio.gitlens",
-				"aaron-bond.better-comments"
+				"aaron-bond.better-comments",
+				"fernandoescolar.vscode-solution-explorer",
+				"hbenl.vscode-test-explorer"
 			]
 		}
-	}
+	},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"remoteUser": "node"
 }

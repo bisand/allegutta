@@ -1,0 +1,52 @@
+ARG VARIANT=lts-alpine
+FROM node:${VARIANT}
+
+# TODO Alpine 3.17 is not available for node image yet. Update when it is.
+ARG ALPINE_VERSION=3.17
+ARG USERNAME=node
+
+WORKDIR /usr/src/app
+
+# Overwriting repositories to install specific Alpine version
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/main" > /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
+
+# Update latest packages
+RUN apk update && \
+    apk upgrade
+
+# Install dotnet 7 SDK and its dependencies.
+RUN apk add bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib && \
+    apk add libgdiplus && \
+    apk add libcrypto3 libssl3 && \
+    apk add dotnet7-sdk
+
+# RUN addgroup $USERNAME && adduser -D $USERNAME -G $USERNAME \
+    #
+    # Add sudo support. Omit if you don't need to install software after connecting.
+RUN apk update \
+    && apk add sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Add other dependencies
+RUN apk update && apk add git git-credential-libsecret openssh zsh curl nano sed
+
+# Change default shell to ZSH
+RUN sed -i -e "s/bin\/ash/bin\/zsh/" /etc/passwd
+
+# Prepare directories for zsh_history
+RUN mkdir /commandhistory \
+    && touch /commandhistory/.zsh_history \
+    && chown -R $USERNAME /commandhistory
+
+USER $USERNAME
+
+# Install Oh-My-Zsh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+# Change current theme
+RUN sed -i -r 's/ZSH_THEME=\".*/ZSH_THEME=\"bira\"/' ~/.zshrc
+# Store zsh history
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.zsh_history" \
+    && echo "$SNIPPET" >> "/home/$USERNAME/.zshrc"

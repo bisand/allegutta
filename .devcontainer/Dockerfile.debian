@@ -1,0 +1,46 @@
+ARG VARIANT=lts-slim
+FROM node:${VARIANT}
+
+# TODO Alpine 3.17 is not available for node image yet. Update when it is.
+ARG ALPINE_VERSION=3.17
+ARG USERNAME=node
+
+WORKDIR /usr/src/app
+
+# Get wget
+RUN apt-get update && \
+    apt-get install -y wget
+
+# Overwriting repositories to install specific Alpine version
+RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb
+
+# Update latest packages
+RUN apt-get update && \
+    apt-get upgrade -y
+
+# Install dotnet 7 SDK and its dependencies.
+RUN apt-get install -y dotnet-sdk-7.0
+
+RUN apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Add other dependencies
+RUN apt-get install -y git openssh-client zsh curl nano sed
+
+# Prepare directories for zsh_history
+RUN mkdir /commandhistory \
+    && touch /commandhistory/.zsh_history \
+    && chown -R $USERNAME /commandhistory
+
+USER $USERNAME
+
+# Install Oh-My-Zsh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+# Change current theme
+RUN sed -i -r 's/ZSH_THEME=\".*/ZSH_THEME=\"bira\"/' ~/.zshrc
+# Store zsh history
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.zsh_history" \
+    && echo "$SNIPPET" >> "/home/$USERNAME/.zshrc"
