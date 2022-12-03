@@ -28,7 +28,14 @@ RUN apt-get install -y sudo \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Add other dependencies
-RUN apt-get install -y git openssh-client zsh curl nano sed
+RUN apt-get install -y git openssh-client zsh curl nano sed \
+    chromium \
+    # nss \
+    # freetype \
+    # harfbuzz \
+    ca-certificates \
+    # ttf-freefont
+
 
 # Prepare directories for zsh_history
 RUN mkdir /commandhistory \
