@@ -1,0 +1,73 @@
+[
+    {
+        "account_credit": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "collateral": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "pawn_value": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "trading_power": {
+            "currency": "NOK",
+            "value": 14649.6
+        },
+        "short_positions_margin": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "buy_orders_value": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "loan_limit": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "forward_sum": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "future_sum": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "account_currency": "NOK",
+        "interest": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "account_sum": {
+            "currency": "NOK",
+            "value": 14649.6
+        },
+        "unrealized_future_profit_loss": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "own_capital": {
+            "value": 1171651.8800000001,
+            "currency": "NOK"
+        },
+        "own_capital_morning": {
+            "currency": "NOK",
+            "value": 1171651.88
+        },
+        "full_marketvalue": {
+            "currency": "NOK",
+            "value": 1157002.28
+        },
+        "account_code": "DEP",
+        "registration_date": "2007-09-18",
+        "accno": 6627020,
+        "accid": 2,
+        "equity": {
+            "value": 1171651.8800000001,
+            "currency": "NOK"
+        }
+    }
+]

@@ -1,0 +1,1835 @@
+[
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274230"
+                }
+            ],
+            "instrument_id": 16105606,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "NAS",
+            "isin_code": "NO0010196140",
+            "sector": "AIRLINES",
+            "sector_group": "TRANSPORTATION",
+            "name": "NORWEGIAN AIR SHUTTLE"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 8.854
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 8.854
+        },
+        "qty": 80.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 708.3199999999999
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 708.3199999999999
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 62.1275
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 62.1275
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274281"
+                }
+            ],
+            "instrument_id": 16105712,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 80.0,
+            "margin_percentage": 120.0,
+            "symbol": "SALM",
+            "isin_code": "NO0010310956",
+            "sector": "FOOD_PRODUCTS",
+            "sector_group": "CONSUMER_PRODUCTS",
+            "name": "SALMAR"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 346.0
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 346.0
+        },
+        "qty": 124.0,
+        "pawn_percent": 80,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 42904.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 42904.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 233.494651
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 233.494651
+        },
+        "is_custom_gav": false,
+        "margin_percent": 120
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 49,
+                    "tick_size_id": 34831238,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "MERK",
+                    "price_unit": "NOK",
+                    "identifier": "2272751"
+                }
+            ],
+            "instrument_id": 17283497,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 20.0,
+            "margin_percentage": 180.0,
+            "symbol": "IFISH",
+            "isin_code": "NO0010884794",
+            "name": "ICE FISH FARM"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 30.8
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 30.8
+        },
+        "qty": 800.0,
+        "pawn_percent": 20,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 24640.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 24640.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 33.535
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 33.535
+        },
+        "is_custom_gav": false,
+        "margin_percent": 180
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 49,
+                    "tick_size_id": 34831239,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "MERK",
+                    "price_unit": "NOK",
+                    "identifier": "2479164"
+                }
+            ],
+            "instrument_id": 17473891,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "DSRT",
+            "isin_code": "NO0010963275",
+            "name": "DESERT CONTROL AS"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 16.88
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 16.88
+        },
+        "qty": 800.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 13504.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 13504.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 20.774
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 20.774
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274252"
+                }
+            ],
+            "instrument_id": 16105667,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 70.0,
+            "margin_percentage": 150.0,
+            "symbol": "NHY",
+            "isin_code": "NO0005052605",
+            "sector": "METALS_AND_MINING",
+            "sector_group": "MATERIALS",
+            "name": "NORSK HYDRO"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 72.5
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 72.5
+        },
+        "qty": 2213.0,
+        "pawn_percent": 70,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 160442.5
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 160442.5
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 30.172287
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 30.172287
+        },
+        "is_custom_gav": false,
+        "margin_percent": 150
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "key_information_documents": {
+                "url_for_combined": "https://api.priiphub.com/hub/kid-portal/kid/identifier/NO0010063308?documentType=pdf&jurisdiction=NO&language=NO"
+            },
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274240"
+                }
+            ],
+            "instrument_id": 16105595,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 85.0,
+            "margin_percentage": 115.0,
+            "symbol": "TEL",
+            "isin_code": "NO0010063308",
+            "sector": "TELECOM",
+            "sector_group": "IT",
+            "name": "TELENOR"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 95.08
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 95.08
+        },
+        "qty": 250.0,
+        "pawn_percent": 85,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 23770.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 23770.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 143.3785
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 143.3785
+        },
+        "is_custom_gav": false,
+        "margin_percent": 115
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831242,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2983319"
+                }
+            ],
+            "instrument_id": 17775123,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 85.0,
+            "margin_percentage": 115.0,
+            "symbol": "TOM",
+            "isin_code": "NO0012470089",
+            "name": "TOMRA SYSTEMS"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 197.52
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 197.52
+        },
+        "qty": 206.0,
+        "pawn_percent": 85,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 40689.12
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 40689.12
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 147.167184
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 147.167184
+        },
+        "is_custom_gav": false,
+        "margin_percent": 115
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274316"
+                }
+            ],
+            "instrument_id": 16418421,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 80.0,
+            "margin_percentage": 120.0,
+            "symbol": "EPR",
+            "isin_code": "NO0010735343",
+            "name": "EUROPRIS"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 62.9
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 62.9
+        },
+        "qty": 480.0,
+        "pawn_percent": 80,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 30192.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 30192.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 49.731667
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 49.731667
+        },
+        "is_custom_gav": false,
+        "margin_percent": 120
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274222"
+                }
+            ],
+            "instrument_id": 16105626,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 50.0,
+            "margin_percentage": 150.0,
+            "symbol": "KOA",
+            "isin_code": "NO0003033102",
+            "sector": "AUTO_COMPONENTS",
+            "sector_group": "AUTOMOBILES_AND_COMPONENTS",
+            "name": "KONGSBERG AUTOMOTIVE"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 2.61
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 2.61
+        },
+        "qty": 22607.0,
+        "pawn_percent": 50,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 59004.27
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 59004.27
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 3.345601
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 3.345601
+        },
+        "is_custom_gav": true,
+        "margin_percent": 150
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274227"
+                }
+            ],
+            "instrument_id": 16105608,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 85.0,
+            "margin_percentage": 115.0,
+            "symbol": "YAR",
+            "isin_code": "NO0010208051",
+            "sector": "CHEMICALS",
+            "sector_group": "MATERIALS",
+            "name": "YARA INTERNATIONAL"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 450.5
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 450.5
+        },
+        "qty": 84.0,
+        "pawn_percent": 85,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 37842.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 37842.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 357.564583
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 357.564583
+        },
+        "is_custom_gav": false,
+        "margin_percent": 115
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831239,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274195"
+                }
+            ],
+            "instrument_id": 16105630,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 50.0,
+            "margin_percentage": 150.0,
+            "symbol": "AFK",
+            "isin_code": "NO0003572802",
+            "sector": "ENERGY_UTILITIES",
+            "sector_group": "ENERGY",
+            "name": "ARENDALS FOSSEKOMPANI"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 225.0
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 225.0
+        },
+        "qty": 110.0,
+        "pawn_percent": 50,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 24750.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 24750.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 204.228342
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 204.228342
+        },
+        "is_custom_gav": false,
+        "margin_percent": 150
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831239,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2272775"
+                }
+            ],
+            "instrument_id": 17058977,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "ULTI",
+            "isin_code": "NO0010851603",
+            "name": "ULTIMOVACS"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 106.8
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 106.8
+        },
+        "qty": 134.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 14311.199999999999
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 14311.199999999999
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 46.215625
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 46.215625
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2559769"
+                }
+            ],
+            "instrument_id": 17534483,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 85.0,
+            "margin_percentage": 115.0,
+            "symbol": "DNB",
+            "isin_code": "NO0010161896",
+            "name": "DNB BANK ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 189.95
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 189.95
+        },
+        "qty": 239.0,
+        "pawn_percent": 85,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 45398.049999999996
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 45398.049999999996
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 117.977186
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 117.977186
+        },
+        "is_custom_gav": false,
+        "margin_percent": 115
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274211"
+                }
+            ],
+            "instrument_id": 16105575,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 70.0,
+            "margin_percentage": 150.0,
+            "symbol": "TGS",
+            "isin_code": "NO0003078800",
+            "sector": "ENERGY_EQUIPMENT_AND_SERVICES",
+            "sector_group": "ENERGY",
+            "name": "TGS ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 137.1
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 137.1
+        },
+        "qty": 313.0,
+        "pawn_percent": 70,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 42912.299999999996
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 42912.299999999996
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 147.05
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 147.05
+        },
+        "is_custom_gav": false,
+        "margin_percent": 150
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274237"
+                }
+            ],
+            "instrument_id": 16105612,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 55.0,
+            "margin_percentage": 145.0,
+            "symbol": "NEL",
+            "isin_code": "NO0010081235",
+            "sector": "INDUSTRIAL_CONGLOMERATE",
+            "sector_group": "CAPITAL_GOODS",
+            "name": "NEL"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 15.19
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 15.19
+        },
+        "qty": 440.0,
+        "pawn_percent": 55,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 6683.599999999999
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 6683.599999999999
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 18.473636
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 18.473636
+        },
+        "is_custom_gav": false,
+        "margin_percent": 145
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274217"
+                }
+            ],
+            "instrument_id": 16105427,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 80.0,
+            "margin_percentage": 120.0,
+            "symbol": "MOWI",
+            "isin_code": "NO0003054108",
+            "sector": "FOOD_PRODUCTS",
+            "sector_group": "CONSUMER_PRODUCTS",
+            "name": "MOWI"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 155.0
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 155.0
+        },
+        "qty": 614.0,
+        "pawn_percent": 80,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 95170.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 95170.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 139.991363
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 139.991363
+        },
+        "is_custom_gav": false,
+        "margin_percent": 120
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274309"
+                }
+            ],
+            "instrument_id": 16324395,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 80.0,
+            "margin_percentage": 120.0,
+            "symbol": "SCATC",
+            "isin_code": "NO0010715139",
+            "name": "SCATEC ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 87.36
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 87.36
+        },
+        "qty": 660.0,
+        "pawn_percent": 80,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 57657.6
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 57657.6
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 81.702364
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 81.702364
+        },
+        "is_custom_gav": false,
+        "margin_percent": 120
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831239,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOAS",
+                    "price_unit": "NOK",
+                    "identifier": "2263420"
+                }
+            ],
+            "instrument_id": 16105713,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 45.0,
+            "margin_percentage": 155.0,
+            "symbol": "HUNT",
+            "isin_code": "NO0010283211",
+            "sector": "ENERGY_EQUIPMENT_AND_SERVICES",
+            "sector_group": "ENERGY",
+            "name": "HUNTER GROUP"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 2.215
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 2.215
+        },
+        "qty": 5300.0,
+        "pawn_percent": 45,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 11739.5
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 11739.5
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 1.637925
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 1.637925
+        },
+        "is_custom_gav": false,
+        "margin_percent": 155
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831239,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2543336"
+                }
+            ],
+            "instrument_id": 17519997,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "ELO",
+            "isin_code": "NO0011002586",
+            "name": "ELOPAK ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 24.3
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 24.3
+        },
+        "qty": 375.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 9112.5
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 9112.5
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 28.0
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 28.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831239,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2426968"
+                }
+            ],
+            "instrument_id": 17447523,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 30.0,
+            "margin_percentage": 170.0,
+            "symbol": "RANA",
+            "isin_code": "NO0010907389",
+            "name": "RANA GRUBER ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 44.55
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 44.55
+        },
+        "qty": 650.0,
+        "pawn_percent": 30,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 28957.499999999996
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 28957.499999999996
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 53.567615
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 53.567615
+        },
+        "is_custom_gav": false,
+        "margin_percent": 170
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831239,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2272750"
+                }
+            ],
+            "instrument_id": 17299778,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 30.0,
+            "margin_percentage": 170.0,
+            "symbol": "AKBM",
+            "isin_code": "NO0010886625",
+            "name": "AKER BIOMARINE ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 37.7
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 37.7
+        },
+        "qty": 670.0,
+        "pawn_percent": 30,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 25259.000000000004
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 25259.000000000004
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 37.506179
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 37.506179
+        },
+        "is_custom_gav": false,
+        "margin_percent": 170
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2398356"
+                }
+            ],
+            "instrument_id": 17434301,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 50.0,
+            "margin_percentage": 150.0,
+            "symbol": "AKH",
+            "isin_code": "NO0010921232",
+            "name": "AKER HORIZONS ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 13.655
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 13.655
+        },
+        "qty": 800.0,
+        "pawn_percent": 50,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 10924.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 10924.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 13.27125
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 13.27125
+        },
+        "is_custom_gav": false,
+        "margin_percent": 150
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274205"
+                }
+            ],
+            "instrument_id": 16105604,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 80.0,
+            "margin_percentage": 120.0,
+            "symbol": "LSG",
+            "isin_code": "NO0003096208",
+            "sector": "FOOD_PRODUCTS",
+            "sector_group": "CONSUMER_PRODUCTS",
+            "name": "LERØY SEAFOOD GROUP"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 48.62
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 48.62
+        },
+        "qty": 1052.0,
+        "pawn_percent": 80,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 51148.24
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 51148.24
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 46.970919
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 46.970919
+        },
+        "is_custom_gav": false,
+        "margin_percent": 120
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831239,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2293426"
+                }
+            ],
+            "instrument_id": 17367126,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "VOLUE",
+            "isin_code": "NO0010894603",
+            "name": "VOLUE ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 32.9
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 32.9
+        },
+        "qty": 5.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 164.5
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 164.5
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274221"
+                }
+            ],
+            "instrument_id": 16105666,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 85.0,
+            "margin_percentage": 115.0,
+            "symbol": "KOG",
+            "isin_code": "NO0003043309",
+            "sector": "AEROSPACE_AND_DEFENCE",
+            "sector_group": "CAPITAL_GOODS",
+            "name": "KONGSBERG GRUPPEN"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 405.8
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 405.8
+        },
+        "qty": 133.0,
+        "pawn_percent": 85,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 53971.4
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 53971.4
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 59.5
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 59.5
+        },
+        "is_custom_gav": false,
+        "margin_percent": 115
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274245"
+                }
+            ],
+            "instrument_id": 16105593,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 55.0,
+            "margin_percentage": 145.0,
+            "symbol": "PHO",
+            "isin_code": "NO0010000045",
+            "sector": "PHARMACEUTICALS",
+            "sector_group": "HEALTH_CARE",
+            "name": "PHOTOCURE"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 100.2
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 100.2
+        },
+        "qty": 164.0,
+        "pawn_percent": 55,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 16432.8
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 16432.8
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 76.206818
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 76.206818
+        },
+        "is_custom_gav": false,
+        "margin_percent": 145
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274183"
+                }
+            ],
+            "instrument_id": 16505567,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 65.0,
+            "margin_percentage": 135.0,
+            "symbol": "FRO",
+            "isin_code": "BMG3682E1921",
+            "name": "FRONTLINE"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 133.0
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 133.0
+        },
+        "qty": 208.0,
+        "pawn_percent": 65,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 27664.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 27664.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 79.360096
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 79.360096
+        },
+        "is_custom_gav": false,
+        "margin_percent": 135
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831240,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274321"
+                }
+            ],
+            "instrument_id": 16978420,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 70.0,
+            "margin_percentage": 130.0,
+            "symbol": "ACR",
+            "isin_code": "NO0010840515",
+            "name": "AXACTOR ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 6.08
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 6.08
+        },
+        "qty": 3000.0,
+        "pawn_percent": 70,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 18240.0
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 18240.0
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 6.094377
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 6.094377
+        },
+        "is_custom_gav": false,
+        "margin_percent": 130
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831238,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2465090"
+                }
+            ],
+            "instrument_id": 17473119,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "TEKNA",
+            "isin_code": "NO0010951577",
+            "name": "TEKNA HOLDING ASA"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 6.28
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 6.28
+        },
+        "qty": 11.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 69.08
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 69.08
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 18.44
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 18.44
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274234"
+                }
+            ],
+            "instrument_id": 16105665,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 30.0,
+            "margin_percentage": 170.0,
+            "symbol": "RECSI",
+            "isin_code": "NO0010112675",
+            "sector": "SEMICONDUCTOR",
+            "sector_group": "IT",
+            "name": "REC SILICON"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 16.23
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 16.23
+        },
+        "qty": 510.0,
+        "pawn_percent": 30,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 8277.300000000001
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 8277.300000000001
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 17.014902
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 17.014902
+        },
+        "is_custom_gav": false,
+        "margin_percent": 170
+    },
+    {
+        "accno": 6627020,
+        "accid": 2,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 15,
+                    "tick_size_id": 34831241,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "mic": "XOSL",
+                    "price_unit": "NOK",
+                    "identifier": "2274277"
+                }
+            ],
+            "instrument_id": 16105717,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "NOK",
+            "multiplier": 1.0,
+            "pawn_percentage": 70.0,
+            "margin_percentage": 130.0,
+            "symbol": "AKRBP",
+            "isin_code": "NO0010345853",
+            "sector": "OIL_GAS_AND_CONSUMABLE_FUELS",
+            "sector_group": "ENERGY",
+            "name": "AKER BP"
+        },
+        "main_market_price": {
+            "currency": "NOK",
+            "value": 326.1
+        },
+        "morning_price": {
+            "currency": "NOK",
+            "value": 326.1
+        },
+        "qty": 535.0,
+        "pawn_percent": 70,
+        "market_value_acc": {
+            "currency": "NOK",
+            "value": 174463.5
+        },
+        "market_value": {
+            "currency": "NOK",
+            "value": 174463.5
+        },
+        "acq_price": {
+            "currency": "NOK",
+            "value": 171.234139
+        },
+        "acq_price_acc": {
+            "currency": "NOK",
+            "value": 171.234139
+        },
+        "is_custom_gav": false,
+        "margin_percent": 130
+    }
+]
