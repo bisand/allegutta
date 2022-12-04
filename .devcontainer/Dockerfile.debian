@@ -33,9 +33,8 @@ RUN apt-get install -y git openssh-client zsh curl nano sed \
     # nss \
     # freetype \
     # harfbuzz \
-    ca-certificates \
+    ca-certificates
     # ttf-freefont
-
 
 # Prepare directories for zsh_history
 RUN mkdir /commandhistory \

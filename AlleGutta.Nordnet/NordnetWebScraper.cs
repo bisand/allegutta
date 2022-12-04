@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PuppeteerSharp;
 
@@ -15,6 +16,13 @@ public class NordnetWebScraper
         _config = config;
     }
 
+    /// <summary>
+    /// Return Batch data from Nordnet API. Is used to retrive portfolio specific data. 
+    /// </summary>
+    /// <param name="forceRun">Force execution and override refresh interval.</param>
+    /// <param name="refreshIntervalMinutes">Refresh interval in minutes. If time is within interval, cched data are returned. Otherwise a request is being made to Nordnet.</param>
+    /// <param name="headless">Indicate if Chrome should run in headless mode. Default true.</param>
+    /// <returns>NordnetBatchData</returns>
     public async Task<NordnetBatchData> GetBatchData(bool forceRun = false, int refreshIntervalMinutes = 60, bool headless = true)
     {
         if (!forceRun && BatchData.CacheUpdated != null && new DateTime().AddMinutes(refreshIntervalMinutes * -1) > BatchData.CacheUpdated)
@@ -32,29 +40,7 @@ public class NordnetWebScraper
         using (var browser = await Puppeteer.LaunchAsync(options))
         using (var page = await browser.NewPageAsync())
         {
-            await page.GoToAsync(_config.Url);
-            await page.ClickAsync("button#cookie-accept-all-secondary");
-            await page.WaitForXPathAsync("//button[contains(., 'innloggingsmetode')]", new() { Timeout = 10000 });
-            var button1 = (await page.XPathAsync("//button[contains(., 'innloggingsmetode')]")).FirstOrDefault();
-            if (button1 != null)
-            {
-                await button1.ClickAsync();
-            }
-            await page.WaitForXPathAsync("//button[contains(., 'brukernavn og passord')]", new() { Timeout = 10000 });
-            var button2 = (await page.XPathAsync("//button[contains(., 'brukernavn og passord')]")).FirstOrDefault();
-            if (button2 != null)
-            {
-                await button2.ClickAsync();
-            }
-
-            await page.WaitForSelectorAsync("input[name='username']", new() { Timeout = 10000 });
-            await page.TypeAsync("input[name='username']", _config.Username);
-            await page.TypeAsync("input[name='password']", _config.Password);
-
-            Task.WaitAll(new[] {
-                page.ClickAsync("button[type='submit']"),
-                page.WaitForNavigationAsync()
-            });
+            await Login(page);
 
             var dataCollected = 0;
             page.Response += async (sender, responseEvent) =>
@@ -64,7 +50,6 @@ public class NordnetWebScraper
                 if (!response.Ok)
                 {
                     Console.WriteLine($"Response NOT OK: {response.StatusText}");
-
                     return;
                 }
 
@@ -90,16 +75,17 @@ public class NordnetWebScraper
                             {
                                 for (var i = 0; i < postData.Length; i++)
                                 {
-                                    var item = postData[i];
-                                    if (item.relative_url.Contains("accounts/2/positions"))
+                                    if (postData[i].relative_url.Contains("accounts/2/positions"))
                                     {
-                                        var json = await response.JsonAsync<NordnetJsonContent<NordnetPosition[]>[]>();
-                                        dataCollected = collectPositions(json[i].body, dataCollected);
+                                        var txt = await response.TextAsync();
+                                        var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetPosition[]>[]>(txt);
+                                        dataCollected = collectPositions(json?[i].body, dataCollected);
                                     }
-                                    else if (item.relative_url.Contains("accounts/2/info"))
+                                    else if (postData[i].relative_url.Contains("accounts/2/info"))
                                     {
-                                        var json = await response.JsonAsync<NordnetJsonContent<NordnetAccountInfo[]>[]>();
-                                        dataCollected = collectAccountInfo(json[i].body?[0], dataCollected);
+                                        var txt = await response.TextAsync();
+                                        var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt);
+                                        dataCollected = collectAccountInfo(json?[i].body?[0], dataCollected);
                                     }
                                 }
                             }
@@ -117,14 +103,12 @@ public class NordnetWebScraper
                             {
                                 var txt = await response.TextAsync();
                                 var json = JsonConvert.DeserializeObject<NordnetPosition[]>(txt);
-                                // var json = await response.JsonAsync<NordnetPosition[]>();
                                 dataCollected = collectPositions(json, dataCollected);
                             }
                             else if (url != null && url.Contains("accounts/2/info"))
                             {
                                 var txt = await response.TextAsync();
                                 var json = JsonConvert.DeserializeObject<NordnetAccountInfo[]>(txt);
-                                // var json = await response.JsonAsync<NordnetAccountInfo[]>();
                                 dataCollected = collectAccountInfo(json?[0], dataCollected);
                             }
                         }
@@ -149,6 +133,44 @@ public class NordnetWebScraper
         }
     }
 
+    /// <summary>
+    /// Handles the Nordnet login process.
+    /// </summary>
+    /// <param name="page">Puppeteer page</param>
+    /// <returns></returns>
+    private async Task Login(IPage page)
+    {
+        await page.GoToAsync(_config.Url);
+        await page.ClickAsync("button#cookie-accept-all-secondary");
+        await page.WaitForXPathAsync("//button[contains(., 'innloggingsmetode')]", new() { Timeout = 10000 });
+        var button1 = (await page.XPathAsync("//button[contains(., 'innloggingsmetode')]")).FirstOrDefault();
+        if (button1 != null)
+        {
+            await button1.ClickAsync();
+        }
+        await page.WaitForXPathAsync("//button[contains(., 'brukernavn og passord')]", new() { Timeout = 10000 });
+        var button2 = (await page.XPathAsync("//button[contains(., 'brukernavn og passord')]")).FirstOrDefault();
+        if (button2 != null)
+        {
+            await button2.ClickAsync();
+        }
+
+        await page.WaitForSelectorAsync("input[name='username']", new() { Timeout = 10000 });
+        await page.TypeAsync("input[name='username']", _config.Username);
+        await page.TypeAsync("input[name='password']", _config.Password);
+
+        Task.WaitAll(new[] {
+                page.ClickAsync("button[type='submit']"),
+                page.WaitForNavigationAsync()
+            });
+    }
+
+    /// <summary>
+    /// A general wait for method. It resolves when provided function returns true or if it times out.
+    /// </summary>
+    /// <param name="checkFn">The function to wait for. Return true to resolve the WaitFor method.</param>
+    /// <param name="opts">Configuration options.</param>
+    /// <returns></returns>
     private Task WaitFor(Func<bool> checkFn, Option? opts = null)
     {
         opts = opts != null ? opts : new Option(10000, 100, "Timeout!");

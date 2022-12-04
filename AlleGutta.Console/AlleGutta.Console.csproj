@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AlleGutta.Nordnet\AlleGutta.Nordnet.csproj" />
+    <ProjectReference Include="..\AlleGutta.Repository\AlleGutta.Repository.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

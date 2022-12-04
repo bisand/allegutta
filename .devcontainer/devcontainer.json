@@ -26,6 +26,7 @@
 				"ms-vscode.vs-keybindings",
 				"github.vscode-pull-request-github",
 				"eamodio.gitlens",
+				"k--kato.docomment",
 				"aaron-bond.better-comments",
 				"fernandoescolar.vscode-solution-explorer",
 				"hbenl.vscode-test-explorer"
