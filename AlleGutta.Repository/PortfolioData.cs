@@ -66,7 +66,7 @@ public class PortfolioData
     //     await db.close();
     // }
 
-    public async IAsyncEnumerable<Portfolio> GetPortfolioPositionsAsync(string portfolioName)
+    public async IAsyncEnumerable<PortfolioPosition> GetPortfolioPositionsAsync(string portfolioName)
     {
         const string sql = @"
             SELECT pp.Id, pp.PortfolioId, pp.Symbol, pp.Shares, pp.AvgPrice 
@@ -74,7 +74,7 @@ public class PortfolioData
             JOIN Portfolio p ON p.Id = pp.PortfolioId
             WHERE p.Name = @portfolioName
         ";
-        await foreach (var item in GetDataAsync<Portfolio>(sql, new[] { new SqliteParameter("@portfolioName", portfolioName) }))
+        await foreach (var item in GetDataAsync<PortfolioPosition>(sql, new[] { new SqliteParameter("@portfolioName", portfolioName) }))
         {
             yield return item;
         }
