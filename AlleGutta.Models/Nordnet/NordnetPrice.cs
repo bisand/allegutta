@@ -1,3 +1,5 @@
+namespace AlleGutta.Models.Nordnet;
+
 public record NordnetPrice
 {
     public NordnetCurrency currency { get; init; }

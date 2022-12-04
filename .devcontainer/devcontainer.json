@@ -29,7 +29,9 @@
 				"k--kato.docomment",
 				"aaron-bond.better-comments",
 				"fernandoescolar.vscode-solution-explorer",
-				"hbenl.vscode-test-explorer"
+				"hbenl.vscode-test-explorer",
+				"josefpihrt-vscode.roslynator",
+				"qwtel.sqlite-viewer"
 			]
 		}
 	},

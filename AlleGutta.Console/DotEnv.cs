@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 
+namespace AlleGutta.Console;
+
 public static class DotEnv
 {
     public static void Load(string filePath)

@@ -1,3 +1,5 @@
+namespace AlleGutta.Models.Nordnet;
+
 public record NordnetAccountInfo
 {
     public NordnetPrice? account_credit { get; init; }

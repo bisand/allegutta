@@ -1,3 +1,5 @@
+namespace AlleGutta.Models.Nordnet;
+
 public record NordnetInstrument
 {
     public int mifid2_category { get; init; }

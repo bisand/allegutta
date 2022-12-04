@@ -1,3 +1,5 @@
+namespace AlleGutta.Models.Nordnet;
+
 public record NordnetPosition
 {
     public int accno { get; init; }

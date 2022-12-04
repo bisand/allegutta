@@ -1,4 +1,5 @@
 ﻿using System;
+using AlleGutta.Console;
 using AlleGutta.Nordnet;
 using AlleGutta.Repository;
 
@@ -12,6 +13,7 @@ var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.
 // var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
 // var data = await nordnetProcessor.GetBatchData();
 
-var portfolioData = new PortfolioData();
-portfolioData.GetData("10");
-Console.WriteLine("data");
+var portfolioData = new PortfolioData("Data Source=data/allegutta.db");
+var  value = portfolioData.GetPortfolioPositionsAsync("10");
+var valueTask = await value.ToListAsync();
+Console.WriteLine(valueTask);

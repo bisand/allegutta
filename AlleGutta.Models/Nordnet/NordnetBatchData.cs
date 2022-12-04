@@ -1,3 +1,5 @@
+namespace AlleGutta.Models.Nordnet;
+
 public record NordnetBatchData
 {
     public NordnetAccountInfo? AccountInfo { get; set; }
