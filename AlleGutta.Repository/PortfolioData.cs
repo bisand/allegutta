@@ -40,7 +40,7 @@ public class PortfolioData
             command.CommandText = @"CREATE TABLE IF NOT EXISTS 'portfolio'(
                 'id'    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
                 'name'  TEXT,
-                'cash*  REAL NOT NULL DEFAULT 0.0
+                'cash'  REAL NOT NULL DEFAULT 0.0
             );";
             await command.ExecuteNonQueryAsync();
             command.CommandText = @"CREATE TABLE IF NOT EXISTS 'portfolio_positions'(
