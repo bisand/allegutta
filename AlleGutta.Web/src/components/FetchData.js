@@ -17,19 +17,21 @@ export class FetchData extends Component {
       <table className="table table-striped" aria-labelledby="tableLabel">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+            <th>Id</th>
+            <th>Ticker</th>
+            <th>Navn</th>
+            <th>Antall</th>
+            <th>Innkjøpspris</th>
           </tr>
         </thead>
         <tbody>
           {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+            <tr key={forecast.id}>
+              <td>{forecast.id}</td>
+              <td>{forecast.symbol}</td>
+              <td>{forecast.name}</td>
+              <td>{forecast.shares}</td>
+              <td>{forecast.avgPrice}</td>
             </tr>
           )}
         </tbody>
@@ -54,8 +56,8 @@ export class FetchData extends Component {
   async fetchWeather() {
     try {
       this.setState({ ...this.state, loading: true });
-      const response = await axios.get('weatherforecast');
-      this.setState({ forecasts: response.data, loading: false });
+      const response = await axios.get('portfolio/allegutta');
+      this.setState({ forecasts: response.data.positions, loading: false });
     } catch (e) {
       console.log(e);
       this.setState({ ...this.state, loading: false });
