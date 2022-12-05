@@ -10,7 +10,6 @@ public class PortfolioData
 
     public PortfolioData(string ConnectionString)
     {
-        Task.Run(InitAsync);
         _connectionString = ConnectionString;
     }
 
