@@ -30,3 +30,28 @@ public class CreatePortfolioPositionsTable : Migration
         Delete.Table("PortfolioPositions");
     }
 }
+
+[Migration(202212050708)]
+public class ModifyPortfolioPositionsTable : Migration
+{
+    public override void Up()
+    {
+        Alter.Table("PortfolioPositions")
+            .AlterColumn("Shares").AsInt64().WithDefaultValue(0)
+            .AlterColumn("AvgPrice").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("LastPrice").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("ChangeToday").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("ChangeTodayPercent").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("PrevClose").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("CostValue").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("CurrentValue").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("Return").AsDecimal().WithDefaultValue(0.0)
+            .AlterColumn("ReturnPercent").AsDecimal().WithDefaultValue(0.0)
+            ;
+    }
+
+    public override void Down()
+    {
+        Delete.Table("PortfolioPositions");
+    }
+}
