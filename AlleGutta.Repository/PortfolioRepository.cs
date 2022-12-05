@@ -5,11 +5,11 @@ using AlleGutta.Models;
 using System.Linq;
 
 namespace AlleGutta.Repository;
-public class PortfolioData
+public class PortfolioRepository
 {
     private readonly string _connectionString;
 
-    public PortfolioData(string ConnectionString)
+    public PortfolioRepository(string ConnectionString)
     {
         _connectionString = ConnectionString;
     }
@@ -51,8 +51,8 @@ public class PortfolioData
                     ChangeTotal = @ChangeTotal,
                     ChangeTotalPercent = @ChangeTotalPercent
                 WHERE
-                    Name = @Name;
-                SELECT Id FROM Portfolio WHERE Name = @Name;
+                    Name = @Name COLLATE NOCASE;
+                SELECT Id FROM Portfolio WHERE Name = @Name COLLATE NOCASE;
             ";
             portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
         }
@@ -98,7 +98,7 @@ public class PortfolioData
                 CAST(p.ChangeTotal as DOUBLE) as ChangeTotal,
                 CAST(p.ChangeTotalPercent as DOUBLE) as ChangeTotalPercent
             FROM Portfolio p
-            WHERE p.Name = @portfolioName
+            WHERE p.Name = @portfolioName COLLATE NOCASE;
         ";
         var portfolio = await GetDataAsync<Portfolio>(sql, new[] { new SqliteParameter("@portfolioName", portfolioName) }).FirstOrDefaultAsync();
         if (portfolio != null) portfolio.Positions = await GetPortfolioPositionsAsync(portfolio.Id).ToArrayAsync();
@@ -125,7 +125,7 @@ public class PortfolioData
                 CAST(pp.ReturnPercent as DOUBLE) as ReturnPercent
             FROM PortfolioPositions pp
             JOIN Portfolio p ON p.Id = pp.PortfolioId
-            WHERE p.Id = @portfolioId
+            WHERE p.Id = @portfolioId;
         ";
         await foreach (var item in GetDataAsync<PortfolioPosition>(sql, new[] { new SqliteParameter("@portfolioId", portfolioId) }))
         {
@@ -153,7 +153,7 @@ public class PortfolioData
                 CAST(pp.ReturnPercent as DOUBLE) as ReturnPercent
             FROM PortfolioPositions pp
             JOIN Portfolio p ON p.Id = pp.PortfolioId
-            WHERE p.Name = @portfolioName
+            WHERE p.Name = @portfolioName COLLATE NOCASE;
         ";
         await foreach (var item in GetDataAsync<PortfolioPosition>(sql, new[] { new SqliteParameter("@portfolioName", portfolioName) }))
         {

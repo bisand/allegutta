@@ -48,7 +48,7 @@ internal static class Program
             }).ToArray()
         };
 
-        var portfolioData = new PortfolioData(ConnectionString);
+        var portfolioData = new PortfolioRepository(ConnectionString);
         await portfolioData.SavePortfolioAsync(portfolio);
         var value = portfolioData.GetPortfolioPositionsAsync("AlleGutta");
         var valueTask = await value.ToListAsync();

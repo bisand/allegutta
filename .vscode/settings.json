@@ -4,7 +4,7 @@
             "previewLimit": 50,
             "driver": "SQLite",
             "name": "allegutta",
-            "database": "${workspaceFolder:allegutta}/AlleGutta.Console/data/allegutta.db"
+            "database": "${workspaceFolder:allegutta}/AlleGutta.Api/data/allegutta.db"
         }
     ]
 }
