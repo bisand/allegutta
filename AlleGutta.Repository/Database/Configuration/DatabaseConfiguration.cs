@@ -9,7 +9,7 @@ public static class DatabaseConfiguration
     /// <summary>
     /// Configure the dependency injection services
     /// </summary>
-    public static IServiceProvider CreateServices()
+    public static IServiceProvider CreateServices(string connectionStringOrName)
     {
         return new ServiceCollection()
             // Add common FluentMigrator services
@@ -18,7 +18,7 @@ public static class DatabaseConfiguration
                 // Add SQLite support to FluentMigrator
                 .AddSQLite()
                 // Set the connection string
-                .WithGlobalConnectionString("Data Source=data/allegutta.db")
+                .WithGlobalConnectionString(connectionStringOrName)
                 // Define the assembly containing the migrations
                 .ScanIn(new[] {
                     typeof(CreatePortfolioTable).Assembly,

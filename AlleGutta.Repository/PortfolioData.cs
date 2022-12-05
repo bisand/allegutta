@@ -66,6 +66,11 @@ public class PortfolioData
     //     await db.close();
     // }
 
+    public async Task SavePortfolio(Portfolio portfolio)
+    {
+
+    }
+
     public async IAsyncEnumerable<PortfolioPosition> GetPortfolioPositionsAsync(string portfolioName)
     {
         const string sql = @"
@@ -96,27 +101,5 @@ public class PortfolioData
         {
             yield return parser(reader);
         }
-    }
-
-    private async Task InitAsync()
-    {
-        using var connection = new SqliteConnection(_connectionString);
-        await connection.OpenAsync();
-        var command = connection.CreateCommand();
-        command.CommandText = @"CREATE TABLE IF NOT EXISTS 'Portfolio'(
-                'Id'    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                'Name'  TEXT,
-                'Cash'  REAL NOT NULL DEFAULT 0.0
-            );";
-        await command.ExecuteNonQueryAsync();
-        command.CommandText = @"CREATE TABLE IF NOT EXISTS 'PortfolioPositions'(
-                'Id'    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                'PortfolioId'  INTEGER NOT NULL,
-                'Symbol'    TEXT NOT NULL,
-                'Shares'    INTEGER NOT NULL  DEFAULT 0,
-                'AvgPrice' REAL NOT NULL DEFAULT 0.0,
-                FOREIGN KEY('PortfolioId') REFERENCES 'Portfolio'('Id')
-            );";
-        await command.ExecuteNonQueryAsync();
     }
 }
