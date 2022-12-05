@@ -2,7 +2,7 @@ namespace AlleGutta.Models;
 
 public record Portfolio
 {
-    public int Id { get; init; }
+    public int Id { get; set; }
     public string? Name { get; init; }
     public decimal Cash { get; init; }
     public decimal Ath { get; init; }
@@ -16,5 +16,5 @@ public record Portfolio
     public decimal ChangeTodayPercent { get; init; }
     public decimal ChangeTotal { get; init; }
     public decimal ChangeTotalPercent { get; init; }
-    public PortfolioPosition[]? Positions { get; init; }
+    public PortfolioPosition[]? Positions { get; set; }
 }

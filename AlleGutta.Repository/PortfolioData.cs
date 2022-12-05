@@ -2,6 +2,7 @@
 using Dapper;
 using AlleGutta.Models.Nordnet;
 using AlleGutta.Models;
+using System.Linq;
 
 namespace AlleGutta.Repository;
 public class PortfolioData
@@ -13,67 +14,97 @@ public class PortfolioData
         _connectionString = ConnectionString;
     }
 
-    // async getPortfolioAsync(portfolioName: string): Promise<Portfolio> {
-    //     const db = await this.open();
-    //     const positions = await db.all<PortfolioPosition[]>(
-    //         `
-    //             SELECT p.id, p.name, p.cash, pp.id [pos_id], pp.symbol, pp.shares, pp.avg_price FROM portfolio p 
-    //             LEFT JOIN portfolio_positions pp ON p.id = pp.portfolio_id 
-    //             WHERE p.name = $name`,
-    //         { $name: portfolioName });
-    //     let portfolio = new Portfolio();
-    //     positions.forEach((pos: any) => {
-    //         if (!portfolio.name) {
-    //             portfolio.name = pos.name;
-    //             portfolio.cash = pos.cash;
-    //             portfolio.id = pos.id;
-    //         }
-    //         const pp = new PortfolioPosition();
-    //         pp.id = pos.pos_id;
-    //         pp.symbol = pos.symbol;
-    //         pp.shares = pos.shares;
-    //         pp.avg_price = pos.avg_price;
-    //         portfolio.positions.push(pp);
-    //     });
-    //     return portfolio;
-    // }
-
-    // async importPortfolioAsync(portfolio: Portfolio): Promise<void> {
-    //     const db = await this.open();
-    //     const lastId = await db
-    //         .run(`INSERT INTO portfolio(name, cash) VALUES($name, $cash)`, {
-    //             $name: portfolio.name,
-    //             $cash: portfolio.cash,
-    //             // })
-    //             // .then((res: any) => {
-    //             //     return res.lastID;
-    //         });
-    //     portfolio.positions.forEach(position => {
-    //         db.run(
-    //             `INSERT INTO portfolio_positions(portfolio_id, symbol, shares, avg_price) VALUES($portfolio_id, $symbol, $shares, $avg_price)`,
-    //             {
-    //                 $portfolio_id: lastId,
-    //                 $symbol: position.symbol,
-    //                 $shares: position.shares,
-    //                 $avg_price: position.avg_price,
-    //             },
-    //             (err: any) => {
-    //                 if (err) console.error(err);
-    //             },
-    //         );
-    //     });
-    //     await db.close();
-    // }
-
-    public async Task SavePortfolio(Portfolio portfolio)
+    public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio)
     {
+        if (portfolio is null) throw new ArgumentNullException(nameof(portfolio), "Portfolio can not be null");
+        if (string.IsNullOrWhiteSpace(portfolio.Name)) throw new ArgumentNullException("portfolio.Name", "Portfolio name can not be empty");
 
+        using var connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync();
+
+        if (GetPortfolioAsync(portfolio.Name) is null)
+        {
+            const string sqlPortfolio = @"
+            INSERT INTO Portfolio 
+            OUTPUT INSERTED.Id
+            VALUES (@Name, @Cash, @Ath, @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent)
+        ";
+            portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
+        }
+        else
+        {
+            const string sqlPortfolio = @"
+                UPDATE Portfolio 
+                OUTPUT UPDATED.Id
+                    Name = @Name,
+                    Cash = @Cash,
+                    Ath = @Ath,
+                    Equity = @Equity,
+                    CostValue = @CostValue,
+                    MarketValue = @MarketValue,
+                    MarketValuePrev = @MarketValuePrev,
+                    MarketValueMax = @MarketValueMax,
+                    MarketValueMin = @MarketValueMin,
+                    ChangeTodayTotal = @ChangeTodayTotal,
+                    ChangeTodayPercent = @ChangeTodayPercent,
+                    ChangeTotal = @ChangeTotal,
+                    ChangeTotalPercent = @ChangeTotalPercent
+                WHERE
+                    Name = @Name
+            ";
+            portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
+        }
+
+        await connection.ExecuteAsync("DELETE FROM PortfolioPositions WHERE PortfolioId = @Id", portfolio);
+
+        if (portfolio.Positions != null)
+        {
+            foreach (var pos in portfolio.Positions)
+            {
+                const string sqlPositions = @"
+                        INSERT INTO PortfolioPositions 
+                        OUTPUT INSERTED.Id
+                        VALUES (@Symbol, @Shares, @AvgPrice, @Name, @LastPrice, @ChangeToday, @ChangeTodayPercent, @PrevClose, @CostValue, @CurrentValue, @Return, @ReturnPercent)";
+                pos.Id = await connection.ExecuteScalarAsync<int>(sqlPositions, pos);
+                pos.PortfolioId = portfolio.Id;
+            }
+        }
+
+        return portfolio;
+    }
+
+    public async Task<Portfolio?> GetPortfolioAsync(string portfolioName)
+    {
+        if (string.IsNullOrWhiteSpace(portfolioName)) throw new ArgumentNullException(nameof(portfolioName), "Portfolio name can not be empty");
+
+        const string sql = @"
+            SELECT p.Id, p.Name, p.Cash, p.Ath, p.Equity, p.CostValue, p.MarketValue, p.MarketValuePrev, p.MarketValueMax, p.MarketValueMin, p.ChangeTodayTotal, p.ChangeTodayPercent, p.ChangeTotal, p.ChangeTotalPercent
+            FROM Portfolio p
+            WHERE p.Name = @portfolioName
+        ";
+        var portfolio = await GetDataAsync<Portfolio>(sql, new[] { new SqliteParameter("@portfolioName", portfolioName) }).FirstOrDefaultAsync();
+        if (portfolio != null) portfolio.Positions = await GetPortfolioPositionsAsync(portfolio.Id).ToArrayAsync();
+        return portfolio;
+    }
+
+    public async IAsyncEnumerable<PortfolioPosition> GetPortfolioPositionsAsync(int portfolioId)
+    {
+        const string sql = @"
+            SELECT pp.Id, pp.PortfolioId, pp.Symbol, pp.Shares, pp.AvgPrice, pp.Name, pp.LastPrice, pp.ChangeToday, pp.ChangeTodayPercent, pp.PrevClose, pp.CostValue, pp.CurrentValue, pp.Return, pp.ReturnPercent 
+            FROM PortfolioPositions pp
+            JOIN Portfolio p ON p.Id = pp.PortfolioId
+            WHERE p.Id = @portfolioId
+        ";
+        await foreach (var item in GetDataAsync<PortfolioPosition>(sql, new[] { new SqliteParameter("@portfolioId", portfolioId) }))
+        {
+            yield return item;
+        }
     }
 
     public async IAsyncEnumerable<PortfolioPosition> GetPortfolioPositionsAsync(string portfolioName)
     {
         const string sql = @"
-            SELECT pp.Id, pp.PortfolioId, pp.Symbol, pp.Shares, pp.AvgPrice 
+            SELECT pp.Id, pp.PortfolioId, pp.Symbol, pp.Shares, pp.AvgPrice, pp.Name, pp.LastPrice, pp.ChangeToday, pp.ChangeTodayPercent, pp.PrevClose, pp.CostValue, pp.CurrentValue, pp.Return, pp.ReturnPercent 
             FROM PortfolioPositions pp
             JOIN Portfolio p ON p.Id = pp.PortfolioId
             WHERE p.Name = @portfolioName

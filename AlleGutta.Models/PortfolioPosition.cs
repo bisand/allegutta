@@ -2,7 +2,8 @@ namespace AlleGutta.Models;
 
 public record PortfolioPosition
 {
-    public int Id { get; init; }
+    public int Id { get; set; }
+    public int PortfolioId { get; set; }
     public string? Symbol { get; init; }
     public int Shares { get; init; }
     public decimal AvgPrice { get; init; }
