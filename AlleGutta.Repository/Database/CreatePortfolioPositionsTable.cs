@@ -8,45 +8,20 @@ public class CreatePortfolioPositionsTable : Migration
     public override void Up()
     {
         Create.Table("PortfolioPositions")
-            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-            .WithColumn("PortfolioId").AsInt64().ForeignKey("Portfolio", "Id")
+            .WithColumn("Id").AsInt32().PrimaryKey().Identity()
+            .WithColumn("PortfolioId").AsInt32().ForeignKey("Portfolio", "Id")
             .WithColumn("Symbol").AsString()
-            .WithColumn("Shares").AsInt64()
-            .WithColumn("AvgPrice").AsDecimal()
+            .WithColumn("Shares").AsInt32().WithDefaultValue(0)
+            .WithColumn("AvgPrice").AsDecimal().WithDefaultValue(0.0)
             .WithColumn("Name").AsString()
-            .WithColumn("LastPrice").AsDecimal()
-            .WithColumn("ChangeToday").AsDecimal()
-            .WithColumn("ChangeTodayPercent").AsDecimal()
-            .WithColumn("PrevClose").AsDecimal()
-            .WithColumn("CostValue").AsDecimal()
-            .WithColumn("CurrentValue").AsDecimal()
-            .WithColumn("Return").AsDecimal()
-            .WithColumn("ReturnPercent").AsDecimal()
-            ;
-    }
-
-    public override void Down()
-    {
-        Delete.Table("PortfolioPositions");
-    }
-}
-
-[Migration(202212050708)]
-public class ModifyPortfolioPositionsTable : Migration
-{
-    public override void Up()
-    {
-        Alter.Table("PortfolioPositions")
-            .AlterColumn("Shares").AsInt64().WithDefaultValue(0)
-            .AlterColumn("AvgPrice").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("LastPrice").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("ChangeToday").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("ChangeTodayPercent").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("PrevClose").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("CostValue").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("CurrentValue").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("Return").AsDecimal().WithDefaultValue(0.0)
-            .AlterColumn("ReturnPercent").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("LastPrice").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("ChangeToday").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("ChangeTodayPercent").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("PrevClose").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("CostValue").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("CurrentValue").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("Return").AsDecimal().WithDefaultValue(0.0)
+            .WithColumn("ReturnPercent").AsDecimal().WithDefaultValue(0.0)
             ;
     }
 

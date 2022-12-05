@@ -21,21 +21,22 @@ public class PortfolioData
 
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
+        using var transaction = await connection.BeginTransactionAsync();
 
-        if (GetPortfolioAsync(portfolio.Name) is null)
+        if (await GetPortfolioAsync(portfolio.Name) is null)
         {
             const string sqlPortfolio = @"
-            INSERT INTO Portfolio 
-            OUTPUT INSERTED.Id
-            VALUES (@Name, @Cash, @Ath, @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent)
-        ";
+                INSERT INTO Portfolio
+                (Name, Cash, Ath, Equity, CostValue, MarketValue, MarketValuePrev, MarketValueMax, MarketValueMin, ChangeTodayTotal, ChangeTodayPercent, ChangeTotal, ChangeTotalPercent)
+                VALUES (@Name, @Cash, @Ath, @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent);
+                SELECT last_insert_rowid();
+            ";
             portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
         }
         else
         {
             const string sqlPortfolio = @"
-                UPDATE Portfolio 
-                OUTPUT UPDATED.Id
+                UPDATE Portfolio SET
                     Name = @Name,
                     Cash = @Cash,
                     Ath = @Ath,
@@ -50,7 +51,8 @@ public class PortfolioData
                     ChangeTotal = @ChangeTotal,
                     ChangeTotalPercent = @ChangeTotalPercent
                 WHERE
-                    Name = @Name
+                    Name = @Name;
+                SELECT Id FROM Portfolio WHERE Name = @Name;
             ";
             portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
         }
@@ -63,13 +65,15 @@ public class PortfolioData
             {
                 const string sqlPositions = @"
                         INSERT INTO PortfolioPositions 
-                        OUTPUT INSERTED.Id
-                        VALUES (@Symbol, @Shares, @AvgPrice, @Name, @LastPrice, @ChangeToday, @ChangeTodayPercent, @PrevClose, @CostValue, @CurrentValue, @Return, @ReturnPercent)";
-                pos.Id = await connection.ExecuteScalarAsync<int>(sqlPositions, pos);
+                        (PortfolioId, Symbol, Shares, AvgPrice, Name, LastPrice, ChangeToday, ChangeTodayPercent, PrevClose, CostValue, CurrentValue, Return, ReturnPercent)
+                        VALUES (@PortfolioId, @Symbol, @Shares, @AvgPrice, @Name, @LastPrice, @ChangeToday, @ChangeTodayPercent, @PrevClose, @CostValue, @CurrentValue, @Return, @ReturnPercent);
+                        SELECT last_insert_rowid();
+                ";
                 pos.PortfolioId = portfolio.Id;
+                pos.Id = await connection.ExecuteScalarAsync<int>(sqlPositions, pos);
             }
         }
-
+        await transaction.CommitAsync();
         return portfolio;
     }
 
@@ -78,7 +82,21 @@ public class PortfolioData
         if (string.IsNullOrWhiteSpace(portfolioName)) throw new ArgumentNullException(nameof(portfolioName), "Portfolio name can not be empty");
 
         const string sql = @"
-            SELECT p.Id, p.Name, p.Cash, p.Ath, p.Equity, p.CostValue, p.MarketValue, p.MarketValuePrev, p.MarketValueMax, p.MarketValueMin, p.ChangeTodayTotal, p.ChangeTodayPercent, p.ChangeTotal, p.ChangeTotalPercent
+            SELECT
+                p.Id,
+                p.Name,
+                CAST(p.Cash as DOUBLE) as Cash,
+                CAST(p.Ath as DOUBLE) as Ath,
+                CAST(p.Equity as DOUBLE) as Equity,
+                CAST(p.CostValue as DOUBLE) as CostValue,
+                CAST(p.MarketValue as DOUBLE) as MarketValue,
+                CAST(p.MarketValuePrev as DOUBLE) as MarketValuePrev,
+                CAST(p.MarketValueMax as DOUBLE) as MarketValueMax,
+                CAST(p.MarketValueMin as DOUBLE) as MarketValueMin,
+                CAST(p.ChangeTodayTotal as DOUBLE) as ChangeTodayTotal,
+                CAST(p.ChangeTodayPercent as DOUBLE) as ChangeTodayPercent,
+                CAST(p.ChangeTotal as DOUBLE) as ChangeTotal,
+                CAST(p.ChangeTotalPercent as DOUBLE) as ChangeTotalPercent
             FROM Portfolio p
             WHERE p.Name = @portfolioName
         ";
@@ -90,7 +108,21 @@ public class PortfolioData
     public async IAsyncEnumerable<PortfolioPosition> GetPortfolioPositionsAsync(int portfolioId)
     {
         const string sql = @"
-            SELECT pp.Id, pp.PortfolioId, pp.Symbol, pp.Shares, pp.AvgPrice, pp.Name, pp.LastPrice, pp.ChangeToday, pp.ChangeTodayPercent, pp.PrevClose, pp.CostValue, pp.CurrentValue, pp.Return, pp.ReturnPercent 
+            SELECT
+                pp.Id,
+                pp.PortfolioId,
+                pp.Symbol,
+                pp.Shares,
+                CAST(pp.AvgPrice as DOUBLE) as AvgPrice,
+                pp.Name,
+                CAST(pp.LastPrice as DOUBLE) as LastPrice,
+                CAST(pp.ChangeToday as DOUBLE) as ChangeToday,
+                CAST(pp.ChangeTodayPercent as DOUBLE) as ChangeTodayPercent,
+                CAST(pp.PrevClose as DOUBLE) as PrevClose,
+                CAST(pp.CostValue as DOUBLE) as CostValue,
+                CAST(pp.CurrentValue as DOUBLE) as CurrentValue,
+                CAST(pp.Return as DOUBLE) as Return,
+                CAST(pp.ReturnPercent as DOUBLE) as ReturnPercent
             FROM PortfolioPositions pp
             JOIN Portfolio p ON p.Id = pp.PortfolioId
             WHERE p.Id = @portfolioId
@@ -104,7 +136,21 @@ public class PortfolioData
     public async IAsyncEnumerable<PortfolioPosition> GetPortfolioPositionsAsync(string portfolioName)
     {
         const string sql = @"
-            SELECT pp.Id, pp.PortfolioId, pp.Symbol, pp.Shares, pp.AvgPrice, pp.Name, pp.LastPrice, pp.ChangeToday, pp.ChangeTodayPercent, pp.PrevClose, pp.CostValue, pp.CurrentValue, pp.Return, pp.ReturnPercent 
+            SELECT
+                pp.Id,
+                pp.PortfolioId,
+                pp.Symbol,
+                pp.Shares,
+                CAST(pp.AvgPrice as DOUBLE) as AvgPrice,
+                pp.Name,
+                CAST(pp.LastPrice as DOUBLE) as LastPrice,
+                CAST(pp.ChangeToday as DOUBLE) as ChangeToday,
+                CAST(pp.ChangeTodayPercent as DOUBLE) as ChangeTodayPercent,
+                CAST(pp.PrevClose as DOUBLE) as PrevClose,
+                CAST(pp.CostValue as DOUBLE) as CostValue,
+                CAST(pp.CurrentValue as DOUBLE) as CurrentValue,
+                CAST(pp.Return as DOUBLE) as Return,
+                CAST(pp.ReturnPercent as DOUBLE) as ReturnPercent
             FROM PortfolioPositions pp
             JOIN Portfolio p ON p.Id = pp.PortfolioId
             WHERE p.Name = @portfolioName

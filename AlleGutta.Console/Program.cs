@@ -34,7 +34,7 @@ internal static class Program
         {
             Name = "AlleGutta",
             Ath = 0,
-            Cash = data.AccountInfo?.own_capital?.value ?? 0,
+            Cash = data.AccountInfo?.account_sum?.value ?? 0,
             MarketValue = data.AccountInfo?.full_marketvalue?.value ?? 0,
             Positions = data.Positions?.Select(pos =>
             {
@@ -42,7 +42,8 @@ internal static class Program
                 {
                     Symbol = pos.instrument?.symbol,
                     Name = pos.instrument?.name,
-                    Shares = (int)pos.qty
+                    Shares = (int)pos.qty,
+                    AvgPrice = pos.acq_price?.value ?? 0
                 };
             }).ToArray()
         };

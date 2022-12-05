@@ -31,7 +31,8 @@
 				"fernandoescolar.vscode-solution-explorer",
 				"hbenl.vscode-test-explorer",
 				"josefpihrt-vscode.roslynator",
-				"alexcvzz.vscode-sqlite"
+				"alexcvzz.vscode-sqlite",
+				"mtxr.sqltools-driver-sqlite"
 			]
 		}
 	},
