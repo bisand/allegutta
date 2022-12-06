@@ -14,28 +14,35 @@ export class FetchData extends Component<any, any> {
 
   static renderForecastsTable(forecasts: any) {
     return (
-      <table className="table table-striped" aria-labelledby="tableLabel">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Ticker</th>
-            <th>Navn</th>
-            <th>Antall</th>
-            <th>Innkjøpspris</th>
-          </tr>
-        </thead>
-        <tbody>
-          {forecasts.map((forecast: any) =>
-            <tr key={forecast.id}>
-              <td>{forecast.id}</td>
-              <td>{forecast.symbol}</td>
-              <td>{forecast.name}</td>
-              <td>{forecast.shares}</td>
-              <td>{forecast.avgPrice}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <div className="card">
+        <div className="card-header">
+          Portfolio
+        </div>
+        <div className="card-body">
+          <table className="table table-striped table-hover" aria-labelledby="tableLabel">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Ticker</th>
+                <th>Navn</th>
+                <th className='text-end'>Antall</th>
+                <th className='text-end'>Innkjøpspris</th>
+              </tr>
+            </thead>
+            <tbody>
+              {forecasts.map((forecast: any) =>
+                <tr key={forecast.id}>
+                  <td>{forecast.id}</td>
+                  <td>{forecast.symbol}</td>
+                  <td>{forecast.name}</td>
+                  <td className='text-end'>{forecast.shares}</td>
+                  <td className='text-end'>{forecast.avgPrice.toFixed(2)}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 
