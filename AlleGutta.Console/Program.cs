@@ -61,6 +61,8 @@ internal static class Program
             var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
             portfolio = PortfolioProcessor.Process(portfolio, quotes);
             await portfolioData.SavePortfolioAsync(portfolio);
+            var chart = await yahoo.GetChartData("STL.OL", "1d", "1m");
+            Console.WriteLine(JsonConvert.SerializeObject(chart));
         }
 
         Console.WriteLine(JsonConvert.SerializeObject(portfolio));

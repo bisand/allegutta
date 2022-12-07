@@ -15,7 +15,7 @@ public sealed class Yahoo
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
     }
 
-    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string>? tickers)
+    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers)
     {
         var builder = new UriBuilder(quotesUrl)
         {
@@ -33,47 +33,56 @@ public sealed class Yahoo
 
         using var client = new HttpClient();
         var response = await client.GetStringAsync(url);
-        Console.WriteLine(response);
         var quotes = JsonConvert.DeserializeObject<QuoteQyeryResult>(response, new[] { new InvalidDataFormatJsonConverter() });
 
         return quotes?.QuoteResponse?.Result ?? Array.Empty<QuoteResult>();
     }
 
-    //     async getChartData(symbol: string, range: string, interval: string): Promise<object> {
-    //             const searchParams = { symbol, range, interval, region: 'NO', lang: 'nb-NO', includePrePost: false, events: 'div|split|earn' };
+    public async Task<IEnumerable<ChartResult>> GetChartData(string symbol, string range, string interval)
+    {
+        // var searchParams = { symbol, range, interval, region: 'NO', lang: 'nb-NO', includePrePost: false, events: 'div|split|earn' };
+        var builder = new UriBuilder(chartUrl)
+        {
+            Port = -1
+        };
+        var query = HttpUtility.ParseQueryString(builder.Query);
+        query["symbol"] = symbol;
+        query["range"] = range;
+        query["interval"] = interval;
+        query["region"] = "NO";
+        query["lang"] = "nb-NO";
+        query["includePrePost"] = "false";
+        query["events"] = "div|split|earn";
+        query["corsDomain"] = "finance.yahoo.com";
+        builder.Query = query.ToString();
+        string url = builder.ToString();
 
-    //     const chart = await got(chartUrl, { searchParams })
-    //             .then(res =>
-    //              {
-    //     if (res)
-    //     {
-    //         return JSON.parse(res.body).chart.result;
-    //     }
-    // })
-    //             .catch (err => {
-    //             if (err && err.response)
-    //             {
-    //                 console.log(err.response.body);
-    //                 return err.response.body;
-    //             }
-    //         });
+        using var client = new HttpClient();
+        var response = await client.GetStringAsync(url);
+        var chart = JsonConvert.DeserializeObject<ChartQueryResult>(response, new[] { new InvalidDataFormatJsonConverter() });
 
-    // if (chart && chart.length > 0)
-    // {
-    //     return chart[0];
-    // }
+        return chart?.Chart?.Result ?? Array.Empty<ChartResult>();
+        // const chart = await got(chartUrl, { searchParams })
+        //         .then(res =>
+        //          {
+        //              if (res)
+        //              {
+        //                  return JSON.parse(res.body).chart.result;
+        //              }
+        //          })
+        //         .catch (err => {
+        //     if (err && err.response)
+        //     {
+        //         console.log(err.response.body);
+        //         return err.response.body;
+        //     }
+        // });
 
-    // return { };
-    //         }
+        // if (chart && chart.length > 0)
+        // {
+        //     return chart[0];
+        // }
 
-    //         savePortfolio(portfolio: Portfolio) {
-    //     if (!portfolio) return;
-
-    //     const portfolioPath = path.resolve('./data/portfolio_allegutta.json');
-    //     const backupPortfolioPath = path.resolve('./data/portfolio_allegutta_backup_' + new Date().valueOf() + '.json');
-    //     fs.copyFileSync(portfolioPath, backupPortfolioPath);
-    //     fs.writeFileSync(portfolioPath, JSON.stringify(portfolio));
-    //     portfolio = portfolio;
-    //     return portfolio;
-    // }
+        // return { };
+    }
 }
