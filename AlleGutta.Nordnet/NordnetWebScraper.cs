@@ -1,4 +1,3 @@
-using AlleGutta.Models;
 using AlleGutta.Nordnet.Models;
 using Newtonsoft.Json;
 using PuppeteerSharp;

@@ -1,4 +1,4 @@
-﻿using AlleGutta.Models;
+﻿using AlleGutta.Portfolios.Models;
 using AlleGutta.Repository;
 using Microsoft.AspNetCore.Mvc;
 

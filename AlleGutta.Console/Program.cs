@@ -1,11 +1,11 @@
-﻿using AlleGutta.Models;
-using AlleGutta.Nordnet;
+﻿using AlleGutta.Nordnet;
 using AlleGutta.Console;
 using AlleGutta.Repository;
 using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using AlleGutta.Portfolios.Models;
 
 internal static class Program
 {
@@ -55,7 +55,7 @@ internal static class Program
         await portfolioData.SavePortfolioAsync(portfolio);
 
         portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
-        portfolio = await yahoo.GetPortfolio(portfolio!);
-        Console.WriteLine(JsonConvert.SerializeObject(portfolio));
+        var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x=>x.Symbol));
+        Console.WriteLine(JsonConvert.SerializeObject(quotes));
     }
 }

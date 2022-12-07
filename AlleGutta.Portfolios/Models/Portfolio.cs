@@ -1,4 +1,4 @@
-namespace AlleGutta.Models;
+namespace AlleGutta.Portfolios.Models;
 
 public record Portfolio
 {

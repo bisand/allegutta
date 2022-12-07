@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using System.Web;
-using AlleGutta.Models;
 using AlleGutta.Yahoo.Models;
 using Newtonsoft.Json;
 
@@ -16,28 +15,8 @@ public sealed class Yahoo
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
     }
 
-    public async Task<Portfolio> GetPortfolio(Portfolio portfolio)
+    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers)
     {
-        var tickers = "";
-        decimal costValue = 0.0M;
-        if (portfolio is null)
-        {
-            throw new ArgumentNullException(nameof(portfolio), "Portfolio positions cannot be null");
-        }
-        else
-        {
-            if (portfolio.Positions is null)
-                return portfolio;
-
-            foreach (var item in portfolio.Positions)
-            {
-                tickers += item.Symbol + ".OL,";
-                costValue += item.Shares * item.AvgPrice;
-            }
-
-            tickers = tickers.TrimEnd(',');
-        }
-
         var builder = new UriBuilder(quotesUrl)
         {
             Port = -1
@@ -46,7 +25,7 @@ public sealed class Yahoo
         query["formatted"] = "false";
         query["lang"] = "nb-NO";
         query["region"] = "NO";
-        query["symbols"] = tickers;
+        query["symbols"] = tickers.Select(x => x).Aggregate((x, y) => $"{x},{y}");
         query["fields"] = "shortName,longName,regularMarketChange,regularMarketChangePercent,regularMarketTime,regularMarketPrice,regularMarketDayHigh,regularMarketDayRange,regularMarketDayLow,regularMarketVolume,regularMarketPreviousClose";
         query["corsDomain"] = "finance.yahoo.com";
         builder.Query = query.ToString();
@@ -57,52 +36,7 @@ public sealed class Yahoo
         Console.WriteLine(response);
         var quotes = JsonConvert.DeserializeObject<QuoteQyeryResult>(response, new[] { new InvalidDataFormatJsonConverter() });
 
-        if (quotes?.QuoteResponse?.Result is not null)
-        {
-            var currentDay = DateTime.Now.Date;
-            var newDay = false;
-            foreach (var element in quotes.QuoteResponse.Result)
-            {
-                var symbol = element.Symbol?.TrimEnd(new[] { '.', 'O', 'L' });
-                var symbolDate = element.RegularMarketTime;
-                var symbolDay = (symbolDate ?? new DateTime()).Date;
-                if (currentDay == symbolDay)
-                {
-                    newDay = true;
-                }
-                var result = Array.Find(portfolio.Positions, obj => obj.Symbol == symbol);
-                if (result is not null)
-                {
-                    result.Name = element.LongName;
-                    result.LastPrice = element.RegularMarketPrice ?? 0;
-                    result.ChangeToday = currentDay == symbolDay ? element.RegularMarketChange ?? 0.0m : 0.0m;
-                    result.ChangeTodayPercent = currentDay == symbolDay ? element.RegularMarketChangePercent ?? 0.0m : 0.0m;
-                    result.PrevClose = element.RegularMarketPreviousClose ?? 0.0m;
-                    result.CostValue = result.AvgPrice * result.Shares;
-                    result.CurrentValue = result.LastPrice * result.Shares;
-                    result.Return = result.CurrentValue - result.CostValue;
-                    result.ReturnPercent = result.CostValue != 0 ? result.Return / result.CostValue * 100 : 0;
-
-                    portfolio.MarketValue += result.Shares * element.RegularMarketPrice ?? 0.0m;
-                    portfolio.MarketValuePrev += result.Shares * element.RegularMarketPreviousClose ?? 0.0m;
-                    portfolio.MarketValueMax += result.Shares * element.RegularMarketDayHigh ?? 0.0m;
-                    portfolio.MarketValueMin += result.Shares * element.RegularMarketDayLow ?? 0.0m;
-                    portfolio.ChangeTodayTotal += currentDay == symbolDay ? result.Shares * element.RegularMarketChange ?? 0.0m : 0.0m;
-                }
-                portfolio.Equity = portfolio.MarketValue + portfolio.Cash;
-                if (portfolio.MarketValuePrev != 0) portfolio.ChangeTodayPercent = portfolio.ChangeTodayTotal / portfolio.MarketValuePrev * 100;
-                portfolio.ChangeTotal = portfolio.MarketValue - portfolio.CostValue;
-                if (portfolio.CostValue != 0) portfolio.ChangeTotalPercent = portfolio.ChangeTotal / portfolio.CostValue * 100;
-
-                if (!newDay)
-                {
-                    portfolio.ChangeTodayTotal = 0.0m;
-                    portfolio.ChangeTodayPercent = 0.0m;
-                }
-            }
-        }
-
-        return portfolio;
+        return quotes?.QuoteResponse?.Result ?? Array.Empty<QuoteResult>();
     }
 
     //     async getChartData(symbol: string, range: string, interval: string): Promise<object> {

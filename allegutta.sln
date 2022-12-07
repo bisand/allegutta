@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Console", "AlleGu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Repository", "AlleGutta.Repository\AlleGutta.Repository.csproj", "{718A4993-EBEA-4428-AFA6-CC4BE04C9A64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Models", "AlleGutta.Models\AlleGutta.Models.csproj", "{1BD9A102-542F-4ECC-A98F-7834E2A37536}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Portfolios", "AlleGutta.Portfolios\AlleGutta.Portfolios.csproj", "{1BD9A102-542F-4ECC-A98F-7834E2A37536}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Yahoo", "AlleGutta.Yahoo\AlleGutta.Yahoo.csproj", "{CC306541-9786-40EF-B8D2-7C50C7C59A0F}"
 EndProject

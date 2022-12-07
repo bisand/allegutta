@@ -4,6 +4,7 @@
     <ProjectReference Include="..\AlleGutta.Nordnet\AlleGutta.Nordnet.csproj" />
     <ProjectReference Include="..\AlleGutta.Repository\AlleGutta.Repository.csproj" />
     <ProjectReference Include="..\AlleGutta.Yahoo\AlleGutta.Yahoo.csproj" />
+    <ProjectReference Include="..\AlleGutta.Portfolios\AlleGutta.Portfolios.csproj" />
   </ItemGroup>
 
   <ItemGroup>
