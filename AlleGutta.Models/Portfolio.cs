@@ -3,18 +3,18 @@ namespace AlleGutta.Models;
 public record Portfolio
 {
     public int Id { get; set; }
-    public string? Name { get; init; }
-    public decimal Cash { get; init; }
-    public decimal Ath { get; init; }
-    public decimal Equity { get; init; }
-    public decimal CostValue { get; init; }
-    public decimal MarketValue { get; init; }
-    public decimal MarketValuePrev { get; init; }
-    public decimal MarketValueMax { get; init; }
-    public decimal MarketValueMin { get; init; }
-    public decimal ChangeTodayTotal { get; init; }
-    public decimal ChangeTodayPercent { get; init; }
-    public decimal ChangeTotal { get; init; }
-    public decimal ChangeTotalPercent { get; init; }
+    public string? Name { get; set; }
+    public decimal Cash { get; set; }
+    public decimal Ath { get; set; }
+    public decimal Equity { get; set; }
+    public decimal CostValue { get; set; }
+    public decimal MarketValue { get; set; }
+    public decimal MarketValuePrev { get; set; }
+    public decimal MarketValueMax { get; set; }
+    public decimal MarketValueMin { get; set; }
+    public decimal ChangeTodayTotal { get; set; }
+    public decimal ChangeTodayPercent { get; set; }
+    public decimal ChangeTotal { get; set; }
+    public decimal ChangeTotalPercent { get; set; }
     public PortfolioPosition[]? Positions { get; set; }
 }

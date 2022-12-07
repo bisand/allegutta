@@ -1,5 +1,7 @@
-﻿using System.Web;
+﻿using System.Text.Json;
+using System.Web;
 using AlleGutta.Models;
+using AlleGutta.Yahoo.Models;
 using Newtonsoft.Json;
 
 namespace AlleGutta.Yahoo;
@@ -14,19 +16,22 @@ public sealed class Yahoo
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
     }
 
-    public async Task<Portfolio> GetPortfolio(IEnumerable<PortfolioPosition> positions)
+    public async Task<Portfolio> GetPortfolio(Portfolio portfolio)
     {
         var tickers = "";
         decimal costValue = 0.0M;
-        if (positions is null)
+        if (portfolio is null)
         {
-            throw new ArgumentNullException(nameof(positions), "Portfolio positions cannot be null");
+            throw new ArgumentNullException(nameof(portfolio), "Portfolio positions cannot be null");
         }
         else
         {
-            foreach (var item in positions)
+            if (portfolio.Positions is null)
+                return portfolio;
+
+            foreach (var item in portfolio.Positions)
             {
-                tickers += item.Symbol + ',';
+                tickers += item.Symbol + ".OL,";
                 costValue += item.Shares * item.AvgPrice;
             }
 
@@ -49,62 +54,53 @@ public sealed class Yahoo
 
         using var client = new HttpClient();
         var response = await client.GetStringAsync(url);
-        var quotes = JsonConvert.DeserializeObject<dynamic>(response);
+        Console.WriteLine(response);
+        var quotes = JsonConvert.DeserializeObject<QuoteQyeryResult>(response, new[] { new InvalidDataFormatJsonConverter() });
 
-        var portfolio = new Portfolio();
-        // if (quotes && Array.isArray(quotes))
-        // {
-        //     const currentDay = new Date().getDate();
-        //     let newDay: boolean = false;
-        //     quotes.forEach((element: { symbol: any; regularMarketTime: number; longName: string; regularMarketPrice: number; regularMarketChange: number; regularMarketChangePercent: number; regularMarketPreviousClose: number; regularMarketDayHigh: number; regularMarketDayLow: number; }) => {
-        //         const symbol = element.symbol;
-        //         const symbolDate = new Date(element.regularMarketTime * 1000);
-        //         const symbolDay = symbolDate.getDate();
-        //         if (currentDay === symbolDay)
-        //         {
-        //             newDay = true;
-        //         }
-        //         const result = portfolio.positions.find(obj =>
-        //         {
-        //             return obj.symbol === symbol;
-        //         });
-        //         if (result)
-        //         {
-        //             result.name = element.longName;
-        //             result.last_price = element.regularMarketPrice;
-        //             result.change_today = currentDay === symbolDay ? element.regularMarketChange : 0.0;
-        //             result.change_today_percent = currentDay === symbolDay ? element.regularMarketChangePercent : 0.0;
-        //             result.prev_close = element.regularMarketPreviousClose;
-        //             result.cost_value = result.avg_price * result.shares;
-        //             result.current_value = result.last_price * result.shares;
-        //             result.return = result.current_value - result.cost_value;
-        //             if (result.cost_value && result.cost_value !== 0)
-        //             {
-        //                 result.return_percent = (result.return / result.cost_value) *100;
-        //             }
-        //             else
-        //             {
-        //                 result.return_percent = 0;
-        //             }
+        if (quotes?.QuoteResponse?.Result is not null)
+        {
+            var currentDay = DateTime.Now.Date;
+            var newDay = false;
+            foreach (var element in quotes.QuoteResponse.Result)
+            {
+                var symbol = element.Symbol?.TrimEnd(new[] { '.', 'O', 'L' });
+                var symbolDate = element.RegularMarketTime;
+                var symbolDay = (symbolDate ?? new DateTime()).Date;
+                if (currentDay == symbolDay)
+                {
+                    newDay = true;
+                }
+                var result = Array.Find(portfolio.Positions, obj => obj.Symbol == symbol);
+                if (result is not null)
+                {
+                    result.Name = element.LongName;
+                    result.LastPrice = element.RegularMarketPrice ?? 0;
+                    result.ChangeToday = currentDay == symbolDay ? element.RegularMarketChange ?? 0.0m : 0.0m;
+                    result.ChangeTodayPercent = currentDay == symbolDay ? element.RegularMarketChangePercent ?? 0.0m : 0.0m;
+                    result.PrevClose = element.RegularMarketPreviousClose ?? 0.0m;
+                    result.CostValue = result.AvgPrice * result.Shares;
+                    result.CurrentValue = result.LastPrice * result.Shares;
+                    result.Return = result.CurrentValue - result.CostValue;
+                    result.ReturnPercent = result.CostValue != 0 ? result.Return / result.CostValue * 100 : 0;
 
-        //             portfolio.market_value += result.shares * element.regularMarketPrice;
-        //             portfolio.market_value_prev += result.shares * element.regularMarketPreviousClose;
-        //             portfolio.market_value_max += result.shares * element.regularMarketDayHigh;
-        //             portfolio.market_value_min += result.shares * element.regularMarketDayLow;
-        //             portfolio.change_today_total += currentDay === symbolDay ? result.shares * element.regularMarketChange : 0.0;
-        //         }
-        //         portfolio.equity = portfolio.market_value + portfolio.cash;
-        //         portfolio.change_today_percent = (portfolio.change_today_total / portfolio.market_value_prev) * 100;
-        //         portfolio.change_total = portfolio.market_value - portfolio.cost_value;
-        //         portfolio.change_total_percent = (portfolio.change_total / portfolio.cost_value) * 100;
+                    portfolio.MarketValue += result.Shares * element.RegularMarketPrice ?? 0.0m;
+                    portfolio.MarketValuePrev += result.Shares * element.RegularMarketPreviousClose ?? 0.0m;
+                    portfolio.MarketValueMax += result.Shares * element.RegularMarketDayHigh ?? 0.0m;
+                    portfolio.MarketValueMin += result.Shares * element.RegularMarketDayLow ?? 0.0m;
+                    portfolio.ChangeTodayTotal += currentDay == symbolDay ? result.Shares * element.RegularMarketChange ?? 0.0m : 0.0m;
+                }
+                portfolio.Equity = portfolio.MarketValue + portfolio.Cash;
+                if (portfolio.MarketValuePrev != 0) portfolio.ChangeTodayPercent = portfolio.ChangeTodayTotal / portfolio.MarketValuePrev * 100;
+                portfolio.ChangeTotal = portfolio.MarketValue - portfolio.CostValue;
+                if (portfolio.CostValue != 0) portfolio.ChangeTotalPercent = portfolio.ChangeTotal / portfolio.CostValue * 100;
 
-        //         if (!newDay)
-        //         {
-        //             portfolio.change_today_total = 0.0;
-        //             portfolio.change_today_percent = 0.0;
-        //         }
-        //     });
-        // }
+                if (!newDay)
+                {
+                    portfolio.ChangeTodayTotal = 0.0m;
+                    portfolio.ChangeTodayPercent = 0.0m;
+                }
+            }
+        }
 
         return portfolio;
     }

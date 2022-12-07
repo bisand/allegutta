@@ -1,0 +1,142 @@
+// Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
+using System.Text.Json.Serialization;
+
+namespace AlleGutta.Yahoo.Models;
+
+public class ChartResponse
+{
+    [JsonPropertyName("result")]
+    public IEnumerable<Result> Result { get; init; }
+
+    [JsonPropertyName("error")]
+    public object Error { get; init; }
+}
+
+public class CurrentTradingPeriod
+{
+    [JsonPropertyName("pre")]
+    public TradingPeriod Pre { get; init; }
+
+    [JsonPropertyName("regular")]
+    public TradingPeriod Regular { get; init; }
+
+    [JsonPropertyName("post")]
+    public TradingPeriod Post { get; init; }
+}
+
+public class Indicators
+{
+    [JsonPropertyName("quote")]
+    public IEnumerable<Quote> Quote { get; init; }
+}
+
+public class Meta
+{
+    [JsonPropertyName("currency")]
+    public string Currency { get; init; }
+
+    [JsonPropertyName("symbol")]
+    public string Symbol { get; init; }
+
+    [JsonPropertyName("exchangeName")]
+    public string ExchangeName { get; init; }
+
+    [JsonPropertyName("instrumentType")]
+    public string InstrumentType { get; init; }
+
+    [JsonPropertyName("firstTradeDate")]
+    public int? FirstTradeDate { get; init; }
+
+    [JsonPropertyName("regularMarketTime")]
+    public int? RegularMarketTime { get; init; }
+
+    [JsonPropertyName("gmtoffset")]
+    public int? Gmtoffset { get; init; }
+
+    [JsonPropertyName("timezone")]
+    public string Timezone { get; init; }
+
+    [JsonPropertyName("exchangeTimezoneName")]
+    public string ExchangeTimezoneName { get; init; }
+
+    [JsonPropertyName("regularMarketPrice")]
+    public double? RegularMarketPrice { get; init; }
+
+    [JsonPropertyName("chartPreviousClose")]
+    public double? ChartPreviousClose { get; init; }
+
+    [JsonPropertyName("previousClose")]
+    public double? PreviousClose { get; init; }
+
+    [JsonPropertyName("scale")]
+    public int? Scale { get; init; }
+
+    [JsonPropertyName("priceHint")]
+    public int? PriceHint { get; init; }
+
+    [JsonPropertyName("currentTradingPeriod")]
+    public CurrentTradingPeriod CurrentTradingPeriod { get; init; }
+
+    [JsonPropertyName("tradingPeriods")]
+    public IEnumerable<TradingPeriod> TradingPeriods { get; init; }
+
+    [JsonPropertyName("dataGranularity")]
+    public string DataGranularity { get; init; }
+
+    [JsonPropertyName("range")]
+    public string Range { get; init; }
+
+    [JsonPropertyName("validRanges")]
+    public IEnumerable<string> ValidRanges { get; init; }
+}
+
+public class Quote
+{
+    [JsonPropertyName("volume")]
+    public IEnumerable<int?> Volume { get; init; }
+
+    [JsonPropertyName("low")]
+    public IEnumerable<double?> Low { get; init; }
+
+    [JsonPropertyName("high")]
+    public IEnumerable<double?> High { get; init; }
+
+    [JsonPropertyName("close")]
+    public IEnumerable<double?> Close { get; init; }
+
+    [JsonPropertyName("open")]
+    public IEnumerable<double?> Open { get; init; }
+}
+
+public class TradingPeriod
+{
+    [JsonPropertyName("timezone")]
+    public string Timezone { get; init; }
+
+    [JsonPropertyName("start")]
+    public int? Start { get; init; }
+
+    [JsonPropertyName("end")]
+    public int? End { get; init; }
+
+    [JsonPropertyName("gmtoffset")]
+    public int? Gmtoffset { get; init; }
+}
+
+public class Result
+{
+    [JsonPropertyName("meta")]
+    public Meta Meta { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public IEnumerable<int?> Timestamp { get; init; }
+
+    [JsonPropertyName("indicators")]
+    public Indicators Indicators { get; init; }
+}
+
+public class ChartQueryResult
+{
+    [JsonPropertyName("chart")]
+    public ChartResponse Chart { get; init; }
+}

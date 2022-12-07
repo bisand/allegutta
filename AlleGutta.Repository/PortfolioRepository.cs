@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Dapper;
-using AlleGutta.Models.Nordnet;
 using AlleGutta.Models;
-using System.Linq;
 
 namespace AlleGutta.Repository;
 public class PortfolioRepository

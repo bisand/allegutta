@@ -1,4 +1,4 @@
-namespace AlleGutta.Models.Nordnet;
+namespace AlleGutta.Nordnet.Models;
 
 public record NordnetBatchData
 {

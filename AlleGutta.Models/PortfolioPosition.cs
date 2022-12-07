@@ -4,16 +4,16 @@ public record PortfolioPosition
 {
     public int Id { get; set; }
     public int PortfolioId { get; set; }
-    public string? Symbol { get; init; }
-    public int Shares { get; init; }
-    public decimal AvgPrice { get; init; }
-    public string? Name { get; init; }
-    public decimal LastPrice { get; init; }
-    public decimal ChangeToday { get; init; }
-    public decimal ChangeTodayPercent { get; init; }
-    public decimal PrevClose { get; init; }
-    public decimal CostValue { get; init; }
-    public decimal CurrentValue { get; init; }
-    public decimal Return { get; init; }
-    public decimal ReturnPercent { get; init; }
+    public string? Symbol { get; set; }
+    public int Shares { get; set; }
+    public decimal AvgPrice { get; set; }
+    public string? Name { get; set; }
+    public decimal LastPrice { get; set; }
+    public decimal ChangeToday { get; set; }
+    public decimal ChangeTodayPercent { get; set; }
+    public decimal PrevClose { get; set; }
+    public decimal CostValue { get; set; }
+    public decimal CurrentValue { get; set; }
+    public decimal Return { get; set; }
+    public decimal ReturnPercent { get; set; }
 }

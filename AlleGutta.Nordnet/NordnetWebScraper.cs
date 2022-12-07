@@ -1,5 +1,5 @@
 using AlleGutta.Models;
-using AlleGutta.Models.Nordnet;
+using AlleGutta.Nordnet.Models;
 using Newtonsoft.Json;
 using PuppeteerSharp;
 
@@ -70,23 +70,23 @@ public class NordnetWebScraper
                     try
                     {
                         var strBatch = JsonConvert.DeserializeObject<NordnetRequestStringBatch>(postDataText ?? string.Empty);
-                        var postData = JsonConvert.DeserializeObject<NordnetRequest[]>(strBatch?.batch ?? string.Empty);
+                        var postData = JsonConvert.DeserializeObject<NordnetRequest[]>(strBatch?.Batch ?? string.Empty);
 
                         if (postData?.GetType().IsArray == true)
                         {
                             for (var i = 0; i < postData.Length; i++)
                             {
-                                if (postData[i].relative_url.Contains("accounts/2/positions"))
+                                if (postData[i].RelativeUrl.Contains("accounts/2/positions"))
                                 {
                                     var txt = await response.TextAsync();
                                     var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetPosition[]>[]>(txt);
-                                    dataCollected = CollectPositions(json?[i].body, dataCollected);
+                                    dataCollected = CollectPositions(json?[i].Body, dataCollected);
                                 }
-                                else if (postData[i].relative_url.Contains("accounts/2/info"))
+                                else if (postData[i].RelativeUrl.Contains("accounts/2/info"))
                                 {
                                     var txt = await response.TextAsync();
                                     var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt);
-                                    dataCollected = CollectAccountInfo(json?[i].body?[0], dataCollected);
+                                    dataCollected = CollectAccountInfo(json?[i].Body?[0], dataCollected);
                                 }
                             }
                         }
