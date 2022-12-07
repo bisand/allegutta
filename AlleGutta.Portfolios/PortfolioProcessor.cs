@@ -5,7 +5,7 @@ namespace AlleGutta.Portfolios;
 
 public static class PortfolioProcessor
 {
-    public static Portfolio? Process(Portfolio portfolio, IEnumerable<QuoteResult> quotes)
+    public static Portfolio Process(Portfolio portfolio, IEnumerable<QuoteResult> quotes)
     {
         decimal costValue = 0.0M;
         if (portfolio is null)
@@ -29,14 +29,23 @@ public static class PortfolioProcessor
             var newDay = false;
             foreach (var element in quotes)
             {
-                var symbol = element.Symbol?.TrimEnd(new[] { '.', 'O', 'L' });
+                const string symbolSuffix = ".OL";
+                var symbol = element.Symbol ?? string.Empty;
+                if (element.Symbol?.EndsWith(symbolSuffix) == true)
+                {
+                    symbol = symbol[..symbol.LastIndexOf(symbolSuffix)];
+                }
+
                 var symbolDate = element.RegularMarketTime;
                 var symbolDay = (symbolDate ?? new DateTime()).Date;
                 if (currentDay == symbolDay)
                 {
                     newDay = true;
                 }
-                var result = Array.Find(portfolio.Positions, obj => obj.Symbol == symbol);
+                var result = Array.Find(portfolio.Positions, obj => obj
+                    .Symbol?
+                    .Equals(symbol, StringComparison.InvariantCultureIgnoreCase) == true);
+
                 if (result is not null)
                 {
                     result.Name = element.LongName;

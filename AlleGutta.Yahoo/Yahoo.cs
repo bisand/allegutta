@@ -15,7 +15,7 @@ public sealed class Yahoo
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
     }
 
-    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers)
+    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string>? tickers)
     {
         var builder = new UriBuilder(quotesUrl)
         {

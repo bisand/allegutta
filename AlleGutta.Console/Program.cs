@@ -6,6 +6,7 @@ using AlleGutta.Yahoo;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using AlleGutta.Portfolios.Models;
+using AlleGutta.Portfolios;
 
 internal static class Program
 {
@@ -26,36 +27,42 @@ internal static class Program
             DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);
         }
 
-        var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
-        var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
+        // var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
+        // var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
 
-        var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
-        var data = await nordnetProcessor.GetBatchData();
+        // var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
+        // var data = await nordnetProcessor.GetBatchData();
 
-        var portfolio = new Portfolio()
-        {
-            Name = "AlleGutta",
-            Ath = 0,
-            Cash = data.AccountInfo?.AccountSum?.Value ?? 0,
-            MarketValue = data.AccountInfo?.FullMarketvalue?.Value ?? 0,
-            Positions = data.Positions?.Select(pos =>
-            {
-                return new PortfolioPosition()
-                {
-                    Symbol = pos.Instrument?.Symbol,
-                    Name = pos.Instrument?.Name,
-                    Shares = (int)pos.Qty,
-                    AvgPrice = pos.AcqPrice?.Value ?? 0
-                };
-            }).ToArray()
-        };
+        // var portfolio = new Portfolio()
+        // {
+        //     Name = "AlleGutta",
+        //     Ath = 0,
+        //     Cash = data.AccountInfo?.AccountSum?.Value ?? 0,
+        //     MarketValue = data.AccountInfo?.FullMarketvalue?.Value ?? 0,
+        //     Positions = data.Positions?.Select(pos =>
+        //     {
+        //         return new PortfolioPosition()
+        //         {
+        //             Symbol = pos.Instrument?.Symbol,
+        //             Name = pos.Instrument?.Name,
+        //             Shares = (int)pos.Qty,
+        //             AvgPrice = pos.AcqPrice?.Value ?? 0
+        //         };
+        //     }).ToArray()
+        // };
+        // await portfolioData.SavePortfolioAsync(portfolio);
 
         var portfolioData = new PortfolioRepository(ConnectionString);
         var yahoo = new Yahoo();
-        await portfolioData.SavePortfolioAsync(portfolio);
 
-        portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
-        var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x=>x.Symbol));
-        Console.WriteLine(JsonConvert.SerializeObject(quotes));
+        var portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
+        if (portfolio?.Positions is not null)
+        {
+            var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
+            portfolio = PortfolioProcessor.Process(portfolio, quotes);
+            await portfolioData.SavePortfolioAsync(portfolio);
+        }
+
+        Console.WriteLine(JsonConvert.SerializeObject(portfolio));
     }
 }
