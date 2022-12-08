@@ -9,14 +9,14 @@ public sealed class PortfolioWorker : BackgroundService
 {
     private readonly TimeSpan _executionInterval = new(0, 0, 1);
     private readonly ILogger<PortfolioWorker> _logger;
+    private bool _runningUpdateTask;
 
-    private bool _runningNordnet;
     private readonly TimeSpan _runIntervalNordnet = new(5, 0, 0);
     private DateTime _nextRunNordnet = DateTime.MinValue;
-    
-    private bool _runningMarketData;
+
     private readonly TimeSpan _runIntervalMarkedData = new(0, 0, 10);
     private DateTime _nextRunMarketData = DateTime.MinValue;
+
     private readonly PortfolioProcessor _portfolioProcessor;
     private readonly NordnetWebScraper _webScraper;
     private readonly Yahoo _yahoo;
@@ -48,25 +48,25 @@ public sealed class PortfolioWorker : BackgroundService
 
     private async Task UpdatePortfolioFromNordnet()
     {
-        if (!_runningNordnet && _nextRunNordnet < DateTime.Now)
+        if (!_runningUpdateTask && _nextRunNordnet < DateTime.Now)
         {
-            _runningNordnet = true;
+            _runningUpdateTask = true;
             _logger.LogInformation("Worker running Nordnet update at: {time}", DateTimeOffset.Now);
             var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
             _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
-            _runningNordnet = false;
+            _runningUpdateTask = false;
         }
     }
 
     private async Task UpdatePortfolioWithMarketData()
     {
-        if (!_runningMarketData && _nextRunMarketData < DateTime.Now)
+        if (!_runningUpdateTask && _nextRunMarketData < DateTime.Now)
         {
-            _runningMarketData = true;
+            _runningUpdateTask = true;
             _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
             var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
             _logger.LogInformation("Worker running Market Data update at: {time}", DateTimeOffset.Now);
-            _runningMarketData = false;
+            _runningUpdateTask = false;
         }
     }
 }
