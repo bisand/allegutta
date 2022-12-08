@@ -1,15 +1,23 @@
 ﻿using Microsoft.Data.Sqlite;
 using Dapper;
 using AlleGutta.Portfolios.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Data.Common;
 
 namespace AlleGutta.Repository;
 public class PortfolioRepository
 {
-    private readonly string _connectionString;
+    private readonly ILogger<PortfolioRepository> _logger;
+    private readonly DatabaseOptions _options;
 
-    public PortfolioRepository(string ConnectionString)
+    public PortfolioRepository(IOptions<DatabaseOptions> options, ILogger<PortfolioRepository> logger)
     {
-        _connectionString = ConnectionString;
+        if (options == null)
+            throw new ArgumentNullException(nameof(options));
+
+        _logger = logger;
+        _options = options.Value;
     }
 
     public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio)
@@ -17,62 +25,140 @@ public class PortfolioRepository
         if (portfolio is null) throw new ArgumentNullException(nameof(portfolio), "Portfolio can not be null");
         if (string.IsNullOrWhiteSpace(portfolio.Name)) throw new ArgumentNullException("portfolio.Name", "Portfolio name can not be empty");
 
-        using var connection = new SqliteConnection(_connectionString);
+        using var connection = new SqliteConnection(_options.ConnectionString);
         await connection.OpenAsync();
         using var transaction = await connection.BeginTransactionAsync();
 
-        if (await GetPortfolioAsync(portfolio.Name) is null)
+        try
         {
-            const string sqlPortfolio = @"
-                INSERT INTO Portfolio
-                (Name, Cash, Ath, Equity, CostValue, MarketValue, MarketValuePrev, MarketValueMax, MarketValueMin, ChangeTodayTotal, ChangeTodayPercent, ChangeTotal, ChangeTotalPercent)
-                VALUES (@Name, @Cash, @Ath, @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent);
-                SELECT last_insert_rowid();
-            ";
-            portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
-        }
-        else
-        {
-            const string sqlPortfolio = @"
-                UPDATE Portfolio SET
-                    Name = @Name,
-                    Cash = @Cash,
-                    Ath = @Ath,
-                    Equity = @Equity,
-                    CostValue = @CostValue,
-                    MarketValue = @MarketValue,
-                    MarketValuePrev = @MarketValuePrev,
-                    MarketValueMax = @MarketValueMax,
-                    MarketValueMin = @MarketValueMin,
-                    ChangeTodayTotal = @ChangeTodayTotal,
-                    ChangeTodayPercent = @ChangeTodayPercent,
-                    ChangeTotal = @ChangeTotal,
-                    ChangeTotalPercent = @ChangeTotalPercent
-                WHERE
-                    Name = @Name COLLATE NOCASE;
-                SELECT Id FROM Portfolio WHERE Name = @Name COLLATE NOCASE;
-            ";
-            portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
-        }
-
-        await connection.ExecuteAsync("DELETE FROM PortfolioPositions WHERE PortfolioId = @Id", portfolio);
-
-        if (portfolio.Positions != null)
-        {
-            foreach (var pos in portfolio.Positions)
+            if (await GetPortfolioAsync(portfolio.Name) is null)
             {
-                const string sqlPositions = @"
+                const string sqlPortfolio = @"
+                    INSERT INTO Portfolio
+                    (Name, Cash, Ath, Equity, CostValue, MarketValue, MarketValuePrev, MarketValueMax, MarketValueMin, ChangeTodayTotal, ChangeTodayPercent, ChangeTotal, ChangeTotalPercent)
+                    VALUES (@Name, @Cash, @Ath, @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent);
+                    SELECT last_insert_rowid();
+                ";
+                portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
+            }
+            else
+            {
+                const string sqlPortfolio = @"
+                    UPDATE Portfolio SET
+                        Name = @Name,
+                        Cash = @Cash,
+                        Ath = @Ath,
+                        Equity = @Equity,
+                        CostValue = @CostValue,
+                        MarketValue = @MarketValue,
+                        MarketValuePrev = @MarketValuePrev,
+                        MarketValueMax = @MarketValueMax,
+                        MarketValueMin = @MarketValueMin,
+                        ChangeTodayTotal = @ChangeTodayTotal,
+                        ChangeTodayPercent = @ChangeTodayPercent,
+                        ChangeTotal = @ChangeTotal,
+                        ChangeTotalPercent = @ChangeTotalPercent
+                    WHERE
+                        Name = @Name COLLATE NOCASE;
+                    SELECT Id FROM Portfolio WHERE Name = @Name COLLATE NOCASE;
+                ";
+                portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
+            }
+
+            await SavePortfolioPositionsAsync(portfolio, connection, transaction);
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while trying to save portfolio data.");
+            await transaction.RollbackAsync();
+        }
+        return portfolio;
+    }
+
+    private async Task SavePortfolioPositionsAsync(Portfolio portfolio, SqliteConnection connection, DbTransaction? transaction = null)
+    {
+        if (portfolio == null)
+            throw new ArgumentNullException(nameof(portfolio));
+
+        portfolio.Positions ??= new List<PortfolioPosition>();
+
+        if (connection == null)
+            throw new ArgumentNullException(nameof(connection));
+
+        var trans = transaction ?? await connection.BeginTransactionAsync();
+
+        try
+        {
+            var existing = await GetPortfolioPositionsAsync(portfolio.Id).ToListAsync();
+            var removed = existing.Except(portfolio.Positions, new PortfolioPositionComparer());
+            var added = portfolio.Positions.Except(existing, new PortfolioPositionComparer());
+            var updated = portfolio.Positions.Except(removed.Intersect(added), new PortfolioPositionComparer());
+
+            // await connection.ExecuteAsync("DELETE FROM PortfolioPositions WHERE PortfolioId = @Id", portfolio);
+
+            if (removed.Any())
+            {
+                using var en = removed.GetEnumerator();
+                while (en.MoveNext())
+                {
+                    const string sqlPositions = "DELETE FROM PortfolioPositions WHERE Id = @Id;";
+                    en.Current.PortfolioId = portfolio.Id;
+                    await connection.ExecuteAsync(sqlPositions, en.Current);
+                }
+            }
+
+            if (added.Any())
+            {
+                using var en = added.GetEnumerator();
+                while (en.MoveNext())
+                {
+                    const string sqlPositions = @"
                         INSERT INTO PortfolioPositions 
                         (PortfolioId, Symbol, Shares, AvgPrice, Name, LastPrice, ChangeToday, ChangeTodayPercent, PrevClose, CostValue, CurrentValue, Return, ReturnPercent)
                         VALUES (@PortfolioId, @Symbol, @Shares, @AvgPrice, @Name, @LastPrice, @ChangeToday, @ChangeTodayPercent, @PrevClose, @CostValue, @CurrentValue, @Return, @ReturnPercent);
                         SELECT last_insert_rowid();
-                ";
-                pos.PortfolioId = portfolio.Id;
-                pos.Id = await connection.ExecuteScalarAsync<int>(sqlPositions, pos);
+                    ";
+                    en.Current.PortfolioId = portfolio.Id;
+                    en.Current.Id = await connection.ExecuteScalarAsync<int>(sqlPositions, en.Current);
+                }
             }
+
+            if (updated.Any())
+            {
+                using var en = updated.GetEnumerator();
+                while (en.MoveNext())
+                {
+                    const string sqlPositions = @"
+                        UPDATE PortfolioPositions SET
+                            PortfolioId = @PortfolioId,
+                            Symbol = @Symbol,
+                            Shares = @Shares,
+                            AvgPrice = @AvgPrice,
+                            Name = @Name,
+                            LastPrice = @LastPrice,
+                            ChangeToday = @ChangeToday,
+                            ChangeTodayPercent = @ChangeTodayPercent,
+                            PrevClose = @PrevClose,
+                            CostValue = @CostValue,
+                            CurrentValue = @CurrentValue,
+                            Return = @Return,
+                            ReturnPercent = @ReturnPercent
+                        WHERE Id = @Id;
+                    ";
+                    en.Current.PortfolioId = portfolio.Id;
+                    await connection.ExecuteAsync(sqlPositions, en.Current);
+                }
+            }
+            if (transaction != trans)
+                await trans.CommitAsync();
         }
-        await transaction.CommitAsync();
-        return portfolio;
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while trying to save portfolio position data.");
+            if (transaction != trans)
+                await trans.RollbackAsync();
+        }
     }
 
     public async Task<Portfolio?> GetPortfolioAsync(string portfolioName)
@@ -161,7 +247,7 @@ public class PortfolioRepository
 
     public async IAsyncEnumerable<T> GetDataAsync<T>(string sql, IEnumerable<SqliteParameter> parameters)
     {
-        using var connection = new SqliteConnection(_connectionString);
+        using var connection = new SqliteConnection(_options.ConnectionString);
         await connection.OpenAsync();
 
         var command = connection.CreateCommand();

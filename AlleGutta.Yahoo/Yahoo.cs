@@ -17,6 +17,8 @@ public sealed class Yahoo
 
     public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers)
     {
+        if (!tickers.Any()) return Array.Empty<QuoteResult>();
+
         var builder = new UriBuilder(quotesUrl)
         {
             Port = -1
@@ -25,7 +27,7 @@ public sealed class Yahoo
         query["formatted"] = "false";
         query["lang"] = "nb-NO";
         query["region"] = "NO";
-        query["symbols"] = tickers.Select(x => x).Aggregate((x, y) => $"{x},{y}");
+        query["symbols"] = tickers.Any() ? tickers.Select(x => x).Aggregate((x, y) => $"{x},{y}") : string.Empty;
         query["fields"] = "shortName,longName,regularMarketChange,regularMarketChangePercent,regularMarketTime,regularMarketPrice,regularMarketDayHigh,regularMarketDayRange,regularMarketDayLow,regularMarketVolume,regularMarketPreviousClose";
         query["corsDomain"] = "finance.yahoo.com";
         builder.Query = query.ToString();

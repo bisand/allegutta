@@ -7,7 +7,6 @@ using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
 using App.WorkerService;
 
-const string connectionString = "Data Source=data/allegutta.db";
 var builder = WebApplication.CreateBuilder(args);
 
 var root = Directory.GetCurrentDirectory();
@@ -19,18 +18,21 @@ DotEnv.Load(dotenv);
 var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
 var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
 
+builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection(WorkerOptions.SectionName));
+builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionName));
+
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient(_ => new PortfolioRepository(connectionString));
 builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
+builder.Services.AddTransient<PortfolioRepository>();
 builder.Services.AddTransient<Yahoo>();
 builder.Services.AddTransient<NordnetWebScraper>();
 builder.Services.AddTransient<PortfolioProcessor>();
 builder.Services.AddHostedService<PortfolioWorker>();
-
-var serviceProvider = DatabaseConfiguration.CreateServices(connectionString);
+var sp = builder.Build();
 
 // Put the database update into a scope to ensure
 // that all resources will be disposed.
+var serviceProvider = DatabaseConfiguration.CreateServices(sp.Services.GetService<DatabaseOptions>().ConnectionString);
 using (var scope = serviceProvider.CreateScope())
 {
     DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);

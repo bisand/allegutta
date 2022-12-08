@@ -16,5 +16,5 @@ public record Portfolio
     public decimal ChangeTodayPercent { get; set; }
     public decimal ChangeTotal { get; set; }
     public decimal ChangeTotalPercent { get; set; }
-    public PortfolioPosition[]? Positions { get; set; }
+    public IEnumerable<PortfolioPosition>? Positions { get; set; }
 }

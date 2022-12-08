@@ -1,14 +1,19 @@
-﻿using AlleGutta.Nordnet;
-using AlleGutta.Console;
+﻿using AlleGutta.Console;
 using AlleGutta.Repository;
 using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using AlleGutta.Portfolios.Models;
 using AlleGutta.Portfolios;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using AlleGutta.Nordnet.Models;
+using AlleGutta.Nordnet;
+using Microsoft.Extensions.Options;
+using AlleGutta.Portfolios.Models;
 
-internal static class Program
+static class Program
 {
     private const string ConnectionString = "Data Source=data/allegutta.db";
 
@@ -18,44 +23,60 @@ internal static class Program
         var dotenv = Path.Combine(root, "../.env");
         DotEnv.Load(dotenv);
 
-        var serviceProvider = DatabaseConfiguration.CreateServices(ConnectionString);
+        var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
+        var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
+
+        var builder = Host.CreateApplicationBuilder(args);
+
+        builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionName));
+
+        builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
+        builder.Services.AddTransient<PortfolioRepository>();
+        builder.Services.AddTransient<Yahoo>();
+        builder.Services.AddTransient<NordnetWebScraper>();
+        builder.Services.AddTransient<PortfolioProcessor>();
+
+        var host = builder.Build();
+        var serviceProvider = host.Services;
+        var options = serviceProvider.GetService<IOptions<DatabaseOptions>>();
+
+        var connectionString = options?.Value.ConnectionString ?? string.Empty;
 
         // Put the database update into a scope to ensure
         // that all resources will be disposed.
-        using (var scope = serviceProvider.CreateScope())
+        var dbServiceProvider = DatabaseConfiguration.CreateServices(connectionString);
+        using (var scope = dbServiceProvider.CreateScope())
         {
             DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);
         }
 
-        // var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
-        // var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
+        var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
+        var data = await nordnetProcessor.GetBatchData();
 
-        // var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
-        // var data = await nordnetProcessor.GetBatchData();
+        var portfolio = new Portfolio()
+        {
+            Name = "AlleGutta",
+            Ath = 0,
+            Cash = data.AccountInfo?.AccountSum?.Value ?? 0,
+            MarketValue = data.AccountInfo?.FullMarketvalue?.Value ?? 0,
+            Positions = data.Positions?.Select(pos =>
+            {
+                return new PortfolioPosition()
+                {
+                    Symbol = pos.Instrument?.Symbol,
+                    Name = pos.Instrument?.Name,
+                    Shares = (int)pos.Qty,
+                    AvgPrice = pos.AcqPrice?.Value ?? 0
+                };
+            }).ToArray()
+        };
 
-        // var portfolio = new Portfolio()
-        // {
-        //     Name = "AlleGutta",
-        //     Ath = 0,
-        //     Cash = data.AccountInfo?.AccountSum?.Value ?? 0,
-        //     MarketValue = data.AccountInfo?.FullMarketvalue?.Value ?? 0,
-        //     Positions = data.Positions?.Select(pos =>
-        //     {
-        //         return new PortfolioPosition()
-        //         {
-        //             Symbol = pos.Instrument?.Symbol,
-        //             Name = pos.Instrument?.Name,
-        //             Shares = (int)pos.Qty,
-        //             AvgPrice = pos.AcqPrice?.Value ?? 0
-        //         };
-        //     }).ToArray()
-        // };
-        // await portfolioData.SavePortfolioAsync(portfolio);
+        var portfolioData = serviceProvider.GetService<PortfolioRepository>();
+        var yahoo = serviceProvider.GetService<Yahoo>();
 
-        var portfolioData = new PortfolioRepository(ConnectionString);
-        var yahoo = new Yahoo();
+        await portfolioData.SavePortfolioAsync(portfolio);
 
-        var portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
+        portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
         if (portfolio?.Positions is not null)
         {
             var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));

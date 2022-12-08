@@ -42,7 +42,7 @@ public class PortfolioProcessor
                 {
                     newDay = true;
                 }
-                var result = Array.Find(portfolio.Positions, obj => obj
+                var result = portfolio.Positions.FirstOrDefault(obj => obj
                     .Symbol?
                     .Equals(symbol, StringComparison.InvariantCultureIgnoreCase) == true);
 
