@@ -3,9 +3,9 @@ using AlleGutta.Yahoo.Models;
 
 namespace AlleGutta.Portfolios;
 
-public static class PortfolioProcessor
+public class PortfolioProcessor
 {
-    public static Portfolio Process(Portfolio portfolio, IEnumerable<QuoteResult> quotes)
+    public Portfolio Process(Portfolio portfolio, IEnumerable<QuoteResult> quotes)
     {
         decimal costValue = 0.0M;
         if (portfolio is null)
