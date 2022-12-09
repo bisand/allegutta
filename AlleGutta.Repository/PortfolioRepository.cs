@@ -117,8 +117,8 @@ public class PortfolioRepository
                 {
                     const string sqlPositions = @"
                         INSERT INTO PortfolioPositions 
-                        (PortfolioId, Symbol, Shares, AvgPrice, Name, LastPrice, ChangeToday, ChangeTodayPercent, PrevClose, CostValue, CurrentValue, Return, ReturnPercent)
-                        VALUES (@PortfolioId, @Symbol, @Shares, @AvgPrice, @Name, @LastPrice, @ChangeToday, @ChangeTodayPercent, @PrevClose, @CostValue, @CurrentValue, @Return, @ReturnPercent);
+                        (PortfolioId, Symbol, Shares, AvgPrice, Name, LastPrice, ChangeToday, ChangeTodayPercent, PrevClose, CostValue, CurrentValue, Return, ReturnPercent, DateAdded, DateModified)
+                        VALUES (@PortfolioId, @Symbol, @Shares, @AvgPrice, @Name, @LastPrice, @ChangeToday, @ChangeTodayPercent, @PrevClose, @CostValue, @CurrentValue, @Return, @ReturnPercent, datetime('now'), datetime('now'));
                         SELECT last_insert_rowid();
                     ";
                     en.Current.PortfolioId = portfolio.Id;
@@ -145,7 +145,8 @@ public class PortfolioRepository
                             CostValue = @CostValue,
                             CurrentValue = @CurrentValue,
                             Return = @Return,
-                            ReturnPercent = @ReturnPercent
+                            ReturnPercent = @ReturnPercent,
+                            DateModified = datetime('now')
                         WHERE Id = @Id;
                     ";
                     en.Current.PortfolioId = portfolio.Id;

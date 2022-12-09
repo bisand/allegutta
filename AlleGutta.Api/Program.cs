@@ -14,11 +14,13 @@ var root = Directory.GetCurrentDirectory();
 var dotenv = Path.Combine(root, "../.env");
 DotEnv.Load(dotenv);
 
-// Add services to the container.
+if (new[] { "NORDNET_USERNAME", "NORDNET_PASSWORD" }.Any(x => Environment.GetEnvironmentVariable(x)?.Length == 0))
+    throw new ArgumentException("Missing Nordnet username or password. Use environment variables: NORDNET_USERNAME & NORDNET_PASSWORD");
 
 var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
 var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
 
+// Add services to the container.
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection(WorkerOptions.SectionName));
 builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionName));
 

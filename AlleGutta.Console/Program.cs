@@ -50,37 +50,20 @@ static class Program
             DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);
         }
 
-        // var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
-        // var data = await nordnetProcessor.GetBatchData();
+        var portfolioProcessor = serviceProvider.GetService<PortfolioProcessor>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioProcessor)}");
+        var nordnetProcessor = serviceProvider.GetService<NordnetWebScraper>() ?? throw new NullReferenceException($"Missing registration: {nameof(NordnetWebScraper)}");
+        var portfolioData = serviceProvider.GetService<PortfolioRepository>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioRepository)}");
+        var yahoo = serviceProvider.GetService<Yahoo>() ?? throw new NullReferenceException($"Missing registration: {nameof(Yahoo)}");
 
-        // var portfolio = new Portfolio()
-        // {
-        //     Name = "AlleGutta",
-        //     Ath = 0,
-        //     Cash = data.AccountInfo?.AccountSum?.Value ?? 0,
-        //     MarketValue = data.AccountInfo?.FullMarketvalue?.Value ?? 0,
-        //     Positions = data.Positions?.Select(pos =>
-        //     {
-        //         return new PortfolioPosition()
-        //         {
-        //             Symbol = pos.Instrument?.Symbol,
-        //             Name = pos.Instrument?.Name,
-        //             Shares = (int)pos.Qty,
-        //             AvgPrice = pos.AcqPrice?.Value ?? 0
-        //         };
-        //     }).ToArray()
-        // };
-
-        var portfolioData = serviceProvider.GetService<PortfolioRepository>();
-        var yahoo = serviceProvider.GetService<Yahoo>();
-
-        // await portfolioData.SavePortfolioAsync(portfolio);
+        var batchData = await nordnetProcessor.GetBatchData();
+        var nordnetPortfolio = portfolioProcessor.GetPortfolioFromBatchData(batchData);
+        await portfolioData.SavePortfolioAsync(nordnetPortfolio);
 
         var portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
         if (portfolio?.Positions is not null)
         {
             var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
-            portfolio = new PortfolioProcessor().Process(portfolio, quotes);
+            portfolio = portfolioProcessor.Process(portfolio, quotes);
             await portfolioData.SavePortfolioAsync(portfolio);
             var chart = await yahoo.GetChartData("STL.OL", "1d", "1m");
             Console.WriteLine(JsonConvert.SerializeObject(chart));
