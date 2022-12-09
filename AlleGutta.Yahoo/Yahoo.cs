@@ -1,15 +1,14 @@
-﻿using System.Text.Json;
-using System.Web;
+﻿using System.Web;
 using AlleGutta.Yahoo.Models;
 using Newtonsoft.Json;
 
 namespace AlleGutta.Yahoo;
-public sealed class Yahoo
+public sealed class YahooApi
 {
     private readonly string quotesUrl;
     private readonly string chartUrl;
 
-    public Yahoo()
+    public YahooApi()
     {
         quotesUrl = "https://query2.finance.yahoo.com/v7/finance/quote";
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";

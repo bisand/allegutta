@@ -1,22 +1,18 @@
-﻿using AlleGutta.Console;
-using AlleGutta.Repository;
+﻿using AlleGutta.Repository;
 using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using AlleGutta.Portfolios;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using AlleGutta.Nordnet.Models;
 using AlleGutta.Nordnet;
 using Microsoft.Extensions.Options;
-using AlleGutta.Portfolios.Models;
+
+namespace AlleGutta.App;
 
 static class Program
 {
-    private const string ConnectionString = "Data Source=data/allegutta.db";
-
     private static async Task Main(string[] args)
     {
         var root = Directory.GetCurrentDirectory();
@@ -32,7 +28,7 @@ static class Program
 
         builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
         builder.Services.AddTransient<PortfolioRepository>();
-        builder.Services.AddTransient<Yahoo>();
+        builder.Services.AddTransient<YahooApi>();
         builder.Services.AddTransient<NordnetWebScraper>();
         builder.Services.AddTransient<PortfolioProcessor>();
 
@@ -53,7 +49,7 @@ static class Program
         var portfolioProcessor = serviceProvider.GetService<PortfolioProcessor>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioProcessor)}");
         var nordnetProcessor = serviceProvider.GetService<NordnetWebScraper>() ?? throw new NullReferenceException($"Missing registration: {nameof(NordnetWebScraper)}");
         var portfolioData = serviceProvider.GetService<PortfolioRepository>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioRepository)}");
-        var yahoo = serviceProvider.GetService<Yahoo>() ?? throw new NullReferenceException($"Missing registration: {nameof(Yahoo)}");
+        var yahoo = serviceProvider.GetService<YahooApi>() ?? throw new NullReferenceException($"Missing registration: {nameof(Yahoo)}");
 
         var batchData = await nordnetProcessor.GetBatchData();
         var nordnetPortfolio = portfolioProcessor.GetPortfolioFromBatchData(batchData);

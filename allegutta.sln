@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Api", "AlleGutta.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Nordnet", "AlleGutta.Nordnet\AlleGutta.Nordnet.csproj", "{41F24816-9C45-43E2-8BC0-C5948CB0822F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Console", "AlleGutta.Console\AlleGutta.Console.csproj", "{617066A3-A534-4119-804B-768D67A2946B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.App", "AlleGutta.App\AlleGutta.App.csproj", "{617066A3-A534-4119-804B-768D67A2946B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Repository", "AlleGutta.Repository\AlleGutta.Repository.csproj", "{718A4993-EBEA-4428-AFA6-CC4BE04C9A64}"
 EndProject

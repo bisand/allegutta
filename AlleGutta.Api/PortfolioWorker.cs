@@ -20,7 +20,7 @@ public sealed class PortfolioWorker : BackgroundService
 
     private readonly PortfolioProcessor _portfolioProcessor;
     private readonly NordnetWebScraper _webScraper;
-    private readonly Yahoo _yahoo;
+    private readonly YahooApi _yahoo;
     private readonly PortfolioRepository _repository;
     private readonly WorkerOptions _options;
 
@@ -30,7 +30,7 @@ public sealed class PortfolioWorker : BackgroundService
         PortfolioRepository repository,
         PortfolioProcessor portfolioProcessor,
         NordnetWebScraper webScraper,
-        Yahoo yahoo)
+        YahooApi yahoo)
     {
         _logger = logger;
         _portfolioProcessor = portfolioProcessor ?? throw new ArgumentNullException(nameof(portfolioProcessor));

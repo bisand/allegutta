@@ -27,7 +27,7 @@ builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(Dat
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
 builder.Services.AddTransient<PortfolioRepository>();
-builder.Services.AddTransient<Yahoo>();
+builder.Services.AddTransient<YahooApi>();
 builder.Services.AddTransient<NordnetWebScraper>();
 builder.Services.AddTransient<PortfolioProcessor>();
 builder.Services.AddHostedService<PortfolioWorker>();
