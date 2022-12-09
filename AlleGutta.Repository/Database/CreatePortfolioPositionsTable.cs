@@ -57,8 +57,8 @@ public class AddModifiedDatePortfolioPositionsTable : Migration
     public override void Up()
     {
         Alter.Table("PortfolioPositions")
-            .AddColumn("DateAdded").AsDateTime()
-            .AddColumn("DateModified").AsDateTime()
+            .AddColumn("DateAdded").AsDateTime().SetExistingRowsTo(DateTime.Today).NotNullable()
+            .AddColumn("DateModified").AsDateTime().SetExistingRowsTo(DateTime.Today).NotNullable()
             ;
     }
 
