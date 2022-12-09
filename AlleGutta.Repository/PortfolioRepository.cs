@@ -91,9 +91,11 @@ public class PortfolioRepository
         try
         {
             var existing = await GetPortfolioPositionsAsync(portfolio.Id).ToListAsync();
-            var removed = existing.Except(portfolio.Positions, new PortfolioPositionComparer());
-            var added = portfolio.Positions.Except(existing, new PortfolioPositionComparer());
-            var updated = portfolio.Positions.Except(removed.Intersect(added), new PortfolioPositionComparer());
+            var incoming = portfolio.Positions;
+            var comparer = new PortfolioPositionComparer();
+            var removed = existing.Except(incoming, comparer);
+            var added = incoming.Except(existing, comparer);
+            var updated = existing.Intersect(incoming, comparer);
 
             // await connection.ExecuteAsync("DELETE FROM PortfolioPositions WHERE PortfolioId = @Id", portfolio);
 

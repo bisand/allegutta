@@ -5,6 +5,12 @@
             "driver": "SQLite",
             "name": "allegutta",
             "database": "${workspaceFolder:allegutta}/AlleGutta.Api/data/allegutta.db"
+        },
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:allegutta}/AlleGutta.Console/data/allegutta.db",
+            "name": "AlleGutta Console"
         }
     ]
 }

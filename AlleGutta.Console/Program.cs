@@ -50,33 +50,33 @@ static class Program
             DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);
         }
 
-        var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
-        var data = await nordnetProcessor.GetBatchData();
+        // var nordnetProcessor = new NordnetWebScraper(new("https://www.nordnet.no/login-next", username, password));
+        // var data = await nordnetProcessor.GetBatchData();
 
-        var portfolio = new Portfolio()
-        {
-            Name = "AlleGutta",
-            Ath = 0,
-            Cash = data.AccountInfo?.AccountSum?.Value ?? 0,
-            MarketValue = data.AccountInfo?.FullMarketvalue?.Value ?? 0,
-            Positions = data.Positions?.Select(pos =>
-            {
-                return new PortfolioPosition()
-                {
-                    Symbol = pos.Instrument?.Symbol,
-                    Name = pos.Instrument?.Name,
-                    Shares = (int)pos.Qty,
-                    AvgPrice = pos.AcqPrice?.Value ?? 0
-                };
-            }).ToArray()
-        };
+        // var portfolio = new Portfolio()
+        // {
+        //     Name = "AlleGutta",
+        //     Ath = 0,
+        //     Cash = data.AccountInfo?.AccountSum?.Value ?? 0,
+        //     MarketValue = data.AccountInfo?.FullMarketvalue?.Value ?? 0,
+        //     Positions = data.Positions?.Select(pos =>
+        //     {
+        //         return new PortfolioPosition()
+        //         {
+        //             Symbol = pos.Instrument?.Symbol,
+        //             Name = pos.Instrument?.Name,
+        //             Shares = (int)pos.Qty,
+        //             AvgPrice = pos.AcqPrice?.Value ?? 0
+        //         };
+        //     }).ToArray()
+        // };
 
         var portfolioData = serviceProvider.GetService<PortfolioRepository>();
         var yahoo = serviceProvider.GetService<Yahoo>();
 
-        await portfolioData.SavePortfolioAsync(portfolio);
+        // await portfolioData.SavePortfolioAsync(portfolio);
 
-        portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
+        var portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
         if (portfolio?.Positions is not null)
         {
             var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));

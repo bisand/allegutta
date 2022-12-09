@@ -64,27 +64,5 @@ public sealed class Yahoo
         var chart = JsonConvert.DeserializeObject<ChartQueryResult>(response, new[] { new InvalidDataFormatJsonConverter() });
 
         return chart?.Chart?.Result ?? Array.Empty<ChartResult>();
-        // const chart = await got(chartUrl, { searchParams })
-        //         .then(res =>
-        //          {
-        //              if (res)
-        //              {
-        //                  return JSON.parse(res.body).chart.result;
-        //              }
-        //          })
-        //         .catch (err => {
-        //     if (err && err.response)
-        //     {
-        //         console.log(err.response.body);
-        //         return err.response.body;
-        //     }
-        // });
-
-        // if (chart && chart.length > 0)
-        // {
-        //     return chart[0];
-        // }
-
-        // return { };
     }
 }
