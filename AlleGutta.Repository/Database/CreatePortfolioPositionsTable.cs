@@ -50,3 +50,21 @@ public class CaseInsensitivePortfolioPositionsTable : Migration
             ;
     }
 }
+
+[Migration(202212090728)]
+public class AddModifiedDatePortfolioPositionsTable : Migration
+{
+    public override void Up()
+    {
+        Alter.Table("PortfolioPositions")
+            .AddColumn("DateAdded").AsDateTime()
+            .AddColumn("DateModified").AsDateTime()
+            ;
+    }
+
+    public override void Down()
+    {
+        Delete.Column("DateAdded").FromTable("PortfolioPositions");
+        Delete.Column("DateModified").FromTable("PortfolioPositions");
+    }
+}

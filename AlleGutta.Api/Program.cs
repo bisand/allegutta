@@ -6,6 +6,7 @@ using AlleGutta.Repository;
 using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
 using App.WorkerService;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,12 +29,17 @@ builder.Services.AddTransient<Yahoo>();
 builder.Services.AddTransient<NordnetWebScraper>();
 builder.Services.AddTransient<PortfolioProcessor>();
 builder.Services.AddHostedService<PortfolioWorker>();
-var sp = builder.Build();
+var host = builder.Build();
+var serviceProvider = host.Services;
+
+var options = serviceProvider.GetService<IOptions<DatabaseOptions>>();
+
+var connectionString = options?.Value.ConnectionString ?? string.Empty;
 
 // Put the database update into a scope to ensure
 // that all resources will be disposed.
-var serviceProvider = DatabaseConfiguration.CreateServices(sp.Services.GetService<DatabaseOptions>().ConnectionString);
-using (var scope = serviceProvider.CreateScope())
+var dbServiceProvider = DatabaseConfiguration.CreateServices(connectionString);
+using (var scope = dbServiceProvider.CreateScope())
 {
     DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);
 }
