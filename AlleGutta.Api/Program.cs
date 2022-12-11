@@ -70,7 +70,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapWhen(x => !(x?.Request?.Path.Value ?? string.Empty).StartsWith("/api"), builder =>
+app.MapWhen(x => !(x?.Request?.Path.Value ?? string.Empty).StartsWith(new[] { "/api", "/hubs" }), builder =>
 {
     builder.UseSpa(spa =>
     {

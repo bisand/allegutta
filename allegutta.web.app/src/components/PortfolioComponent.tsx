@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import { format } from 'date-fns'
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 export class PortfolioComponent extends Component<any, any> {
@@ -8,7 +9,7 @@ export class PortfolioComponent extends Component<any, any> {
 
   constructor(props: any) {
     super(props);
-    this.state = { portfolioPositions: [], loading: true, portfolioUpdated: Date.now() };
+    this.state = { portfolioPositions: [], loading: true, portfolioUpdated: new Date() };
 
     window.onbeforeunload = (event) => {
       this._hubConnection.stop();
@@ -31,7 +32,7 @@ export class PortfolioComponent extends Component<any, any> {
     this.fetchWeather();
 
     this._hubConnection.on('PortfolioUpdated', (portfolio: any) => {
-      this.setState({ portfolioPositions: portfolio.positions, loading: false, portfolioUpdated: Date.now() });
+      this.setState({ portfolioPositions: portfolio.positions, loading: false, portfolioUpdated: new Date() });
       console.log('Portfolio updated.');
     });
   }
@@ -76,7 +77,7 @@ export class PortfolioComponent extends Component<any, any> {
             </tbody>
             <tfoot>
               <tr>
-                <th>Portfolio updated {this.state.portfolioUpdated.toLocaleString('nb-NO')}</th>
+                <th>Portfolio updated {format(this.state.portfolioUpdated, 'yyyy-MM-dd HH:mm:ss')}</th>
               </tr>
             </tfoot>
           </table>
