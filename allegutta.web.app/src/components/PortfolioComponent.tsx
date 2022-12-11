@@ -77,7 +77,7 @@ export class PortfolioComponent extends Component<any, any> {
             </tbody>
             <tfoot>
               <tr>
-                <th>Portfolio updated {format(this.state.portfolioUpdated, 'yyyy-MM-dd HH:mm:ss')}</th>
+                <th colSpan={10}>Portfolio updated {format(this.state.portfolioUpdated, 'yyyy-MM-dd HH:mm:ss')}</th>
               </tr>
             </tfoot>
           </table>

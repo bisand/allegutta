@@ -21,6 +21,15 @@ export class NavMenu extends Component<any, any> {
     });
   }
 
+  componentDidMount() {
+    const script = document.createElement("script");
+
+    script.src = "switch.js";
+    script.async = true;
+
+    document.body.appendChild(script);
+  }
+
   render() {
     return (
       <header>
@@ -40,6 +49,10 @@ export class NavMenu extends Component<any, any> {
               </NavItem>
             </ul>
           </Collapse>
+          <div className="form-check form-switch">
+            <label className="form-check-label" htmlFor="lightSwitch"> Dark Mode </label>
+            <input className="form-check-input" type="checkbox" id="lightSwitch" />
+          </div>
         </Navbar>
       </header>
     );
