@@ -1,10 +1,13 @@
+using AlleGutta.Api.Hubs;
+using AlleGutta.Api.Hubs.Clients;
 using AlleGutta.Nordnet;
 using AlleGutta.Portfolios;
 using AlleGutta.Repository;
 using AlleGutta.Yahoo;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 
-namespace App.WorkerService;
+namespace AlleGutta.Api;
 
 public sealed class PortfolioWorker : BackgroundService
 {
@@ -23,10 +26,12 @@ public sealed class PortfolioWorker : BackgroundService
     private readonly YahooApi _yahoo;
     private readonly PortfolioRepository _repository;
     private readonly WorkerOptions _options;
+    private readonly IHubContext<PortfolioHub, IPortfolioClient>  _portfolioHub;
 
     public PortfolioWorker(
         ILogger<PortfolioWorker> logger,
         IOptions<WorkerOptions> options,
+        IHubContext<PortfolioHub, IPortfolioClient> portfolioHub,
         PortfolioRepository repository,
         PortfolioProcessor portfolioProcessor,
         NordnetWebScraper webScraper,
@@ -41,6 +46,7 @@ public sealed class PortfolioWorker : BackgroundService
         _executionInterval = _options.ExecutionInterval;
         _runIntervalNordnet = _options.RunIntervalNordnet;
         _runIntervalMarkedData = _options.RunIntervalMarkedData;
+        _portfolioHub = portfolioHub;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -59,7 +65,9 @@ public sealed class PortfolioWorker : BackgroundService
         {
             _runningUpdateTask = true;
             _logger.LogInformation("Worker running Nordnet update at: {time}", DateTimeOffset.Now);
-            var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
+            var batchData = await _webScraper.GetBatchData();
+            var nordnetPortfolio = _portfolioProcessor.GetPortfolioFromBatchData("AlleGutta", batchData);
+            await _repository.SavePortfolioAsync(nordnetPortfolio, false);
             _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
             _runningUpdateTask = false;
         }
@@ -72,7 +80,13 @@ public sealed class PortfolioWorker : BackgroundService
             _runningUpdateTask = true;
             _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
             var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
-            
+            if (portfolio?.Positions is not null)
+            {
+                var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
+                portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
+                await _repository.SavePortfolioAsync(portfolio);
+                await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
+            }
             _logger.LogInformation("Worker running Market Data update at: {time}", DateTimeOffset.Now);
             _runningUpdateTask = false;
         }

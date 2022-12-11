@@ -15,11 +15,12 @@ public class PortfolioProcessor
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public Portfolio GetPortfolioFromBatchData(NordnetBatchData nordnetBatchData)
+    public Portfolio GetPortfolioFromBatchData(string name, NordnetBatchData nordnetBatchData)
     {
+        _logger.LogInformation("Generating '{name}' portfolio from batch data.", name);
         return new Portfolio()
         {
-            Name = "AlleGutta",
+            Name = name,
             Ath = 0,
             Cash = nordnetBatchData.AccountInfo?.AccountSum?.Value ?? 0,
             MarketValue = nordnetBatchData.AccountInfo?.FullMarketvalue?.Value ?? 0,
@@ -36,7 +37,7 @@ public class PortfolioProcessor
         };
     }
 
-    public Portfolio Process(Portfolio portfolio, IEnumerable<QuoteResult> quotes)
+    public Portfolio UpdatePortfolioWithMarketData(Portfolio portfolio, IEnumerable<QuoteResult> quotes)
     {
         decimal costValue = 0.0M;
         if (portfolio is null)

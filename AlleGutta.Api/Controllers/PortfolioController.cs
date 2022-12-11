@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace allegutta.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class PortfolioController : ControllerBase
 {
     private readonly ILogger<PortfolioController> _logger;

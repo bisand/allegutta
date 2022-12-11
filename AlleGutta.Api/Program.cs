@@ -1,11 +1,12 @@
 using AlleGutta.Api;
+using AlleGutta.Api.Hubs;
 using AlleGutta.Nordnet;
 using AlleGutta.Nordnet.Models;
 using AlleGutta.Portfolios;
 using AlleGutta.Repository;
 using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
-using App.WorkerService;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,21 +22,31 @@ var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.
 var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
 
 // Add services to the container.
+
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection(WorkerOptions.SectionName));
 builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionName));
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
 builder.Services.AddTransient<PortfolioRepository>();
 builder.Services.AddTransient<YahooApi>();
 builder.Services.AddTransient<NordnetWebScraper>();
 builder.Services.AddTransient<PortfolioProcessor>();
 builder.Services.AddHostedService<PortfolioWorker>();
-var host = builder.Build();
-var serviceProvider = host.Services;
+builder.Services.AddSignalR();
 
+builder.Services.AddSpaStaticFiles(config => config.RootPath = "/workspaces/allegutta/allegutta.web.app/build");
+
+var app = builder.Build();
+
+app.MapHub<PortfolioHub>("/hubs/portfolio");
+
+var serviceProvider = app.Services;
 var options = serviceProvider.GetService<IOptions<DatabaseOptions>>();
-
 var connectionString = options?.Value.ConnectionString ?? string.Empty;
 
 // Put the database update into a scope to ensure
@@ -46,20 +57,29 @@ using (var scope = dbServiceProvider.CreateScope())
     DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);
 }
 
-var app = builder.Build();
-
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseStaticFiles();
-app.UseRouting();
+app.UseHttpsRedirection();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+app.UseAuthorization();
 
-app.MapFallbackToFile("index.html");
+app.MapControllers();
+
+app.MapWhen(x => !(x?.Request?.Path.Value ?? string.Empty).StartsWith("/api"), builder =>
+{
+    builder.UseSpa(spa =>
+    {
+        spa.Options.SourcePath = "/workspaces/allegutta/allegutta.web.app";
+        if (app.Environment.IsDevelopment())
+        {
+            spa.UseReactDevelopmentServer(npmScript: "start");
+        }
+    });
+});
 
 app.Run();

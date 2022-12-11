@@ -52,14 +52,14 @@ static class Program
         var yahoo = serviceProvider.GetService<YahooApi>() ?? throw new NullReferenceException($"Missing registration: {nameof(Yahoo)}");
 
         var batchData = await nordnetProcessor.GetBatchData();
-        var nordnetPortfolio = portfolioProcessor.GetPortfolioFromBatchData(batchData);
+        var nordnetPortfolio = portfolioProcessor.GetPortfolioFromBatchData("AlleGutta", batchData);
         await portfolioData.SavePortfolioAsync(nordnetPortfolio);
 
         var portfolio = await portfolioData.GetPortfolioAsync("AlleGutta");
         if (portfolio?.Positions is not null)
         {
             var quotes = await yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
-            portfolio = portfolioProcessor.Process(portfolio, quotes);
+            portfolio = portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
             await portfolioData.SavePortfolioAsync(portfolio);
             var chart = await yahoo.GetChartData("STL.OL", "1d", "1m");
             Console.WriteLine(JsonConvert.SerializeObject(chart));

@@ -20,7 +20,7 @@ public class PortfolioRepository
         _options = options.Value;
     }
 
-    public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio)
+    public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio, bool performUpdate = true)
     {
         if (portfolio is null) throw new ArgumentNullException(nameof(portfolio), "Portfolio can not be null");
         if (string.IsNullOrWhiteSpace(portfolio.Name)) throw new ArgumentNullException("portfolio.Name", "Portfolio name can not be empty");
@@ -31,7 +31,8 @@ public class PortfolioRepository
 
         try
         {
-            if (await GetPortfolioAsync(portfolio.Name) is null)
+            var existingPortfolio = await GetPortfolioAsync(portfolio.Name);
+            if (existingPortfolio is null)
             {
                 const string sqlPortfolio = @"
                     INSERT INTO Portfolio
@@ -41,7 +42,7 @@ public class PortfolioRepository
                 ";
                 portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
             }
-            else
+            else if (performUpdate)
             {
                 const string sqlPortfolio = @"
                     UPDATE Portfolio SET
@@ -64,8 +65,12 @@ public class PortfolioRepository
                 ";
                 portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
             }
+            else if (existingPortfolio != null)
+            {
+                portfolio.Id = existingPortfolio.Id;
+            }
 
-            await SavePortfolioPositionsAsync(portfolio, connection, transaction);
+            await SavePortfolioPositionsAsync(portfolio, connection, transaction, performUpdate);
             await transaction.CommitAsync();
         }
         catch (Exception ex)
@@ -76,7 +81,7 @@ public class PortfolioRepository
         return portfolio;
     }
 
-    private async Task SavePortfolioPositionsAsync(Portfolio portfolio, SqliteConnection connection, DbTransaction? transaction = null)
+    private async Task SavePortfolioPositionsAsync(Portfolio portfolio, SqliteConnection connection, DbTransaction? transaction = null, bool performUpdate = true)
     {
         if (portfolio == null)
             throw new ArgumentNullException(nameof(portfolio));
@@ -95,7 +100,7 @@ public class PortfolioRepository
             var comparer = new PortfolioPositionComparer();
             var removed = existing.Except(incoming, comparer);
             var added = incoming.Except(existing, comparer);
-            var updated = existing.Intersect(incoming, comparer);
+            var updated = incoming.Intersect(existing, comparer);
 
             // await connection.ExecuteAsync("DELETE FROM PortfolioPositions WHERE PortfolioId = @Id", portfolio);
 
@@ -126,7 +131,7 @@ public class PortfolioRepository
                 }
             }
 
-            if (updated.Any())
+            if (performUpdate && updated.Any())
             {
                 using var en = updated.GetEnumerator();
                 while (en.MoveNext())
