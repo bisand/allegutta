@@ -17,7 +17,7 @@ public class PortfolioProcessor
 
     public Portfolio GetPortfolioFromBatchData(string name, NordnetBatchData nordnetBatchData)
     {
-        _logger.LogInformation("Generating '{name}' portfolio from batch data.", name);
+        _logger.LogDebug("Generating '{name}' portfolio from batch data.", name);
         return new Portfolio()
         {
             Name = name,
@@ -57,7 +57,7 @@ public class PortfolioProcessor
 
         if (quotes is not null)
         {
-            _logger.LogInformation("Updating portfolio positions with market data.");
+            _logger.LogDebug("Updating portfolio positions with market data.");
             var currentDay = DateTime.Now.Date;
             var newDay = false;
             foreach (var element in quotes)
@@ -108,7 +108,7 @@ public class PortfolioProcessor
                     portfolio.ChangeTodayPercent = 0.0m;
                 }
             }
-            _logger.LogInformation("Successfully updated portfolio positions with market data.");
+            _logger.LogDebug("Successfully updated portfolio positions with market data.");
         }
 
         return portfolio;
