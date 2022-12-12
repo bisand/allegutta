@@ -66,11 +66,11 @@ export class PortfolioComponent extends Component<any, any> {
                   <td>{position.symbol}</td>
                   <td className='text-end'>{position.shares.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
                   <td className='text-end'>{position.avgPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                  <td className='text-end'>{position.costValue.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td className='text-end'>{position.costValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
                   <td className={'text-end ' + (position.changeTodayPercent >= 0 ? 'text-success' : 'text-danger')}>{position.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td className='text-end'>{position.lastPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                  <td className='text-end'>{position.currentValue.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                  <td className={'text-end ' + (position.return >= 0 ? 'text-success' : 'text-danger')}>{position.return.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td className='text-end'>{position.currentValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
+                  <td className={'text-end ' + (position.return >= 0 ? 'text-success' : 'text-danger')}>{position.return.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
                   <td className={'text-end ' + (position.returnPercent >= 0 ? 'text-success' : 'text-danger')}>{position.returnPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 </tr>
               )}
