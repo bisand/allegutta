@@ -23,10 +23,26 @@ export class NavMenu extends Component<any, any> {
 
   componentDidMount() {
     const script = document.createElement("script");
+    script.innerHTML = `
+      function toggleDarkModeButtons() {
+        if(darkmode.inDarkMode) {
+          document.querySelector("#darkmode-sun").classList.remove("d-none");
+          document.querySelector("#darkmode-moon").classList.add("d-none");
+        } else {
+          document.querySelector("#darkmode-sun").classList.add("d-none");
+          document.querySelector("#darkmode-moon").classList.remove("d-none");
+        }
+      }
+      setTimeout(()=>{
+        toggleDarkModeButtons();
+        document.querySelector("#darkmode-button").onclick = function(e){
+          darkmode.toggleDarkMode();
+          toggleDarkModeButtons();
 
-    script.src = "switch.js";
+        }
+      }, 100);
+    `;
     script.async = true;
-
     document.body.appendChild(script);
   }
 
@@ -39,20 +55,20 @@ export class NavMenu extends Component<any, any> {
           <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
             <ul className="navbar-nav flex-grow">
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                <NavLink tag={Link} to="/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
+                <NavLink tag={Link} to="/counter">Counter</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/portfolio">Fetch data</NavLink>
+                <NavLink tag={Link} to="/portfolio">Fetch data</NavLink>
               </NavItem>
             </ul>
           </Collapse>
-          <div className="form-check form-switch">
-            <label className="form-check-label" htmlFor="lightSwitch"> Dark Mode </label>
-            <input className="form-check-input" type="checkbox" id="lightSwitch" />
-          </div>
+            <a id="darkmode-button" className="btn btn-outline-secondary">
+              <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
+              <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
+            </a>
         </Navbar>
       </header>
     );
