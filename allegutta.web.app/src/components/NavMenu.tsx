@@ -5,6 +5,7 @@ import './NavMenu.css';
 
 export class NavMenu extends Component<any, any> {
   static displayName = NavMenu.name;
+  private _renderedScript = false;
 
   constructor(props: any) {
     super(props);
@@ -22,6 +23,10 @@ export class NavMenu extends Component<any, any> {
   }
 
   componentDidMount() {
+    if (this._renderedScript)
+      return;
+    this._renderedScript = true;
+
     const script = document.createElement("script");
     script.innerHTML = `
       function toggleDarkModeButtons() {
@@ -65,10 +70,10 @@ export class NavMenu extends Component<any, any> {
               </NavItem>
             </ul>
           </Collapse>
-            <a id="darkmode-button" className="btn btn-outline-secondary">
-              <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
-              <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
-            </a>
+          <a id="darkmode-button" className="btn btn-outline-secondary">
+            <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
+            <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
+          </a>
         </Navbar>
       </header>
     );

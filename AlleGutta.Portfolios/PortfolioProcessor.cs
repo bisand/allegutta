@@ -60,6 +60,18 @@ public class PortfolioProcessor
             _logger.LogDebug("Updating portfolio positions with market data.");
             var currentDay = DateTime.Now.Date;
             var newDay = false;
+
+            // Reset portfolio values
+            portfolio.ChangeTodayTotal = 0;
+            portfolio.ChangeTodayPercent = 0;
+            portfolio.ChangeTotal = 0;
+            portfolio.ChangeTotalPercent = 0;
+            portfolio.Equity = 0;
+            portfolio.MarketValue = 0;
+            portfolio.MarketValueMin = 0;
+            portfolio.MarketValueMax = 0;
+            portfolio.MarketValuePrev = 0;
+
             foreach (var element in quotes)
             {
                 const string symbolSuffix = ".OL";
@@ -98,9 +110,11 @@ public class PortfolioProcessor
                     portfolio.ChangeTodayTotal += currentDay == symbolDay ? result.Shares * element.RegularMarketChange ?? 0.0m : 0.0m;
                 }
                 portfolio.Equity = portfolio.MarketValue + portfolio.Cash;
-                if (portfolio.MarketValuePrev != 0) portfolio.ChangeTodayPercent = portfolio.ChangeTodayTotal / portfolio.MarketValuePrev * 100;
+                if (portfolio.MarketValuePrev != 0)
+                    portfolio.ChangeTodayPercent = portfolio.ChangeTodayTotal / portfolio.MarketValuePrev * 100;
                 portfolio.ChangeTotal = portfolio.MarketValue - portfolio.CostValue;
-                if (portfolio.CostValue != 0) portfolio.ChangeTotalPercent = portfolio.ChangeTotal / portfolio.CostValue * 100;
+                if (portfolio.CostValue != 0)
+                    portfolio.ChangeTotalPercent = portfolio.ChangeTotal / portfolio.CostValue * 100;
 
                 if (!newDay)
                 {

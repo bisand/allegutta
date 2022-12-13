@@ -1,5 +1,6 @@
 using AlleGutta.Api.Hubs;
 using AlleGutta.Api.Hubs.Clients;
+using AlleGutta.Api.Options;
 using AlleGutta.Nordnet;
 using AlleGutta.Portfolios;
 using AlleGutta.Repository;
@@ -69,7 +70,7 @@ public sealed class PortfolioWorker : BackgroundService
                 _logger.LogDebug("Worker running Nordnet update at: {time}", DateTimeOffset.Now);
                 var batchData = await _webScraper.GetBatchData();
                 var nordnetPortfolio = _portfolioProcessor.GetPortfolioFromBatchData("AlleGutta", batchData);
-                await _repository.SavePortfolioAsync(nordnetPortfolio, false);
+                await _repository.SavePortfolioAsync(nordnetPortfolio, true, false);
                 _logger.LogDebug("Worker done updating Nordnet data at: {time}", DateTimeOffset.Now);
                 _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
                 _runningUpdateTask = false;
@@ -96,6 +97,7 @@ public sealed class PortfolioWorker : BackgroundService
                 {
                     var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
                     portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
+                    portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
                     await _repository.SavePortfolioAsync(portfolio);
                     await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
                 }

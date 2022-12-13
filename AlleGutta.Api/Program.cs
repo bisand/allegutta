@@ -1,5 +1,6 @@
 using AlleGutta.Api;
 using AlleGutta.Api.Hubs;
+using AlleGutta.Api.Options;
 using AlleGutta.Nordnet;
 using AlleGutta.Nordnet.Models;
 using AlleGutta.Portfolios;

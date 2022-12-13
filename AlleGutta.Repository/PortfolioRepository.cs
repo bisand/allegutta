@@ -20,7 +20,7 @@ public class PortfolioRepository
         _options = options.Value;
     }
 
-    public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio, bool performUpdate = true)
+    public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio, bool performSummaryUpdate = true, bool performPositionsUpdate = true)
     {
         if (portfolio is null) throw new ArgumentNullException(nameof(portfolio), "Portfolio can not be null");
         if (string.IsNullOrWhiteSpace(portfolio.Name)) throw new ArgumentNullException("portfolio.Name", "Portfolio name can not be empty");
@@ -42,7 +42,7 @@ public class PortfolioRepository
                 ";
                 portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio);
             }
-            else if (performUpdate)
+            else if (performSummaryUpdate)
             {
                 const string sqlPortfolio = @"
                     UPDATE Portfolio SET
@@ -70,7 +70,7 @@ public class PortfolioRepository
                 portfolio.Id = existingPortfolio.Id;
             }
 
-            await SavePortfolioPositionsAsync(portfolio, connection, transaction, performUpdate);
+            await SavePortfolioPositionsAsync(portfolio, connection, transaction, performPositionsUpdate);
             await transaction.CommitAsync();
         }
         catch (Exception ex)
