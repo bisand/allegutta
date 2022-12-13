@@ -9,7 +9,7 @@ export class PortfolioComponent extends Component<any, any> {
 
   constructor(props: any) {
     super(props);
-    this.state = { portfolioPositions: [], loading: true, portfolioUpdated: new Date() };
+    this.state = { portfolio: {}, loading: true, portfolioUpdated: new Date(), search: '' };
 
     window.onbeforeunload = (event) => {
       this._hubConnection.stop();
@@ -32,16 +32,54 @@ export class PortfolioComponent extends Component<any, any> {
     this.fetchWeather();
 
     this._hubConnection.on('PortfolioUpdated', (portfolio: any) => {
-      this.setState({ portfolioPositions: portfolio.positions, loading: false, portfolioUpdated: new Date() });
+      this.setState({ portfolio: portfolio, loading: false, portfolioUpdated: new Date(), search: '' });
       console.log('Portfolio updated.');
     });
   }
 
-  private renderForecastsTable(portfolioPositions: any) {
+  private submitHandler(e: any) {
+    e.preventDefault();
+  }
+
+  private setSearchValue(e: any) {
+    console.log(e);
+    this.setState({search:''})
+  }
+
+  private renderPortfolioSummary(portfolio: any) {
     return (
-      <div className="card">
+      <div className="card mb-3">
         <div className="card-header">
-          Portfolio
+          Porteføljens verdi
+        </div>
+        <div className="card-body">
+        </div>
+      </div>
+    );
+  }
+
+  private renderPortfolioControls(portfolio: any) {
+    return (
+      <div className="card mb-3">
+        <div className="card-body">
+          <form onSubmit={this.submitHandler}>
+            <input className='form-control' placeholder="Search" list="datalistOptions" id="search-in-table" onKeyUp={this.setSearchValue} />
+            <datalist id="datalistOptions">
+              {portfolio.positions.map((item: any, key: any) =>
+                <option key={key} value={item.name} />
+              )}
+            </datalist>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  private renderPositionsTable(portfolio: any) {
+    return (
+      <div className="card mb-3">
+        <div className="card-header">
+          Beholdning
         </div>
         <div className="card-body">
           <table className="table table-striped table-hover" aria-labelledby="tableLabel">
@@ -60,7 +98,7 @@ export class PortfolioComponent extends Component<any, any> {
               </tr>
             </thead>
             <tbody>
-              {portfolioPositions.map((position: any) =>
+              {portfolio?.positions?.filter((x: any) => x.name.toLowerCase().includes(this.state.search.toLowerCase())).map((position: any) =>
                 <tr key={position.id}>
                   <td>{position.name}</td>
                   <td>{position.symbol}</td>
@@ -87,15 +125,28 @@ export class PortfolioComponent extends Component<any, any> {
   }
 
   render() {
-    let contents = this.state.loading
-      ? <p><em>Loading...</em></p>
-      : this.renderForecastsTable(this.state.portfolioPositions);
-
+    let summary = this.state.loading
+      ? <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+      : this.renderPortfolioSummary(this.state.portfolio);
+    let positions = this.state.loading
+      ? <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+      : this.renderPositionsTable(this.state.portfolio);
+    let controls = this.state.loading
+      ? <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+      : this.renderPortfolioControls(this.state.portfolio)
     return (
       <div>
         <h1 id="tableLabel">Portefølje - AlleGutta</h1>
         <p>This component demonstrates fetching data from the server.</p>
-        {contents}
+        {summary}
+        {controls}
+        {positions}
       </div>
     );
   }
@@ -104,7 +155,7 @@ export class PortfolioComponent extends Component<any, any> {
     try {
       this.setState({ ...this.state, loading: true });
       const response = await axios.get('api/portfolio/allegutta');
-      this.setState({ portfolioPositions: response.data.positions, loading: false });
+      this.setState({ portfolio: response.data, loading: false });
     } catch (e) {
       console.log(e);
       this.setState({ ...this.state, loading: false });
@@ -113,6 +164,6 @@ export class PortfolioComponent extends Component<any, any> {
   async populateWeatherData() {
     const response = await fetch('api/weatherforecast');
     const data = await response.json();
-    this.setState({ portfolioPositions: data, loading: false });
+    this.setState({ portfolio: data, loading: false });
   }
 }
