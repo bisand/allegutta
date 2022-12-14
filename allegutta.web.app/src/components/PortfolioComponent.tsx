@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import { format } from 'date-fns'
 import { HubConnectionBuilder } from '@microsoft/signalr';
+import { Link, NavLink } from 'react-router-dom';
 
 export class PortfolioComponent extends Component<any, any> {
   static displayName = PortfolioComponent.name;
@@ -158,26 +159,74 @@ export class PortfolioComponent extends Component<any, any> {
     return (
       <table className="table table-striped table-hover" aria-labelledby="tableLabel" id="portfolio-positions-table">
         <thead>
-          <tr>
+          <tr style={{ cursor: "pointer" }}>
             <th onClick={e => this.sortClick(e, "name")}>
-              Navn &nbsp; <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}></i>
+              Navn&nbsp;
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-alpha-down " : "bi-sort-alpha-up-alt ") + (this._sortProperty !== "name" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
-            <th onClick={e => this.sortClick(e, "symbol")}>Ticker</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "shares")}>Antall</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "avgPrice")}>GAV</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "costValue")}>Kost</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "changeTodayPercent")}>I dag %</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "lastPrice")}>Siste</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "currentValue")}>Verdi</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "return")}>Avkastning</th>
-            <th className='text-end' onClick={e => this.sortClick(e, "returnPercent")}>Avkastning %</th>
+            <th onClick={e => this.sortClick(e, "symbol")}>
+              Ticker&nbsp;
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-alpha-down " : "bi-sort-alpha-up-alt ") + (this._sortProperty !== "symbol" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "shares")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "shares" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              Antall
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "avgPrice")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "avgPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              GAV
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "costValue")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "costValue" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              Kost
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "changeTodayPercent")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "changeTodayPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              I dag %
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "lastPrice")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "lastPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              Siste
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "currentValue")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "currentValue" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              Verdi
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "return")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "return" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              Avkastning
+            </th>
+            <th className='text-end' onClick={e => this.sortClick(e, "returnPercent")}>
+              <span style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "returnPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
+              Avkastning %
+            </th>
           </tr>
         </thead>
         <tbody>
           {portfolio?.positions?.sort(this.sorter).filter((x: any) => x.name.toLowerCase().includes(this.state.search.toLowerCase())).map((position: any) =>
-            <tr key={position.id}>
-              <td>{position.name}</td>
-              <td>{position.symbol}</td>
+            <tr key={position.id} style={{ cursor: "default" }}>
+              <td><a href={'instrument/' + position.symbol} style={{ textDecoration: "unset", color: "unset" }}>{position.name}</a></td>
+              <td><a href={'instrument/' + position.symbol} style={{ textDecoration: "unset", color: "unset" }}>{position.symbol}</a></td>
               <td className='text-end'>{position.shares.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
               <td className='text-end'>{position.avgPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               <td className='text-end'>{position.costValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
