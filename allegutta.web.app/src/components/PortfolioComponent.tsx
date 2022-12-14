@@ -251,8 +251,11 @@ export class PortfolioComponent extends Component<any, any> {
     event.preventDefault();
 
     const cell: HTMLTableCellElement = event.currentTarget;
+    if (sortProperty === this._sortProperty)
+      this._sortOrder[sortProperty] = (this._sortOrder[sortProperty] ?? "desc") === "desc" ? "asc" : "desc";
+    else
+      this._sortOrder[sortProperty] = "asc";
     this._sortProperty = sortProperty;
-    this._sortOrder[this._sortProperty] = (this._sortOrder[this._sortProperty] ?? "desc") === "desc" ? "asc" : "desc";
     this.forceUpdate();
   };
 
