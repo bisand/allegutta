@@ -24,6 +24,7 @@ public class PortfolioProcessor
             Ath = 0,
             Cash = nordnetBatchData.AccountInfo?.AccountSum?.Value ?? 0,
             MarketValue = nordnetBatchData.AccountInfo?.FullMarketvalue?.Value ?? 0,
+            CostValue = nordnetBatchData.Positions?.Sum(x => x.Qty * x.AcqPrice?.Value ?? 0.0m) ?? 0.0m,
             Positions = nordnetBatchData.Positions?.Select(pos =>
             {
                 return new PortfolioPosition()

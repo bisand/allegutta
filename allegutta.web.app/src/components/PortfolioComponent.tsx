@@ -7,6 +7,8 @@ export class PortfolioComponent extends Component<any, any> {
   static displayName = PortfolioComponent.name;
   private _hubConnection: any;
   private _didMount = false;
+  private _sortProperty: string;
+  private _sortOrder: any = {};
 
   constructor(props: any) {
     super(props);
@@ -27,6 +29,8 @@ export class PortfolioComponent extends Component<any, any> {
         })
         .catch((e: any) => console.log('Connection failed: ', e));
     }
+    this._sortProperty = "name";
+    this._sortOrder[this._sortProperty] = "asc";
   }
 
   componentDidMount() {
@@ -69,19 +73,19 @@ export class PortfolioComponent extends Component<any, any> {
       <div className="container text-center">
         <div className="row mb-3">
           <div className="col">
-            <p className='fs-4'>Egenkapital</p>
+            <p className='fs-4 text-secondary'>Egenkapital</p>
             <p className='fs-3'>
               {portfolio.equity.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
           <div className="col">
-            <p className='fs-4'>Markedsverdi</p>
+            <p className='fs-4 text-secondary'>Markedsverdi</p>
             <p className='fs-3'>
               {portfolio.marketValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
           <div className="col">
-            <p className='fs-4'>Cash</p>
+            <p className='fs-4 text-secondary'>Cash</p>
             <p className='fs-3'>
               {portfolio.cash.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
@@ -89,20 +93,20 @@ export class PortfolioComponent extends Component<any, any> {
         </div>
         <div className="row">
           <div className="col">
-            <p className='fs-4'>ATH</p>
+            <p className='fs-4 text-secondary'>ATH</p>
             <p className='fs-3'>
               {portfolio.ath.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
           <div className="col">
-            <p className='fs-4'>Endring total</p>
+            <p className='fs-4 text-secondary'>Endring total</p>
             <p className={'fs-3 ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
-            <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+              <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
               {portfolio.changeTotalPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % | {portfolio.changeTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
           <div className="col">
-            <p className='fs-4'>Endring i dag</p>
+            <p className='fs-4 text-secondary'>Endring i dag</p>
             <p className={'fs-3 ' + (portfolio.changeTodayPercent >= 0 ? "text-success" : "text-danger")}>
               <i className={"bi " + (portfolio.changeTodayPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
               {portfolio.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % | {portfolio.changeTodayTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
@@ -129,25 +133,48 @@ export class PortfolioComponent extends Component<any, any> {
     );
   }
 
+  private sorter = (a: any, b: any): number => {
+    let fa = a[this._sortProperty];
+    let fb = b[this._sortProperty];
+    if (typeof a[this._sortProperty] === 'string') {
+      fa = a[this._sortProperty].toLowerCase();
+      fb = b[this._sortProperty].toLowerCase();
+    }
+
+    if (fa < fb && this._sortOrder[this._sortProperty] === "asc") {
+      return -1;
+    } else if (fa < fb && this._sortOrder[this._sortProperty] === "desc") {
+      return 1;
+    }
+    if (fa > fb && this._sortOrder[this._sortProperty] === "asc") {
+      return 1;
+    } else if (fa > fb && this._sortOrder[this._sortProperty] === "desc") {
+      return -1;
+    }
+    return 0;
+  };
+
   private renderPositionsTable(portfolio: any) {
     return (
-      <table className="table table-striped table-hover" aria-labelledby="tableLabel">
+      <table className="table table-striped table-hover" aria-labelledby="tableLabel" id="portfolio-positions-table">
         <thead>
           <tr>
-            <th>Navn</th>
-            <th>Ticker</th>
-            <th className='text-end'>Antall</th>
-            <th className='text-end'>GAV</th>
-            <th className='text-end'>Kost</th>
-            <th className='text-end'>I dag %</th>
-            <th className='text-end'>Siste</th>
-            <th className='text-end'>Verdi</th>
-            <th className='text-end'>Avkastning</th>
-            <th className='text-end'>Avkastning %</th>
+            <th onClick={e => this.sortClick(e, "name")}>
+              Navn &nbsp; <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}></i>
+            </th>
+            <th onClick={e => this.sortClick(e, "symbol")}>Ticker</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "shares")}>Antall</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "avgPrice")}>GAV</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "costValue")}>Kost</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "changeTodayPercent")}>I dag %</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "lastPrice")}>Siste</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "currentValue")}>Verdi</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "return")}>Avkastning</th>
+            <th className='text-end' onClick={e => this.sortClick(e, "returnPercent")}>Avkastning %</th>
           </tr>
         </thead>
         <tbody>
-          {portfolio?.positions?.filter((x: any) => x.name.toLowerCase().includes(this.state.search.toLowerCase())).map((position: any) =>
+          {portfolio?.positions?.sort(this.sorter).filter((x: any) => x.name.toLowerCase().includes(this.state.search.toLowerCase())).map((position: any) =>
             <tr key={position.id}>
               <td>{position.name}</td>
               <td>{position.symbol}</td>
@@ -171,8 +198,17 @@ export class PortfolioComponent extends Component<any, any> {
     );
   }
 
+  private sortClick = (event: React.MouseEvent<HTMLTableCellElement>, sortProperty: string) => {
+    event.preventDefault();
+
+    const cell: HTMLTableCellElement = event.currentTarget;
+    this._sortProperty = sortProperty;
+    this._sortOrder[this._sortProperty] = (this._sortOrder[this._sortProperty] ?? "desc") === "desc" ? "asc" : "desc";
+    this.forceUpdate();
+  };
+
   render() {
-    let templateLoading = <p><div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div></p>
+    let templateLoading = <div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div>
 
     let summary = this.state.loading ? templateLoading : this.renderPanel(this.renderPortfolioSummary(this.state.portfolio), "Porteføljens verdi");
     let controls = this.renderPortfolioControls(this.state.portfolio);
@@ -180,8 +216,6 @@ export class PortfolioComponent extends Component<any, any> {
 
     return (
       <div>
-        {/* <h1 id="tableLabel">Portefølje - AlleGutta</h1>
-        <p>This component demonstrates fetching data from the server.</p> */}
         {summary}
         {controls}
         {positions}
