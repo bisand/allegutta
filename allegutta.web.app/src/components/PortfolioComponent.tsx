@@ -10,6 +10,7 @@ export class PortfolioComponent extends Component<any, any> {
   private _didMount = false;
   private _sortProperty: string;
   private _sortOrder: any = {};
+  private _dataSummary: any = {};
 
   constructor(props: any) {
     super(props);
@@ -122,7 +123,7 @@ export class PortfolioComponent extends Component<any, any> {
       <div className="card mb-3">
         <div className="card-body">
           <form onSubmit={this.submitHandler}>
-            <input className='form-control' placeholder="Search" list="datalistOptions" id="search-in-table" onKeyUp={this.setSearchValue} />
+            <input className='form-control' placeholder="Search" list="datalistOptions" id="search-in-table" onKeyUp={this.setSearchValue} autoComplete="off" />
             <datalist id="datalistOptions">
               {portfolio?.positions?.map((item: any, key: any) =>
                 <option key={key} value={item.name} />
@@ -156,6 +157,7 @@ export class PortfolioComponent extends Component<any, any> {
   };
 
   private renderPositionsTable(portfolio: any) {
+    this._dataSummary = {};
     return (
       <table className="table table-striped table-hover" aria-labelledby="tableLabel" id="portfolio-positions-table">
         <thead>
@@ -237,42 +239,58 @@ export class PortfolioComponent extends Component<any, any> {
             <tr key={position.id} style={{ cursor: "default" }}>
               <td><a href={'instrument/' + position.symbol} style={{ textDecoration: "unset", color: "unset" }}>{position.name}</a></td>
               <td><a href={'instrument/' + position.symbol} style={{ textDecoration: "unset", color: "unset" }}>{position.symbol}</a></td>
-              <td className='text-end'>{position.shares.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
-              <td className='text-end'>{position.avgPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-              <td className='text-end'>{position.costValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</td>
+              <td className='text-end'>{this.sumAndPresent(position, "shares", 0)}</td>
+              <td className='text-end'>{this.sumAndPresent(position, "avgPrice", 2)}</td>
+              <td className='text-end'>{this.sumAndPresent(position, "costValue", 2)}</td>
               <td className={'text-end ' + (position.changeTodayPercent >= 0 ? 'text-success' : 'text-danger')}>{position.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %</td>
               <td className='text-end'>{position.lastPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-              <td className='text-end'>{position.currentValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</td>
-              <td className={'text-end ' + (position.return >= 0 ? 'text-success' : 'text-danger')}>{position.return.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</td>
-              <td className={'text-end ' + (position.returnPercent >= 0 ? 'text-success' : 'text-danger')}>{position.returnPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %</td>
+              <td className='text-end'>{this.sumAndPresent(position, "currentValue", 0)},-</td>
+              <td className={'text-end ' + (position.return >= 0 ? 'text-success' : 'text-danger')}>{this.sumAndPresent(position, "return", 0)},-</td>
+              <td className={'text-end ' + (position.returnPercent >= 0 ? 'text-success' : 'text-danger')}>{this.sumAndPresent(position, "returnPercent", 2)} %</td>
             </tr>
           )}
         </tbody>
         <tfoot>
           <tr>
             <th colSpan={2} className="fw-lighter fst-italic">Portfolio updated {format(this.state.portfolioUpdated, 'yyyy-MM-dd HH:mm:ss')}</th>
-            <th></th>
-            <th></th>
-            <th className={'text-end '}>
-              {portfolio.costValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
-            </th>
+            <th className={'text-end '}>{this.presentSum("shares", 0)}</th>
+            <th className={'text-end '}></th>
+            <th className={'text-end '}>{this.presentSum("costValue", 0)},-</th>
             <th></th>
             <th></th>
             <th className={'text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
-              {portfolio.marketValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+              {this.presentSum("currentValue", 0)},-
             </th>
-            <th className={'text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
-              <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
-              {portfolio.changeTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+            <th className={'text-end ' + (this._dataSummary["return"] >= 0 ? "text-success" : "text-danger")}>
+              <i className={"bi " + (this._dataSummary["return"] >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+              {this.presentSum("return", 0)},-
             </th>
-            <th className={'text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
-              <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
-              {portfolio.changeTotalPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
+            <th className={'text-end ' + (this._dataSummary["return"] >= 0 ? "text-success" : "text-danger")}>
+              <i className={"bi " + (this._dataSummary["return"] >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+              {((this._dataSummary["return"] ?? 0) * 100 / (this._dataSummary["costValue"] ?? 1)).toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
             </th>
           </tr>
         </tfoot>
       </table>
     );
+  }
+
+  sumAndPresent(data: any, property: string, decimals: number): React.ReactNode {
+    if (!this._dataSummary)
+      this._dataSummary = {};
+    this._dataSummary[property] = (this._dataSummary[property] ?? 0) + (data[property] ?? 0);
+    this._dataSummary[property + "_count"] = (this._dataSummary[property + "_count"] ?? 0) + 1;
+    return data[property].toLocaleString('nb-NO', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  presentSum(property: string, decimals: number, average: boolean = false, resetValues: boolean = false): React.ReactNode {
+    let tmpSum = this._dataSummary[property] / (average && this._dataSummary[property + "_count"] && this._dataSummary[property + "_count"] > 0 ? this._dataSummary[property + "_count"] : 1);
+    const result = tmpSum.toLocaleString('nb-NO', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    if (resetValues) {
+      this._dataSummary[property] = 0;
+      this._dataSummary[property + "_count"] = 0;
+    }
+    return result;
   }
 
   private sortClick = (event: React.MouseEvent<HTMLTableCellElement>, sortProperty: string) => {

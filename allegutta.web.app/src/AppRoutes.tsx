@@ -2,6 +2,8 @@ import { Counter } from "./components/Counter";
 import { PortfolioComponent } from "./components/PortfolioComponent";
 import { Home } from "./components/Home";
 import { Instrument } from './components/Instrument';
+import { Vedtekter } from './components/Vedtekter';
+import { News } from './components/News';
 
 const AppRoutes = [
   {
@@ -11,6 +13,14 @@ const AppRoutes = [
   {
     path: '/counter',
     element: <Counter />
+  },
+  {
+    path: '/vedtekter',
+    element: <Vedtekter />
+  },
+  {
+    path: '/news',
+    element: <News />
   },
   {
     path: '/instrument/:symbol',
