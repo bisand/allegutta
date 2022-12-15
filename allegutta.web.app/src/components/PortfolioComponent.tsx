@@ -161,64 +161,74 @@ export class PortfolioComponent extends Component<any, any> {
         <thead>
           <tr style={{ cursor: "pointer" }}>
             <th onClick={e => this.sortClick(e, "name")}>
-              Navn&nbsp;
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-alpha-down " : "bi-sort-alpha-up-alt ") + (this._sortProperty !== "name" ? "d-none" : "d-inline")}>&nbsp;</i>
+              Navn
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "name" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "name" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
             <th onClick={e => this.sortClick(e, "symbol")}>
-              Ticker&nbsp;
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-alpha-down " : "bi-sort-alpha-up-alt ") + (this._sortProperty !== "symbol" ? "d-none" : "d-inline")}>&nbsp;</i>
+              Ticker
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "symbol" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "symbol" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "shares")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "shares" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               Antall
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "shares" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "shares" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "avgPrice")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "avgPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               GAV
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "avgPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "avgPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "costValue")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "costValue" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               Kost
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "costValue" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "costValue" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "changeTodayPercent")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "changeTodayPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               I dag %
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "changeTodayPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "changeTodayPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "lastPrice")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "lastPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               Siste
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "lastPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "lastPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "currentValue")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "currentValue" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               Verdi
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "currentValue" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "currentValue" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "return")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "return" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               Avkastning
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "return" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "return" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
             <th className='text-end' onClick={e => this.sortClick(e, "returnPercent")}>
-              <span style={{ width: 21, display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-numeric-down " : "bi-sort-numeric-up-alt ") + (this._sortProperty !== "returnPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
-              </span>
               Avkastning %
+              <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "returnPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "returnPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
+              </span>
             </th>
           </tr>
         </thead>
@@ -229,18 +239,36 @@ export class PortfolioComponent extends Component<any, any> {
               <td><a href={'instrument/' + position.symbol} style={{ textDecoration: "unset", color: "unset" }}>{position.symbol}</a></td>
               <td className='text-end'>{position.shares.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
               <td className='text-end'>{position.avgPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-              <td className='text-end'>{position.costValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
+              <td className='text-end'>{position.costValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</td>
               <td className={'text-end ' + (position.changeTodayPercent >= 0 ? 'text-success' : 'text-danger')}>{position.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %</td>
               <td className='text-end'>{position.lastPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-              <td className='text-end'>{position.currentValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
-              <td className={'text-end ' + (position.return >= 0 ? 'text-success' : 'text-danger')}>{position.return.toLocaleString('nb-NO', { maximumFractionDigits: 0 })}</td>
+              <td className='text-end'>{position.currentValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</td>
+              <td className={'text-end ' + (position.return >= 0 ? 'text-success' : 'text-danger')}>{position.return.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</td>
               <td className={'text-end ' + (position.returnPercent >= 0 ? 'text-success' : 'text-danger')}>{position.returnPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %</td>
             </tr>
           )}
         </tbody>
         <tfoot>
           <tr>
-            <th colSpan={10}>Portfolio updated {format(this.state.portfolioUpdated, 'yyyy-MM-dd HH:mm:ss')}</th>
+            <th colSpan={2} className="fw-lighter fst-italic">Portfolio updated {format(this.state.portfolioUpdated, 'yyyy-MM-dd HH:mm:ss')}</th>
+            <th></th>
+            <th></th>
+            <th className={'text-end '}>
+              {portfolio.costValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+            </th>
+            <th></th>
+            <th></th>
+            <th className={'text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
+              {portfolio.marketValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+            </th>
+            <th className={'text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
+              <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+              {portfolio.changeTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+            </th>
+            <th className={'text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
+              <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+              {portfolio.changeTotalPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
+            </th>
           </tr>
         </tfoot>
       </table>
