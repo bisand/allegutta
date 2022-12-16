@@ -35,7 +35,7 @@ public class NordnetWebScraper
             Headless = headless,
             DefaultViewport = { Width = 1024, Height = 768 },
             Args = new[] { "--disable-dev-shm-usage", "--no-sandbox" },
-            ExecutablePath = "/usr/bin/chromium"
+            // ExecutablePath = "/usr/bin/chromium"
         };
 
         using var browser = await Puppeteer.LaunchAsync(options);

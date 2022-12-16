@@ -11,7 +11,7 @@ RUN chown -R pptruser:pptruser /app
 EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 WORKDIR /src
-COPY ["AlleGutta.Api/AlleGutta.Api.csproj", "./AlleGutta.Api/"]
+COPY ./AlleGutta.Api/AlleGutta.Api.csproj ./AlleGutta.Api/
 RUN dotnet restore "./AlleGutta.Api/AlleGutta.Api.csproj"
 COPY . .
 WORKDIR "/src/."
@@ -23,6 +23,8 @@ FROM base AS final
 WORKDIR /app
 RUN mkdir data
 COPY --from=publish /app/publish .
+RUN mkdir -p /app/data
+RUN chown pptruser:pptruser /app/data
 RUN chown -R pptruser:pptruser /app
 
 # Run everything after as non-privileged user.
