@@ -73,14 +73,14 @@ app.MapControllers();
 
 app.MapWhen(x => !(x?.Request?.Path.Value ?? string.Empty).StartsWith(new[] { "/api", "/hubs" }), builder =>
 {
-    builder.UseSpa(spa =>
+    if (app.Environment.IsDevelopment())
     {
-        spa.Options.SourcePath = "/workspaces/allegutta/allegutta.web.app";
-        if (app.Environment.IsDevelopment())
+        builder.UseSpa(spa =>
         {
+            spa.Options.SourcePath = "/workspaces/allegutta/allegutta.web.app";
             spa.UseReactDevelopmentServer(npmScript: "start");
-        }
-    });
+        });
+    }
 });
 
 app.Run();

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+
+  allegutta-web:
+    container_name: allegutta-web
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - '1337:80'
+
+  allegutta-api:
+    container_name: allegutta-api
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - '1338:80'
