@@ -73,49 +73,56 @@ export class PortfolioComponent extends Component<any, any> {
   private renderPortfolioSummary(portfolio: any) {
     return (
       <div className="container text-center">
-        <div className="row mb-3">
+        <div className="row row-cols-2 mb-3">
           <div className="col">
-            <p className='fs-4 text-secondary'>Egenkapital</p>
+            <p className='fs-4 text-secondary mb-0'>Egenkapital</p>
             <p className='fs-3'>
               {portfolio.equity.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
           <div className="col">
-            <p className='fs-4 text-secondary'>Markedsverdi</p>
+            <p className='fs-4 text-secondary mb-0'>Markedsverdi</p>
             <p className='fs-3'>
               {portfolio.marketValue.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
-          <div className="col">
-            <p className='fs-4 text-secondary'>Cash</p>
-            <p className='fs-3'>
-              {portfolio.cash.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
-            </p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <p className='fs-4 text-secondary'>ATH</p>
+          <div className="col d-sm-block d-md-inline">
+            <p className='fs-4 text-secondary mb-0'>ATH</p>
             <p className='fs-3'>
               {portfolio.ath.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
           <div className="col">
-            <p className='fs-4 text-secondary'>Endring total</p>
-            <p className={'fs-3 ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
-              <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
-              {portfolio.changeTotalPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % | {portfolio.changeTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+            <p className='fs-4 text-secondary mb-0'>Cash</p>
+            <p className='fs-3'>
+              {portfolio.cash.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
             </p>
           </div>
-          <div className="col">
-            <p className='fs-4 text-secondary'>Endring i dag</p>
+          <div className="col d-sm-block d-md-inline">
+            <p className='fs-4 text-secondary mb-0'>Endring total</p>
+            <p className={'fs-3 ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
+              <span className='text-nowrap'>
+                <i className={"bi " + (portfolio.changeTotalPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+                {portfolio.changeTotalPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
+              </span>
+              <span className='d-none d-md-inline'> | </span><br className='d-sm-inline d-md-none' />
+              <span className='text-nowrap'>{portfolio.changeTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</span>
+            </p>
+          </div>
+          <div className="col d-sm-block d-md-inline">
+            <p className='fs-4 text-secondary mb-0'>Endring i dag</p>
             <p className={'fs-3 ' + (portfolio.changeTodayPercent >= 0 ? "text-success" : "text-danger")}>
-              <i className={"bi " + (portfolio.changeTodayPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
-              {portfolio.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % | {portfolio.changeTodayTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+              <span className='text-nowrap'>
+                <i className={"bi " + (portfolio.changeTodayPercent >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+                {portfolio.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
+              </span>
+              <span className='d-none d-md-inline'> | </span><br className='d-sm-inline d-md-none' />
+              <span className='text-nowrap'>{portfolio.changeTodayTotal.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-</span>
             </p>
           </div>
         </div>
-      </div>);
+      </div>
+    );
   }
 
   private renderPortfolioControls(portfolio: any) {
@@ -219,14 +226,16 @@ export class PortfolioComponent extends Component<any, any> {
               </span>
             </th>
             <th className='d-none d-md-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "return")}>
-              Avkastning
+              <span className='d-none d-lg-inline'>Avkastning</span>
+              <span className='d-lg-none'>Avk.</span>
               <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
                 <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "return" ? "d-none" : "d-inline")}>&nbsp;</i>
                 <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "return" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
             <th className='text-end text-nowrap' onClick={e => this.sortClick(e, "returnPercent")}>
-              Avkastning %
+              <span className='d-none d-lg-inline'>Avkastning %</span>
+              <span className='d-lg-none'>Avk.%</span>
               <span className="ms-1" style={{ width: 21, display: "inline-block" }}>
                 <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "returnPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
                 <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "returnPercent" ? "d-none" : "d-inline")}>&nbsp;</i>
