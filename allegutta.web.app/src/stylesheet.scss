@@ -8,9 +8,10 @@
 /* Your customizations here */
 
 $grid-breakpoints: (
-  xs: 0,
+  xxs: 0,
+  xs: 300px,
   sm: 576px,
-  md: 740px,
+  md: 640px,
   lg: 992px,
   xl: 1200px,
   xxl: 1400px

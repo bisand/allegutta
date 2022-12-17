@@ -43,3 +43,9 @@ h5,
 h6 {
   font-weight: bold;
 }
+
+.flex-item-3 {
+  flex: 1 0 calc(33% - 10px);
+  min-width: 120px;
+  margin: 5px;
+}
