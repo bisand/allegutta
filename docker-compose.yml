@@ -26,11 +26,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
-    env_file:
-      - .env
     environment:
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
       - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      - NORDNET_USERNAME=${NORDNET_USERNAME}
+      - NORDNET_PASSWORD=${NORDNET_PASSWORD}
     volumes:
       # Data persistency
       - api-data:/app/data
