@@ -63,6 +63,15 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.MapWhen(x => !(x?.Request?.Path.Value ?? string.Empty).StartsWith(new[] { "/api", "/hubs" }), builder =>
+    {
+        builder.UseSpa(spa =>
+        {
+            spa.Options.SourcePath = "/workspaces/allegutta/allegutta.web.app";
+            spa.UseReactDevelopmentServer(npmScript: "start");
+        });
+    });
 }
 
 app.UseHttpsRedirection();
@@ -70,17 +79,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapWhen(x => !(x?.Request?.Path.Value ?? string.Empty).StartsWith(new[] { "/api", "/hubs" }), builder =>
-{
-    if (app.Environment.IsDevelopment())
-    {
-        builder.UseSpa(spa =>
-        {
-            spa.Options.SourcePath = "/workspaces/allegutta/allegutta.web.app";
-            spa.UseReactDevelopmentServer(npmScript: "start");
-        });
-    }
-});
 
 app.Run();

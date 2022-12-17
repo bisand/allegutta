@@ -38,6 +38,20 @@
   }
 }
 
-h4,h5,h6 {
+h4,
+h5,
+h6 {
   font-weight: bold;
+}
+
+.hidden-md-up {
+  @media (min-width: 700px) {
+    display: none;
+  }
+}
+
+.hidden-md-down {
+  @media not all and (min-width: 700px) {
+    display: none;
+  }
 }
