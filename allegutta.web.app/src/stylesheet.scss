@@ -1,0 +1,19 @@
+/* stylesheet.scss */
+
+@import "bootstrap/scss/functions"; 
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+//@import "bootstrap/scss/mixins/breakpoints";
+
+/* Your customizations here */
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 740px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+@import "bootstrap";
