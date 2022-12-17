@@ -25,7 +25,7 @@ public class NordnetWebScraper
     /// <returns>NordnetBatchData</returns>
     public async Task<NordnetBatchData> GetBatchData(bool forceRun = false, int refreshIntervalMinutes = 60, bool headless = true)
     {
-        if (!forceRun && BatchData.CacheUpdated != null && new DateTime().AddMinutes(refreshIntervalMinutes * -1) > BatchData.CacheUpdated)
+        if (!forceRun && BatchData.CacheUpdated != null && DateTime.Now.AddMinutes(refreshIntervalMinutes * -1) > BatchData.CacheUpdated)
         {
             return BatchData;
         }
