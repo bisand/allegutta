@@ -3,6 +3,7 @@ version: '3.8'
 volumes:
   api-data:
   api-logs:
+  db-data:
   proxy:
 
 services:
@@ -35,3 +36,17 @@ services:
       # Data persistency
       - api-data:/app/data
       - api-logs:/app/logs
+
+  allegutta-db:
+    image: yobasystems/alpine-mariadb
+    container_name: allegutta-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    restart: always
