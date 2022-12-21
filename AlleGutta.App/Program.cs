@@ -27,7 +27,7 @@ static class Program
         builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionName));
 
         builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
-        builder.Services.AddTransient<PortfolioRepository>();
+        builder.Services.AddTransient<PortfolioRepositorySQLite>();
         builder.Services.AddTransient<YahooApi>();
         builder.Services.AddTransient<NordnetWebScraper>();
         builder.Services.AddTransient<PortfolioProcessor>();
@@ -48,7 +48,7 @@ static class Program
 
         var portfolioProcessor = serviceProvider.GetService<PortfolioProcessor>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioProcessor)}");
         var nordnetProcessor = serviceProvider.GetService<NordnetWebScraper>() ?? throw new NullReferenceException($"Missing registration: {nameof(NordnetWebScraper)}");
-        var portfolioData = serviceProvider.GetService<PortfolioRepository>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioRepository)}");
+        var portfolioData = serviceProvider.GetService<PortfolioRepositorySQLite>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioRepositorySQLite)}");
         var yahoo = serviceProvider.GetService<YahooApi>() ?? throw new NullReferenceException($"Missing registration: {nameof(Yahoo)}");
 
         var batchData = await nordnetProcessor.GetBatchData();

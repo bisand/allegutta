@@ -9,9 +9,9 @@ namespace allegutta.Controllers;
 public class PortfolioController : ControllerBase
 {
     private readonly ILogger<PortfolioController> _logger;
-    private readonly PortfolioRepository _portfolioRepository;
+    private readonly PortfolioRepositorySQLite _portfolioRepository;
 
-    public PortfolioController(ILogger<PortfolioController> logger, PortfolioRepository portfolioRepository)
+    public PortfolioController(ILogger<PortfolioController> logger, PortfolioRepositorySQLite portfolioRepository)
     {
         _logger = logger;
         _portfolioRepository = portfolioRepository;

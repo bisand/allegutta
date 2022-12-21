@@ -6,12 +6,13 @@ using Microsoft.Extensions.Options;
 using System.Data.Common;
 
 namespace AlleGutta.Repository;
-public class PortfolioRepository
+
+public class PortfolioRepositorySQLite : IPortfolioRepository
 {
-    private readonly ILogger<PortfolioRepository> _logger;
+    private readonly ILogger<PortfolioRepositorySQLite> _logger;
     private readonly DatabaseOptions _options;
 
-    public PortfolioRepository(IOptions<DatabaseOptions> options, ILogger<PortfolioRepository> logger)
+    public PortfolioRepositorySQLite(IOptions<DatabaseOptions> options, ILogger<PortfolioRepositorySQLite> logger)
     {
         if (options == null)
             throw new ArgumentNullException(nameof(options));

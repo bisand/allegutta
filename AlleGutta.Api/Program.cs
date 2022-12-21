@@ -33,7 +33,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
-builder.Services.AddTransient<PortfolioRepository>();
+builder.Services.AddTransient<PortfolioRepositorySQLite>();
 builder.Services.AddTransient<YahooApi>();
 builder.Services.AddTransient<NordnetWebScraper>();
 builder.Services.AddTransient<PortfolioProcessor>();
