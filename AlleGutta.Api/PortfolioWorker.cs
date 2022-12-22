@@ -67,11 +67,11 @@ public sealed class PortfolioWorker : BackgroundService
             if (!_runningUpdateTask && _nextRunNordnet < DateTime.Now)
             {
                 _runningUpdateTask = true;
-                _logger.LogDebug("Worker running Nordnet update at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Worker running Nordnet update at: {time}", DateTimeOffset.Now);
                 var batchData = await _webScraper.GetBatchData();
                 var nordnetPortfolio = _portfolioProcessor.GetPortfolioFromBatchData("AlleGutta", batchData);
                 await _repository.SavePortfolioAsync(nordnetPortfolio, true, false);
-                _logger.LogDebug("Worker done updating Nordnet data at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Worker done updating Nordnet data at: {time}", DateTimeOffset.Now);
                 _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
                 _runningUpdateTask = false;
             }

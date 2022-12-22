@@ -1,4 +1,5 @@
 using AlleGutta.Nordnet.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PuppeteerSharp;
 
@@ -8,12 +9,12 @@ public class NordnetWebScraper
 {
     private static readonly NordnetBatchData BatchData = new();
     private readonly NordNetConfig _config;
+    private readonly ILogger<NordnetWebScraper> _logger;
 
-    public NordnetWebScraper(NordNetConfig config)
+    public NordnetWebScraper(NordNetConfig config, ILogger<NordnetWebScraper> logger)
     {
-        if (config is null)
-            throw new ArgumentNullException(nameof(config), "Configuration cannot be empty!");
-        _config = config;
+        _config = config ?? throw new ArgumentNullException(nameof(config), "Configuration cannot be empty!");
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -49,7 +50,7 @@ public class NordnetWebScraper
 
             if (!response.Ok)
             {
-                Console.WriteLine($"Response NOT OK: {response.StatusText}");
+                _logger.LogWarning("Login response NOT OK", response.StatusText);
                 return;
             }
 
@@ -92,7 +93,7 @@ public class NordnetWebScraper
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        _logger.LogError(e, "An error ocurred while handling POST batch data.");
                     }
                 }
                 else if (isAPI && isJson)
@@ -114,13 +115,13 @@ public class NordnetWebScraper
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        _logger.LogError(e, "An error ocurred while handling JSON batch data.");
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"An error occurred while processing Nordnet data: {e}");
+                _logger.LogError(e, "An error occurred while processing Nordnet data.");
             }
         };
         Task.WaitAll(new[] {
