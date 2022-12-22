@@ -14,6 +14,6 @@ public record PortfolioPosition
     public decimal PrevClose { get; set; }
     public decimal CostValue { get; set; }
     public decimal CurrentValue { get; set; }
-    public decimal Return { get; set; }
+    public decimal ReturnValue { get; set; }
     public decimal ReturnPercent { get; set; }
 }

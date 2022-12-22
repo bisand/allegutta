@@ -10,15 +10,18 @@ namespace AlleGutta.Repository;
 public class PortfolioRepositorySQLite : IPortfolioRepository
 {
     private readonly ILogger<PortfolioRepositorySQLite> _logger;
-    private readonly DatabaseOptions _options;
+    private readonly DatabaseOptionsSQLite _options;
 
-    public PortfolioRepositorySQLite(IOptions<DatabaseOptions> options, ILogger<PortfolioRepositorySQLite> logger)
+    public string ConnectionString { get; }
+
+    public PortfolioRepositorySQLite(IOptions<DatabaseOptionsSQLite> options, ILogger<PortfolioRepositorySQLite> logger)
     {
         if (options == null)
             throw new ArgumentNullException(nameof(options));
 
         _logger = logger;
         _options = options.Value;
+        ConnectionString = _options.ConnectionString;
     }
 
     public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio, bool performSummaryUpdate = true, bool performPositionsUpdate = true)
@@ -254,14 +257,14 @@ public class PortfolioRepositorySQLite : IPortfolioRepository
         }
     }
 
-    public async IAsyncEnumerable<T> GetDataAsync<T>(string sql, IEnumerable<SqliteParameter> parameters)
+    public async IAsyncEnumerable<T> GetDataAsync<T>(string sql, IEnumerable<DbParameter> parameters)
     {
         using var connection = new SqliteConnection(_options.ConnectionString);
         await connection.OpenAsync();
 
         var command = connection.CreateCommand();
         command.CommandText = sql;
-        command.Parameters.AddRange(parameters);
+        command.Parameters.AddRange(parameters.ToArray());
 
         using var reader = await command.ExecuteReaderAsync();
         var parser = reader.GetRowParser<T>(typeof(T));

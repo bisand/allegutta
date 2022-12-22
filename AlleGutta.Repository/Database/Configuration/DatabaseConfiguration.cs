@@ -15,8 +15,8 @@ public static class DatabaseConfiguration
             // Add common FluentMigrator services
             .AddFluentMigratorCore()
             .ConfigureRunner(rb => rb
-                // Add SQLite support to FluentMigrator
-                .AddSQLite()
+                // Add MySQL support to FluentMigrator
+                .AddMySql5()
                 // Set the connection string
                 .WithGlobalConnectionString(connectionStringOrName)
                 // Define the assembly containing the migrations

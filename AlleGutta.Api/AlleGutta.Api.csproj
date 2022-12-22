@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AlleGutta.Repository\AlleGutta.Repository.csproj" />
     <ProjectReference Include="..\AlleGutta.Portfolios\AlleGutta.Portfolios.csproj" />
+    <ProjectReference Include="..\AlleGutta.Common\AlleGutta.Common.csproj" />
   </ItemGroup>
 
 </Project>

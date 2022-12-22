@@ -1,6 +1,7 @@
 using AlleGutta.Api;
 using AlleGutta.Api.Hubs;
 using AlleGutta.Api.Options;
+using AlleGutta.Common;
 using AlleGutta.Nordnet;
 using AlleGutta.Nordnet.Models;
 using AlleGutta.Portfolios;
@@ -9,6 +10,7 @@ using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Options;
+using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,21 +21,23 @@ DotEnv.Load(dotenv);
 if (new[] { "NORDNET_USERNAME", "NORDNET_PASSWORD" }.Any(x => Environment.GetEnvironmentVariable(x)?.Length == 0))
     throw new ArgumentException("Missing Nordnet username or password. Use environment variables: NORDNET_USERNAME & NORDNET_PASSWORD");
 
-var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
-var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
+var nordnetUsername = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
+var nordnetPassword = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
+var mariaDbPassword = Environment.GetEnvironmentVariable("MARIADB_PASSWORD") ?? string.Empty;
 
 // Add services to the container.
 
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection(WorkerOptions.SectionName));
-builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionName));
+builder.Services.Configure<DatabaseOptionsSQLite>(builder.Configuration.GetSection(DatabaseOptionsSQLite.SectionName));
+builder.Services.Configure<DatabaseOptionsMariaDb>(builder.Configuration.GetSection(DatabaseOptionsMariaDb.SectionName));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
-builder.Services.AddTransient<PortfolioRepositorySQLite>();
+builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", nordnetUsername, nordnetPassword));
+builder.Services.AddTransient<IPortfolioRepository, PortfolioRepositoryMariaDb>();
 builder.Services.AddTransient<YahooApi>();
 builder.Services.AddTransient<NordnetWebScraper>();
 builder.Services.AddTransient<PortfolioProcessor>();
@@ -47,12 +51,11 @@ var app = builder.Build();
 app.MapHub<PortfolioHub>("/hubs/portfolio");
 
 var serviceProvider = app.Services;
-var options = serviceProvider.GetService<IOptions<DatabaseOptions>>();
-var connectionString = options?.Value.ConnectionString ?? string.Empty;
+var repository = serviceProvider.GetService<IPortfolioRepository>();
 
 // Put the database update into a scope to ensure
 // that all resources will be disposed.
-var dbServiceProvider = DatabaseConfiguration.CreateServices(connectionString);
+var dbServiceProvider = DatabaseConfiguration.CreateServices(repository?.ConnectionString ?? string.Empty);
 using (var scope = dbServiceProvider.CreateScope())
 {
     DatabaseConfiguration.UpdateDatabase(scope.ServiceProvider);

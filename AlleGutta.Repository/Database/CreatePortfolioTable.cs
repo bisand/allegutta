@@ -30,21 +30,3 @@ public class CreatePortfolioTable : Migration
         Delete.Table("Portfolio");
     }
 }
-
-[Migration(202212051944)]
-public class CaseInsensitivePortfolioTable : Migration
-{
-    public override void Up()
-    {
-        Alter.Table("Portfolio")
-            .AlterColumn("Name").AsCustom("TEXT COLLATE NOCASE")
-            ;
-    }
-
-    public override void Down()
-    {
-        Alter.Table("Portfolio")
-            .AlterColumn("Name").AsString()
-            ;
-    }
-}

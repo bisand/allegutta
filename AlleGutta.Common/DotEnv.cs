@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace AlleGutta.Api;
+namespace AlleGutta.Common;
 
 public static class DotEnv
 {

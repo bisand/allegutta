@@ -101,8 +101,8 @@ public class PortfolioProcessor
                     result.PrevClose = element.RegularMarketPreviousClose ?? 0.0m;
                     result.CostValue = result.AvgPrice * result.Shares;
                     result.CurrentValue = result.LastPrice * result.Shares;
-                    result.Return = result.CurrentValue - result.CostValue;
-                    result.ReturnPercent = result.CostValue != 0 ? result.Return / result.CostValue * 100 : 0;
+                    result.ReturnValue = result.CurrentValue - result.CostValue;
+                    result.ReturnPercent = result.CostValue != 0 ? result.ReturnValue / result.CostValue * 100 : 0;
 
                     portfolio.MarketValue += result.Shares * element.RegularMarketPrice ?? 0.0m;
                     portfolio.MarketValuePrev += result.Shares * element.RegularMarketPreviousClose ?? 0.0m;

@@ -24,17 +24,17 @@ static class Program
 
         var builder = Host.CreateApplicationBuilder(args);
 
-        builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionName));
+        builder.Services.Configure<DatabaseOptionsSQLite>(builder.Configuration.GetSection(DatabaseOptionsSQLite.SectionName));
 
         builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
-        builder.Services.AddTransient<PortfolioRepositorySQLite>();
+        builder.Services.AddTransient<IPortfolioRepository, PortfolioRepositoryMariaDb>();
         builder.Services.AddTransient<YahooApi>();
         builder.Services.AddTransient<NordnetWebScraper>();
         builder.Services.AddTransient<PortfolioProcessor>();
 
         var host = builder.Build();
         var serviceProvider = host.Services;
-        var options = serviceProvider.GetService<IOptions<DatabaseOptions>>();
+        var options = serviceProvider.GetService<IOptions<DatabaseOptionsSQLite>>();
 
         var connectionString = options?.Value.ConnectionString ?? string.Empty;
 
@@ -48,7 +48,7 @@ static class Program
 
         var portfolioProcessor = serviceProvider.GetService<PortfolioProcessor>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioProcessor)}");
         var nordnetProcessor = serviceProvider.GetService<NordnetWebScraper>() ?? throw new NullReferenceException($"Missing registration: {nameof(NordnetWebScraper)}");
-        var portfolioData = serviceProvider.GetService<PortfolioRepositorySQLite>() ?? throw new NullReferenceException($"Missing registration: {nameof(PortfolioRepositorySQLite)}");
+        var portfolioData = serviceProvider.GetService<IPortfolioRepository>() ?? throw new NullReferenceException($"Missing registration: {nameof(IPortfolioRepository)}");
         var yahoo = serviceProvider.GetService<YahooApi>() ?? throw new NullReferenceException($"Missing registration: {nameof(Yahoo)}");
 
         var batchData = await nordnetProcessor.GetBatchData();

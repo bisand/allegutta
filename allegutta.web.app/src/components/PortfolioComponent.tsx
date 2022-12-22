@@ -225,12 +225,12 @@ export class PortfolioComponent extends Component<any, any> {
                 <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "currentValue" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
-            <th className='d-none d-md-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "return")}>
+            <th className='d-none d-md-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "returnValue")}>
               <span className='d-none d-lg-inline'>Avkastning</span>
               <span className='d-lg-none'>Avk.</span>
               <span className="ms-1" style={{ display: "inline-block" }}>
-                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "return" ? "d-none" : "d-inline")}>&nbsp;</i>
-                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "return" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "returnValue" ? "d-none" : "d-inline")}>&nbsp;</i>
+                <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "returnValue" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
             <th className='text-end text-nowrap' onClick={e => this.sortClick(e, "returnPercent")}>
@@ -254,7 +254,7 @@ export class PortfolioComponent extends Component<any, any> {
               <td className={'text-nowrap text-end ' + (position.changeTodayPercent >= 0 ? 'text-success' : 'text-danger')}>{position.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %</td>
               <td className='d-none d-xs-table-cell text-end'>{position.lastPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               <td className='d-none d-lg-table-cell text-end'>{this.sumAndPresent(position, "currentValue", 0)},-</td>
-              <td className={'d-none d-md-table-cell text-end ' + (position.return >= 0 ? 'text-success' : 'text-danger')}>{this.sumAndPresent(position, "return", 0)},-</td>
+              <td className={'d-none d-md-table-cell text-end ' + (position.returnValue >= 0 ? 'text-success' : 'text-danger')}>{this.sumAndPresent(position, "returnValue", 0)},-</td>
               <td className={'text-nowrap text-end ' + (position.returnPercent >= 0 ? 'text-success' : 'text-danger')}>{this.sumAndPresent(position, "returnPercent", 2)} %</td>
             </tr>
           )}
@@ -271,13 +271,13 @@ export class PortfolioComponent extends Component<any, any> {
             <th className={'d-none d-lg-table-cell text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
               {this.presentSum("currentValue", 0)},-
             </th>
-            <th className={'d-none d-md-table-cell text-end ' + (this._dataSummary["return"] >= 0 ? "text-success" : "text-danger")}>
-              <i className={"bi " + (this._dataSummary["return"] >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
-              {this.presentSum("return", 0)},-
+            <th className={'d-none d-md-table-cell text-end ' + (this._dataSummary["returnValue"] >= 0 ? "text-success" : "text-danger")}>
+              <i className={"bi " + (this._dataSummary["returnValue"] >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+              {this.presentSum("returnValue", 0)},-
             </th>
-            <th className={'text-end text-nowrap ' + (this._dataSummary["return"] >= 0 ? "text-success" : "text-danger")}>
-              <i className={"bi " + (this._dataSummary["return"] >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
-              {((this._dataSummary["return"] ?? 0) * 100 / (this._dataSummary["costValue"] ?? 1)).toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
+            <th className={'text-end text-nowrap ' + (this._dataSummary["returnValue"] >= 0 ? "text-success" : "text-danger")}>
+              <i className={"bi " + (this._dataSummary["returnValue"] >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
+              {((this._dataSummary["returnValue"] ?? 0) * 100 / (this._dataSummary["costValue"] ?? 1)).toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
             </th>
           </tr>
         </tfoot>

@@ -25,7 +25,7 @@ public sealed class PortfolioWorker : BackgroundService
     private readonly PortfolioProcessor _portfolioProcessor;
     private readonly NordnetWebScraper _webScraper;
     private readonly YahooApi _yahoo;
-    private readonly PortfolioRepositorySQLite _repository;
+    private readonly IPortfolioRepository _repository;
     private readonly WorkerOptions _options;
     private readonly IHubContext<PortfolioHub, IPortfolioClient> _portfolioHub;
 
@@ -33,7 +33,7 @@ public sealed class PortfolioWorker : BackgroundService
         ILogger<PortfolioWorker> logger,
         IOptions<WorkerOptions> options,
         IHubContext<PortfolioHub, IPortfolioClient> portfolioHub,
-        PortfolioRepositorySQLite repository,
+        IPortfolioRepository repository,
         PortfolioProcessor portfolioProcessor,
         NordnetWebScraper webScraper,
         YahooApi yahoo)
