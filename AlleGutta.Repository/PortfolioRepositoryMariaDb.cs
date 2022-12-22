@@ -24,10 +24,10 @@ public class PortfolioRepositoryMariaDb : IPortfolioRepository
         var dotenv = Path.Combine(root, "../.env");
         DotEnv.Load(dotenv);
 
-        if (new[] { "MARIADB_PASSWORD" }.Any(x => Environment.GetEnvironmentVariable(x)?.Length == 0))
-            throw new ArgumentException("Missing MariaDB password. Use environment variables: MARIADB_PASSWORD");
+        if (new[] { "MYSQL_PASSWORD" }.Any(x => Environment.GetEnvironmentVariable(x)?.Length == 0))
+            throw new ArgumentException("Missing MariaDB password. Use environment variables: MYSQL_PASSWORD");
 
-        var mariaDbPassword = Environment.GetEnvironmentVariable("MARIADB_PASSWORD") ?? string.Empty;
+        var mariaDbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? string.Empty;
         _builder = new MySqlConnectionStringBuilder
         {
             Server = _options.Server,

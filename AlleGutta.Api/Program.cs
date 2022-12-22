@@ -23,7 +23,7 @@ if (new[] { "NORDNET_USERNAME", "NORDNET_PASSWORD" }.Any(x => Environment.GetEnv
 
 var nordnetUsername = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
 var nordnetPassword = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
-var mariaDbPassword = Environment.GetEnvironmentVariable("MARIADB_PASSWORD") ?? string.Empty;
+var mariaDbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? string.Empty;
 
 // Add services to the container.
 

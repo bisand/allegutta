@@ -32,6 +32,7 @@ services:
       - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
       - NORDNET_USERNAME=${NORDNET_USERNAME}
       - NORDNET_PASSWORD=${NORDNET_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     volumes:
       # Data persistency
       - api-data:/app/data
