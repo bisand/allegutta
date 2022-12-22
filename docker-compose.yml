@@ -28,11 +28,11 @@ services:
       context: .
       dockerfile: Dockerfile.api
     environment:
-      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-      - NORDNET_USERNAME=${NORDNET_USERNAME}
-      - NORDNET_PASSWORD=${NORDNET_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      NORDNET_USERNAME: ${NORDNET_USERNAME}
+      NORDNET_PASSWORD: ${NORDNET_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       # Data persistency
       - api-data:/app/data
