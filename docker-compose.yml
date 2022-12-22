@@ -29,7 +29,7 @@ services:
       dockerfile: Dockerfile.api
     environment:
       PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
-      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
       NORDNET_USERNAME: ${NORDNET_USERNAME}
       NORDNET_PASSWORD: ${NORDNET_PASSWORD}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
