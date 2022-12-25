@@ -30,9 +30,7 @@
 				"aaron-bond.better-comments",
 				"fernandoescolar.vscode-solution-explorer",
 				"hbenl.vscode-test-explorer",
-				"josefpihrt-vscode.roslynator",
-				"alexcvzz.vscode-sqlite",
-				"mtxr.sqltools-driver-sqlite"
+				"josefpihrt-vscode.roslynator"
 			]
 		}
 	},
