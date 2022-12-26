@@ -107,17 +107,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Sleep for 10 seconds
-        run: sleep 10s
-        shell: bash
+    - name: Check out the repo
+      uses: actions/checkout@v3
 
-      - name: Deploy stack to Portainer
-        uses: carlrygart/portainer-stack-deploy@v1
-        with:
-          portainer-host: ${{ secrets.PORTAINER_HOST }}
-          username: ${{ secrets.PORTAINER_USERNAME }}
-          password: ${{ secrets.PORTAINER_PASSWORD }}
-          endpoint-id: 4
-          stack-name: 'allegutta'
-          stack-definition: 'docker-compose.yml'
-          template-variables: '{"NORDNET_USERNAME": "${{ secrets.NORDNET_USERNAME }}", "NORDNET_PASSWORD": "${{ secrets.NORDNET_PASSWORD }}", "MYSQL_ROOT_PASSWORD": "${{ secrets.MYSQL_ROOT_PASSWORD }}", "MYSQL_DATABASE": "${{ secrets.MYSQL_DATABASE }}", "MYSQL_USER": "${{ secrets.MYSQL_USER }}", "MYSQL_PASSWORD": "${{ secrets.MYSQL_PASSWORD }}"}'
+    - name: Sleep for 10 seconds
+      run: sleep 10s
+      shell: bash
+
+    - name: Deploy stack to Portainer
+      uses: carlrygart/portainer-stack-deploy@v1
+      with:
+        portainer-host: ${{ secrets.PORTAINER_HOST }}
+        username: ${{ secrets.PORTAINER_USERNAME }}
+        password: ${{ secrets.PORTAINER_PASSWORD }}
+        endpoint-id: 4
+        stack-name: 'allegutta'
+        stack-definition: 'docker-compose.yml'
+        template-variables: '{"NORDNET_USERNAME": "${{ secrets.NORDNET_USERNAME }}", "NORDNET_PASSWORD": "${{ secrets.NORDNET_PASSWORD }}", "MYSQL_ROOT_PASSWORD": "${{ secrets.MYSQL_ROOT_PASSWORD }}", "MYSQL_DATABASE": "${{ secrets.MYSQL_DATABASE }}", "MYSQL_USER": "${{ secrets.MYSQL_USER }}", "MYSQL_PASSWORD": "${{ secrets.MYSQL_PASSWORD }}"}'
