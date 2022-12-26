@@ -115,32 +115,31 @@ jobs:
       shell: bash
 
     - name: Deploy stack to Portainer
-      uses: bots-house/portainer-deploy-stack-action@v1.0.0
+      uses: carlrygart/portainer-stack-deploy@v1
       with:
         # url of Poratainer instance
-        portainer-url: ${{ secrets.PORTAINER_HOST }}
+        portainer-host: ${{ secrets.PORTAINER_HOST }}
 
         # portainer auth
-        portainer-username: ${{ secrets.PORTAINER_USERNAME }}
-        portainer-password: ${{ secrets.PORTAINER_PASSWORD }}
+        username: ${{ secrets.PORTAINER_USERNAME }}
+        password: ${{ secrets.PORTAINER_PASSWORD }}
 
         # internal portainer cluster id
-        portainer-endpoint: 4
+        endpoint-id: 4
 
         # stack name
         stack-name: allegutta
 
         # docker stack file location
-        stack-file: docker-compose.yml
+        stack-definition: docker-compose.yml
 
         # vars to substitute in stack
-        stack-vars: |
+        template-variables: |
+        {
           NORDNET_USERNAME: ${{ secrets.NORDNET_USERNAME }}
           NORDNET_PASSWORD: ${{ secrets.NORDNET_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-
-        # grant access for specified teams
-        # teams: Microservices, Bots House Family
+        }
