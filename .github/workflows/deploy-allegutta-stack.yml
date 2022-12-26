@@ -115,7 +115,7 @@ jobs:
       shell: bash
 
     - name: Deploy stack to Portainer
-    - uses: bots-house/portainer-deploy-stack-action
+    - uses: bots-house/portainer-deploy-stack-action@v1
       with:
         # url of Poratainer instance
         portainer-url: ${{ secrets.PORTAINER_HOST }}
