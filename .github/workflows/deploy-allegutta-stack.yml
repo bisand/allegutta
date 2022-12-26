@@ -117,7 +117,7 @@ jobs:
           portainer-host: ${{ secrets.PORTAINER_HOST }}
           username: ${{ secrets.PORTAINER_USERNAME }}
           password: ${{ secrets.PORTAINER_PASSWORD }}
+          endpoint-id: 4
           stack-name: 'allegutta'
-          stack-definition: 'stack-definition.yml'
-          template-variables: '{"username": "MrCool"}'
-          image: ${{ env.DOCKER_IMAGE_URI }}:${{ env.IMAGE_TAG }}
+          stack-definition: 'docker-compose.yml'
+          template-variables: '{"NORDNET_USERNAME": "${{ secrets.NORDNET_USERNAME }}", "NORDNET_PASSWORD": "${{ secrets.NORDNET_PASSWORD }}", "MYSQL_ROOT_PASSWORD": "${{ secrets.MYSQL_ROOT_PASSWORD }}", "MYSQL_DATABASE": "${{ secrets.MYSQL_DATABASE }}", "MYSQL_USER": "${{ secrets.MYSQL_USER }}", "MYSQL_PASSWORD": "${{ secrets.MYSQL_PASSWORD }}"}'
