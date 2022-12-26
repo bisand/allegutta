@@ -24,15 +24,24 @@ jobs:
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@4.1.1
+      uses: docker/metadata-action@v4.1.1
       with:
         images: bisand/allegutta-proxy
 
-    - name: Build allegutta.proxy Docker image
-      run: docker build . --file Dockerfile.proxy --tag bisand/allegutta-proxy:$(date +%s)
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3.2.0
+      with:
+        context: .
+        file: Dockerfile.proxy
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+#    - name: Build allegutta.proxy Docker image
+#      run: docker build . --file Dockerfile.proxy --tag bisand/allegutta-proxy:$(date +%s)
     
-    - name: Build allegutta.api Docker image
-      run: docker build . --file Dockerfile.api --tag bisand/allegutta-api:$(date +%s)
+#    - name: Build allegutta.api Docker image
+#      run: docker build . --file Dockerfile.api --tag bisand/allegutta-api:$(date +%s)
     
-    - name: Build allegutta.web Docker image
-      run: docker build . --file Dockerfile.web --tag bisand/allegutta-web:$(date +%s)
+#    - name: Build allegutta.web Docker image
+#      run: docker build . --file Dockerfile.web --tag bisand/allegutta-web:$(date +%s)
