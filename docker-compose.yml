@@ -9,24 +9,27 @@ volumes:
 services:
 
   allegutta-proxy:
+    image: bisand/allegutta-proxy
     container_name: allegutta-proxy
-    build:
-      context: .
-      dockerfile: Dockerfile.proxy
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.proxy
     ports:
       - '8080:80'
 
   allegutta-web:
+    image: bisand/allegutta-web
     container_name: allegutta-web
-    build:
-      context: .
-      dockerfile: Dockerfile.web
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.web
 
   allegutta-api:
+    image: bisand/allegutta-api
     container_name: allegutta-api
-    build:
-      context: .
-      dockerfile: Dockerfile.api
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.api
     environment:
       PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
       PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
