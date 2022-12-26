@@ -24,6 +24,8 @@ jobs:
       id: meta
       uses: docker/metadata-action@v4
       with:
+        tags: |
+          type=semver,pattern={{version}}
         images: |
           bisand/allegutta-proxy
           bisand/allegutta-web
