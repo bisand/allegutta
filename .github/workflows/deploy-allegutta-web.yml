@@ -24,10 +24,8 @@ jobs:
       id: meta
       uses: docker/metadata-action@v4
       with:
-        tags: |
-          type=semver,pattern={{version}}
-        images: |
-          bisand/allegutta-web
+        tags: type=semver,pattern={{version}}
+        images: bisand/allegutta-web
 
     - name: Build and push allegutta-web Docker image
       uses: docker/build-push-action@v3

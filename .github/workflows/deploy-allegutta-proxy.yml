@@ -24,10 +24,8 @@ jobs:
       id: meta
       uses: docker/metadata-action@v4
       with:
-        tags: |
-          type=semver,pattern={{version}}
-        images: |
-          bisand/allegutta-proxy
+        tags: type=semver,pattern={{version}}
+        images: bisand/allegutta-proxy
 
     - name: Build and push allegutta-proxy Docker image
       uses: docker/build-push-action@v3
