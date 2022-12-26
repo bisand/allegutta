@@ -115,12 +115,32 @@ jobs:
       shell: bash
 
     - name: Deploy stack to Portainer
-      uses: carlrygart/portainer-stack-deploy@v1
+    - uses: bots-house/portainer-deploy-stack-action
       with:
-        portainer-host: ${{ secrets.PORTAINER_HOST }}
-        username: ${{ secrets.PORTAINER_USERNAME }}
-        password: ${{ secrets.PORTAINER_PASSWORD }}
-        endpoint-id: 4
-        stack-name: 'allegutta'
-        stack-definition: 'docker-compose.yml'
-        template-variables: '{"NORDNET_USERNAME": "${{ secrets.NORDNET_USERNAME }}", "NORDNET_PASSWORD": "${{ secrets.NORDNET_PASSWORD }}", "MYSQL_ROOT_PASSWORD": "${{ secrets.MYSQL_ROOT_PASSWORD }}", "MYSQL_DATABASE": "${{ secrets.MYSQL_DATABASE }}", "MYSQL_USER": "${{ secrets.MYSQL_USER }}", "MYSQL_PASSWORD": "${{ secrets.MYSQL_PASSWORD }}"}'
+        # url of Poratainer instance
+        portainer-url: ${{ secrets.PORTAINER_HOST }}
+
+        # portainer auth
+        portainer-username: ${{ secrets.PORTAINER_USERNAME }}
+        portainer-password: ${{ secrets.PORTAINER_PASSWORD }}
+
+        # internal portainer cluster id
+        portainer-endpoint: 4
+
+        # stack name
+        stack-name: allegutta
+
+        # docker stack file location
+        stack-file: docker-compose.yml
+
+        # vars to substitute in stack
+        stack-vars: |
+          NORDNET_USERNAME: ${{ secrets.NORDNET_USERNAME }}
+          NORDNET_PASSWORD: ${{ secrets.NORDNET_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
+        # grant access for specified teams
+        # teams: Microservices, Bots House Family
