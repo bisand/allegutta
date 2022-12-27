@@ -19,18 +19,15 @@ services:
     image: bisand/allegutta-web
     container_name: allegutta-web
     depends_on:
-      allegutta-api:
-        condition: service_healthy
+      - allegutta-api:
     restart: always
 
   allegutta-api:
     image: bisand/allegutta-api
     container_name: allegutta-api
     depends_on:
-      allegutta-proxy:
-        condition: service_healthy
-      allegutta-db:
-        condition: service_healthy
+      - allegutta-proxy:
+      - allegutta-db:
     environment:
       PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
       PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
