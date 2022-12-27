@@ -3,6 +3,8 @@ name: Deploy allegutta
 on:
   release:
     types: [published]
+  push:
+    branches: [ "main" ]
 
 jobs:
 
