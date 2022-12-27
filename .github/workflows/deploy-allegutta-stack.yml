@@ -49,7 +49,7 @@ jobs:
           context: .
           file: Dockerfile.proxy
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.DOCKER_TAGS }}
           labels: ${{ steps.meta.outputs.labels }}
 
   build-publish-api:
@@ -93,7 +93,7 @@ jobs:
           context: .
           file: Dockerfile.api
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.DOCKER_TAGS }}
           labels: ${{ steps.meta.outputs.labels }}
 
   build-publish-web:
@@ -137,7 +137,7 @@ jobs:
           context: .
           file: Dockerfile.web
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.DOCKER_TAGS }}
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy-allegutta:
