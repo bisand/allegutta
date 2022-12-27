@@ -7,7 +7,6 @@ on:
 jobs:
 
   deploy-allegutta:
-    needs: [build-publish-proxy, build-publish-web, build-publish-api]
     runs-on: ubuntu-latest
     steps:
 
