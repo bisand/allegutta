@@ -23,7 +23,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract metadata (tags, labels) for Docker
-        if: startsWith(github.ref, 'refs/tags/v')
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -67,7 +66,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract metadata (tags, labels) for Docker
-        if: startsWith(github.ref, 'refs/tags/v')
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -111,7 +109,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract metadata (tags, labels) for Docker
-        if: startsWith(github.ref, 'refs/tags/v')
         id: meta
         uses: docker/metadata-action@v4
         with:
