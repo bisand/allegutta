@@ -41,7 +41,7 @@ jobs:
           stack-name: allegutta
 
           # docker stack file location
-          stack-definition: docker-compose.yml
+          stack-definition: portainer-stack.yml
 
           # vars to substitute in stack
           template-variables: '{"NORDNET_USERNAME":"${{ secrets.NORDNET_USERNAME }}", "NORDNET_PASSWORD":"${{ secrets.NORDNET_PASSWORD }}", "MYSQL_ROOT_PASSWORD":"${{ secrets.MYSQL_ROOT_PASSWORD }}", "MYSQL_DATABASE":"${{ secrets.MYSQL_DATABASE }}", "MYSQL_USER":"${{ secrets.MYSQL_USER }}", "MYSQL_PASSWORD":"${{ secrets.MYSQL_PASSWORD }}"}'
