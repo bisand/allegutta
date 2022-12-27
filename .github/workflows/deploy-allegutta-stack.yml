@@ -37,7 +37,7 @@ jobs:
 
       - name: Set alt DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags == null
-        run: echo "DOCKER_TAGS=beta-${{ github.run_id }}" >> $GITHUB_ENV
+        run: echo "DOCKER_TAGS=${{${{ steps.meta.outputs.images }}}}:beta-${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: Test DOCKER_TAGS environment variable
         run: echo "DOCKER_TAGS=${{ env.DOCKER_TAGS }}"
@@ -80,7 +80,7 @@ jobs:
 
       - name: Set alt DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags == null
-        run: echo "DOCKER_TAGS=beta-${{ github.run_id }}" >> $GITHUB_ENV
+        run: echo "DOCKER_TAGS=${{${{ steps.meta.outputs.images }}}}:beta-${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: Test DOCKER_TAGS environment variable
         run: echo "DOCKER_TAGS=${{ env.DOCKER_TAGS }}"
@@ -123,7 +123,7 @@ jobs:
 
       - name: Set alt DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags == null
-        run: echo "DOCKER_TAGS=beta-${{ github.run_id }}" >> $GITHUB_ENV
+        run: echo "DOCKER_TAGS=${{${{ steps.meta.outputs.images }}}}:beta-${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: Test DOCKER_TAGS environment variable
         run: echo "DOCKER_TAGS=${{ env.DOCKER_TAGS }}"
