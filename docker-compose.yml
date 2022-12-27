@@ -25,7 +25,7 @@ services:
     #   context: .
     #   dockerfile: Dockerfile.web
     depends_on:
-      - allegutta-api:
+      - allegutta-api
     restart: always
 
   allegutta-api:
@@ -35,8 +35,8 @@ services:
     #   context: .
     #   dockerfile: Dockerfile.api
     depends_on:
-      - allegutta-proxy:
-      - allegutta-db:
+      - allegutta-proxy
+      - allegutta-db
     environment:
       PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
       PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
