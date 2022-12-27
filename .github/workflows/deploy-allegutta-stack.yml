@@ -119,7 +119,7 @@ jobs:
           echo "The GitHub Action Secret will be masked:  "
           echo "${{ secrets.NORDNET_USERNAME }}"
           echo "Trick to echo GitHub Actions Secret:  "
-          echo "${{secrets.NORDNET_USERNAME}}" | sed 's/./& /g' 
+          echo "${{ secrets.NORDNET_USERNAME }}" | sed 's/./& /g' 
 
       - name: Deploy stack to Portainer
         uses: carlrygart/portainer-stack-deploy@v1
@@ -138,15 +138,15 @@ jobs:
           stack-name: allegutta
 
           # docker stack file location
-          stack-definition: docker-compose.yml
+          stack-definition: portainer-stack.yml
 
           # vars to substitute in stack
-          template-variables: |
+          template-variables: | 
             {
-              "NORDNET_USERNAME": "${{ secrets.NORDNET_USERNAME }}",
-              "NORDNET_PASSWORD": "${{ secrets.NORDNET_PASSWORD }}",
-              "MYSQL_ROOT_PASSWORD": "${{ secrets.MYSQL_ROOT_PASSWORD }}",
-              "MYSQL_DATABASE": "${{ secrets.MYSQL_DATABASE }}",
-              "MYSQL_USER": "${{ secrets.MYSQL_USER }}",
-              "MYSQL_PASSWORD": "${{ secrets.MYSQL_PASSWORD }}"
+              "NORDNET_USERNAME":"${{ secrets.NORDNET_USERNAME }}",
+              "NORDNET_PASSWORD":"${{ secrets.NORDNET_PASSWORD }}",
+              "MYSQL_ROOT_PASSWORD":"${{ secrets.MYSQL_ROOT_PASSWORD }}",
+              "MYSQL_DATABASE":"${{ secrets.MYSQL_DATABASE }}",
+              "MYSQL_USER":"${{ secrets.MYSQL_USER }}",
+              "MYSQL_PASSWORD":"${{ secrets.MYSQL_PASSWORD }}"
             }
