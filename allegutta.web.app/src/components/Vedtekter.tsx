@@ -92,11 +92,12 @@ export class Vedtekter extends Component<any, any> {
         </p>
         <h6 id="organisasjon">§ 6 ORGANISASJON</h6>
         <ol>
-          <li>Årsmøte</li>
-          <p>Årsmøte skal avholdes årlig og innen utgangen av oktober. Styret
-            innkaller til årsmøtet. Innkalling med saksdokumenter skal sendes
-            medlemmene senest to uker før årsmøtet.
-          </p>
+          <li>Årsmøte
+            <p>Årsmøte skal avholdes årlig og innen utgangen av oktober. Styret
+              innkaller til årsmøtet. Innkalling med saksdokumenter skal sendes
+              medlemmene senest to uker før årsmøtet.
+            </p>
+          </li>
           <p>Følgende saker skal behandles på årsmøtet:
             <ol>
               <li>Styrets beretning</li>

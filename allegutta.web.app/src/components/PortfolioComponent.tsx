@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import { format } from 'date-fns'
 import { HubConnectionBuilder } from '@microsoft/signalr';
-import { Link, NavLink } from 'react-router-dom';
 
 export class PortfolioComponent extends Component<any, any> {
   static displayName = PortfolioComponent.name;
@@ -23,8 +22,8 @@ export class PortfolioComponent extends Component<any, any> {
       .withUrl('/hubs/portfolio')
       .withAutomaticReconnect()
       .build();
-    this._hubConnection.serverTimeoutInMilliseconds = 100000; // 100 second
     if (this._hubConnection) {
+      this._hubConnection.serverTimeoutInMilliseconds = 100000; // 100 second
       this._hubConnection.start()
         .then(() => {
           console.log('Connected!');
@@ -268,7 +267,7 @@ export class PortfolioComponent extends Component<any, any> {
             <th className={'d-none d-lg-table-cell text-end '}>{this.presentSum("costValue", 0)},-</th>
             <th></th>
             <th className='d-none d-xs-table-cell'></th>
-            <th className={'d-none d-lg-table-cell text-end ' + (portfolio.changeTotalPercent >= 0 ? "text-success" : "text-danger")}>
+            <th className={'d-none d-lg-table-cell text-end ' + (portfolio?.changeTotalPercent ?? 0 >= 0 ? "text-success" : "text-danger")}>
               {this.presentSum("currentValue", 0)},-
             </th>
             <th className={'d-none d-md-table-cell text-end ' + (this._dataSummary["returnValue"] >= 0 ? "text-success" : "text-danger")}>
