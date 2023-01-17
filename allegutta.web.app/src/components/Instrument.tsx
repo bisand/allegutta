@@ -9,8 +9,8 @@ export class Instrument extends Component<any, any> {
     this.incrementCounter = this.incrementCounter.bind(this);
   }
 
-  componentDidMount(): void {
-  }
+  // componentDidMount(): void {
+  // }
   incrementCounter() {
     this.setState({
       currentCount: this.state.currentCount + 1

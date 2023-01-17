@@ -1,3 +1,4 @@
+import React from 'react';
 import { Counter } from "./components/Counter";
 import { PortfolioComponent } from "./components/PortfolioComponent";
 import { Home } from "./components/Home";

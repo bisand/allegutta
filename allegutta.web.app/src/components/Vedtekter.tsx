@@ -217,13 +217,13 @@ export class Vedtekter extends Component<any, any> {
           </p>
           <p>
             Ekskludert medlems andel fastsettes som det laveste av følgende to beløp:
-            <ol type='a'>
-              <li>medlemmets innbetalinger (startinnskudd og månedlige sparebeløp, ref. <a href="#kapital">§ 4</a>) eller</li>
-              <li>90% av medlemmets andel vurdert slik denne paragraf bestemmer for
-                uttreden. Uttredelsesdato tilsvarende eksklusjonsdato. Ekskludert
-                medlems andel utbetales innen to uker.</li>
-            </ol>
           </p>
+          <ol type='a'>
+            <li>medlemmets innbetalinger (startinnskudd og månedlige sparebeløp, ref. <a href="#kapital">§ 4</a>) eller</li>
+            <li>90% av medlemmets andel vurdert slik denne paragraf bestemmer for
+              uttreden. Uttredelsesdato tilsvarende eksklusjonsdato. Ekskludert
+              medlems andel utbetales innen to uker.</li>
+          </ol>
           <p>
             Begrunnes eksklusjonen i manglende innbetaling av det månedlige
             sparebeløp eller i at klubben på annen måte har et økonomisk krav på

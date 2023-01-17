@@ -51,8 +51,8 @@ export class PortfolioComponent extends Component<any, any> {
   }
 
   private setSearchValue = (e: any) => {
-    let searchBox: any = document.getElementById("search-in-table");
-    let searchText: string = searchBox.value;
+    const searchBox: any = document.getElementById("search-in-table");
+    const searchText: string = searchBox.value;
     this.setState({ search: searchText });
   }
 
@@ -292,8 +292,8 @@ export class PortfolioComponent extends Component<any, any> {
     return data[property].toLocaleString('nb-NO', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   }
 
-  presentSum(property: string, decimals: number, average: boolean = false, resetValues: boolean = false): React.ReactNode {
-    let tmpSum = this._dataSummary[property] / (average && this._dataSummary[property + "_count"] && this._dataSummary[property + "_count"] > 0 ? this._dataSummary[property + "_count"] : 1);
+  presentSum(property: string, decimals: number, average = false, resetValues = false): React.ReactNode {
+    const tmpSum = this._dataSummary[property] / (average && this._dataSummary[property + "_count"] && this._dataSummary[property + "_count"] > 0 ? this._dataSummary[property + "_count"] : 1);
     const result = tmpSum.toLocaleString('nb-NO', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
     if (resetValues) {
       this._dataSummary[property] = 0;
@@ -315,11 +315,11 @@ export class PortfolioComponent extends Component<any, any> {
   };
 
   render() {
-    let templateLoading = <div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div>
+    const templateLoading = <div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div>
 
-    let summary = this.state.loading ? templateLoading : this.renderPanel(this.renderPortfolioSummary(this.state.portfolio), "Porteføljens verdi");
-    let controls = this.renderPortfolioControls(this.state.portfolio);
-    let positions = this.state.loading ? templateLoading : this.renderPanel(this.renderPositionsTable(this.state.portfolio), "Beholdning");
+    const summary = this.state.loading ? templateLoading : this.renderPanel(this.renderPortfolioSummary(this.state.portfolio), "Porteføljens verdi");
+    const controls = this.renderPortfolioControls(this.state.portfolio);
+    const positions = this.state.loading ? templateLoading : this.renderPanel(this.renderPositionsTable(this.state.portfolio), "Beholdning");
 
     return (
       <div>
