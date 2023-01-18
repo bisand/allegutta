@@ -39,6 +39,9 @@ RUN mkdir /commandhistory \
     && touch /commandhistory/.zsh_history \
     && chown -R $USERNAME /commandhistory
 
+# Add MariaDB
+RUN apt-get install -y mariadb-server
+
 USER $USERNAME
 
 # Install Oh-My-Zsh
