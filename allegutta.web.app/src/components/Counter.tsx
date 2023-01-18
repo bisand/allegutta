@@ -11,7 +11,7 @@ export class Counter extends Component<any, any> {
 
   incrementCounter() {
     this.setState((prevState: any) => {
-      currentCount: prevState.currentCount + 1
+      return { currentCount: prevState.currentCount + 1 };
     });
   }
 
