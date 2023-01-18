@@ -16,6 +16,7 @@ export class PortfolioComponent extends Component<any, any> {
     this.state = { portfolio: {}, loading: true, portfolioUpdated: new Date(), search: '' };
 
     window.onbeforeunload = (event) => {
+      console.log(event);
       this._hubConnection.stop();
     };
     this._hubConnection = new HubConnectionBuilder()
@@ -51,6 +52,7 @@ export class PortfolioComponent extends Component<any, any> {
   }
 
   private setSearchValue = (e: any) => {
+    console.log(e);
     const searchBox: any = document.getElementById("search-in-table");
     const searchText: string = searchBox.value;
     this.setState({ search: searchText });

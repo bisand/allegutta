@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class Home extends Component<any, any> {
+export class Home extends Component<unknown, unknown> {
   static displayName = Home.name;
 
   greetUser(user: string) {

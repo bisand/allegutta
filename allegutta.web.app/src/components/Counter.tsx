@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 
-export class Counter extends Component<any, any> {
+export class Counter extends Component<unknown, { currentCount: number }> {
   static displayName = Counter.name;
 
-  constructor(props: any) {
+  constructor(props: unknown) {
     super(props);
     this.state = { currentCount: 0 };
     this.incrementCounter = this.incrementCounter.bind(this);
   }
 
   incrementCounter() {
-    this.setState((prevState: any) => {
+    this.setState((prevState: { currentCount: number }) => {
       return { currentCount: prevState.currentCount + 1 };
     });
   }
