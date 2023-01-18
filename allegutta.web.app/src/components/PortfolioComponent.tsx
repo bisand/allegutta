@@ -305,7 +305,7 @@ export class PortfolioComponent extends Component<any, any> {
   private sortClick = (event: React.MouseEvent<HTMLTableCellElement>, sortProperty: string) => {
     event.preventDefault();
 
-    const cell: HTMLTableCellElement = event.currentTarget;
+    // const cell: HTMLTableCellElement = event.currentTarget;
     if (sortProperty === this._sortProperty)
       this._sortOrder[sortProperty] = (this._sortOrder[sortProperty] ?? "desc") === "desc" ? "asc" : "desc";
     else

@@ -99,15 +99,15 @@ export class Vedtekter extends Component<any, any> {
             </p>
           </li>
           <p>Følgende saker skal behandles på årsmøtet:
-            <ol>
-              <li>Styrets beretning</li>
-              <li>Fastsettelse av resultatregnskap og balanse</li>
-              <li>Revisors rapport</li>
-              <li>Fastsettelse av sparebeløp i h.h.t. <a href="#kapital">§ 4</a>, 2. ledd</li>
-              <li>Eventuelle vedtektsendringer</li>
-              <li>Valg av leder, styre og revisor</li>
-            </ol>
           </p>
+          <ol>
+            <li>Styrets beretning</li>
+            <li>Fastsettelse av resultatregnskap og balanse</li>
+            <li>Revisors rapport</li>
+            <li>Fastsettelse av sparebeløp i h.h.t. <a href="#kapital">§ 4</a>, 2. ledd</li>
+            <li>Eventuelle vedtektsendringer</li>
+            <li>Valg av leder, styre og revisor</li>
+          </ol>
           <li>Styret</li>
           <p>
             Styret består av leder, samt 2 - 3 medlemmer.

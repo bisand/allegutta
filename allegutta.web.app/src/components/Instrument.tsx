@@ -12,8 +12,8 @@ export class Instrument extends Component<any, any> {
   // componentDidMount(): void {
   // }
   incrementCounter() {
-    this.setState({
-      currentCount: this.state.currentCount + 1
+    this.setState((prevState: any) => {
+      currentCount: prevState.currentCount + 1
     });
   }
 
