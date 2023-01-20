@@ -6,8 +6,7 @@ export class Instrument extends Component<any, any> {
 
   constructor(props: any) {
     super(props);
-    const { symbol } = useParams();
-    this.state = { currentInstrument: {}, currentCount: 0, symbol };
+    this.state = { currentInstrument: {}, currentCount: 0 };
     this.incrementCounter = this.incrementCounter.bind(this);
   }
 
@@ -20,10 +19,11 @@ export class Instrument extends Component<any, any> {
   }
 
   render() {
+    const { symbol } = this.props.match.params;  // Unpacking and retrieve symbol
     return (
       <div>
         <h1>Counter</h1>
-        <div>Id: {this.state.symbol}</div>
+        <div>Id: {symbol}</div>
         <p>This is a simple example of a React component.</p>
 
         <p aria-live="polite">Current count: <strong>{this.state.currentCount}</strong></p>
