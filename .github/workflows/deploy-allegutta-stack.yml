@@ -3,8 +3,8 @@ name: Deploy allegutta
 on:
   release:
     types: [published]
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
 
 jobs:
 
@@ -26,10 +26,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          tags: |
-            type=semver,pattern={{version}}
           images: |
             bisand/allegutta-proxy
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - name: Set DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags != null
@@ -52,8 +53,8 @@ jobs:
         with:
           context: .
           file: Dockerfile.proxy
-          push: true
-          tags: ${{ env.DOCKER_TAGS }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   build-publish-api:
@@ -74,14 +75,20 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          tags: |
-            type=semver,pattern={{version}}
           images: |
             bisand/allegutta-api
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - name: Set DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags != null
-        run: echo "DOCKER_TAGS=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
+        run: |
+          MULTI_LINES_TEXT="${{ steps.meta.outputs.tags }}"
+          echo "steps.meta.outputs.tags = ${{ steps.meta.outputs.tags }}"
+          echo "DOCKER_TAGS<<EOF" >> $GITHUB_ENV
+          echo $MULTI_LINES_TEXT >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Set alt DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags == null
@@ -95,8 +102,8 @@ jobs:
         with:
           context: .
           file: Dockerfile.api
-          push: true
-          tags: ${{ env.DOCKER_TAGS }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   build-publish-web:
@@ -117,14 +124,20 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          tags: |
-            type=semver,pattern={{version}}
           images: |
             bisand/allegutta-web
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - name: Set DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags != null
-        run: echo "DOCKER_TAGS=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
+        run: |
+          MULTI_LINES_TEXT="${{ steps.meta.outputs.tags }}"
+          echo "steps.meta.outputs.tags = ${{ steps.meta.outputs.tags }}"
+          echo "DOCKER_TAGS<<EOF" >> $GITHUB_ENV
+          echo $MULTI_LINES_TEXT >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Set alt DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags == null
@@ -138,8 +151,8 @@ jobs:
         with:
           context: .
           file: Dockerfile.web
-          push: true
-          tags: ${{ env.DOCKER_TAGS }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy-allegutta:
