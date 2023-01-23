@@ -34,9 +34,10 @@ jobs:
       - name: Set DOCKER_TAGS environment variable
         if: steps.meta.outputs.tags != null
         run: |
+          MULTI_LINES_TEXT="${{ steps.meta.outputs.tags }}"
           echo "steps.meta.outputs.tags = ${{ steps.meta.outputs.tags }}"
           echo "DOCKER_TAGS<<EOF" >> $GITHUB_ENV
-          echo ${{ steps.meta.outputs.tags }} >> $GITHUB_ENV
+          echo $MULTI_LINES_TEXT >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Set alt DOCKER_TAGS environment variable
