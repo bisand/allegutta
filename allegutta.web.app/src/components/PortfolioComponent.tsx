@@ -328,6 +328,7 @@ export class PortfolioComponent extends Component<any, any> {
         {summary}
         {controls}
         {positions}
+        <div className="ms-3 d-xl-none fw-lighter fst-italic">Portfolio updated {format(this.state.portfolioUpdated, 'yyyy-MM-dd HH:mm:ss')}</div>
       </div>
     );
   }

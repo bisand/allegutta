@@ -9,31 +9,22 @@ volumes:
 services:
 
   allegutta-proxy:
-    image: bisand/allegutta-proxy
+    image: bisand/allegutta-proxy:latest
     container_name: allegutta-proxy
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile.proxy
     ports:
       - '8080:80'
     restart: always
 
   allegutta-web:
-    image: bisand/allegutta-web
+    image: bisand/allegutta-web:latest
     container_name: allegutta-web
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile.web
     depends_on:
       - allegutta-api
     restart: always
 
   allegutta-api:
-    image: bisand/allegutta-api
+    image: bisand/allegutta-api:latest
     container_name: allegutta-api
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile.api
     depends_on:
       - allegutta-proxy
       - allegutta-db
@@ -50,7 +41,7 @@ services:
     restart: always
 
   allegutta-db:
-    image: yobasystems/alpine-mariadb
+    image: yobasystems/alpine-mariadb:latest
     container_name: allegutta-db
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
