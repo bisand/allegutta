@@ -55,29 +55,30 @@ export class NavMenu extends Component<any, any> {
   render() {
     return (
       <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
-          <NavbarBrand tag={Link} to="/">AlleGutta!</NavbarBrand>
-          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-          <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-            <ul className="navbar-nav flex-grow">
-              <NavItem>
-                <NavLink tag={Link} to="/">Hjem</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/news">Nyheter</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/vedtekter">Vedtekter</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/portfolio">Portefølje</NavLink>
-              </NavItem>
-            </ul>
-          </Collapse>
+        <Navbar className="navbar navbar-expand-lg" container="fluid" light>
+          <NavbarBrand tag={Link} to="/" >AlleGutta!</NavbarBrand>
+          <button className="btn btn-link" onClick={() => window.location.reload()} title="Oppdatere side"><i className="bi bi-arrow-clockwise"></i></button>
           <a id="darkmode-button" className="btn btn-outline-secondary">
             <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
             <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
           </a>
+          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+          <Collapse className="d-sm-inline-flex flex-sm-row-reverse col-12 justify-content-end" isOpen={!this.state.collapsed} navbar>
+            <ul className="navbar-nav flex-grow">
+              <NavItem>
+                <NavLink tag={Link} to="/" onClick={this.toggleNavbar}>Hjem</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/news" onClick={this.toggleNavbar}>Nyheter</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/vedtekter" onClick={this.toggleNavbar}>Vedtekter</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/portfolio" onClick={this.toggleNavbar}>Portefølje</NavLink>
+              </NavItem>
+            </ul>
+          </Collapse>
         </Navbar>
       </header>
     );
