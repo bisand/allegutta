@@ -7,7 +7,7 @@ import { Vedtekter } from './components/Vedtekter';
 import { News } from './components/News';
 import { useParams } from 'react-router-dom';
 
-const InstrumentWrapper = (props: any) => {
+const InstrumentWrapper = (props: Record<string, unknown>) => {
   const params = useParams();
   console.log('WRAPPER PARAMS: ', params);
   return (

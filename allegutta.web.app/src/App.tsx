@@ -7,7 +7,7 @@ import { Layout } from './components/Layout';
 export default class App extends Component {
   static displayName = App.name;
 
-  constructor(props: any) {
+  constructor(props: Record<string, unknown>) {
     super(props);
     this.state = { symbol: '' };
   }
