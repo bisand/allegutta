@@ -161,6 +161,7 @@ jobs:
 
     steps:
       - name: Update stack on Portainer
+        if: success() || failure() # Remove this when PR is accepted (https://github.com/jasongitmail/fast-webhook/pull/8)
         uses: jasongitmail/fast-webhook@v1
         with:
           url: ${{ secrets.PORTAINER_WEBHOOK_URL }}
