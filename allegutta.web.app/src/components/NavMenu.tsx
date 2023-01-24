@@ -55,30 +55,34 @@ export class NavMenu extends Component<any, any> {
   render() {
     return (
       <header>
-        <Navbar className="navbar navbar-expand-lg" container="fluid" light>
-          <NavbarBrand tag={Link} to="/" >AlleGutta!</NavbarBrand>
-          <button className="btn btn-link" onClick={() => window.location.reload()} title="Oppdatere side"><i className="bi bi-arrow-clockwise"></i></button>
-          <a id="darkmode-button" className="btn btn-outline-secondary">
-            <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
-            <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
-          </a>
-          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-          <Collapse className="d-sm-inline-flex flex-sm-row-reverse col-12 justify-content-end" isOpen={!this.state.collapsed} navbar>
-            <ul className="navbar-nav flex-grow">
-              <NavItem>
-                <NavLink tag={Link} to="/" onClick={this.toggleNavbar}>Hjem</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/news" onClick={this.toggleNavbar}>Nyheter</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/vedtekter" onClick={this.toggleNavbar}>Vedtekter</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} to="/portfolio" onClick={this.toggleNavbar}>Portefølje</NavLink>
-              </NavItem>
-            </ul>
-          </Collapse>
+        <Navbar className="navbar navbar-expand-lg" container light>
+          <div className='d-flex align-items-start'>
+            <NavbarBrand tag={Link} to="/" className='' >AlleGutta!</NavbarBrand>
+          </div>
+          <div className='d-lg-flex justify-content-end'>
+            <button type='button' className="btn btn-link" onClick={() => window.location.reload()} title="Oppdatere side"><i className="bi bi-arrow-clockwise"></i></button>
+            <a id="darkmode-button" className="btn btn-outline-secondary">
+              <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
+              <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
+            </a>
+            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" data-toggle="collapse" />
+            <Collapse className="d-lg-inline-flex flex-lg-row-reverse" id="navbarCollapse" isOpen={!this.state.collapsed} navbar>
+              <ul className="navbar-nav flex-grow">
+                <NavItem>
+                  <NavLink tag={Link} to="/" data-toggle="collapse" data-target="#navbarCollapse">Hjem</NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} to="/news" data-toggle="collapse" data-target="#navbarCollapse">Nyheter</NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} to="/vedtekter" data-toggle="collapse" data-target="#navbarCollapse">Vedtekter</NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} to="/portfolio" data-toggle="collapse" data-target="#navbarCollapse">Portefølje</NavLink>
+                </NavItem>
+              </ul>
+            </Collapse>
+          </div>
         </Navbar>
       </header>
     );
