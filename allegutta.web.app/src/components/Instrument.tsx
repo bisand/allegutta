@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from 'react';
-import { useParams } from 'react-router-dom'
 
 export class Instrument extends Component<any, any> {
   static displayName = Instrument.name;

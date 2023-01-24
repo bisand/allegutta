@@ -1,7 +1,7 @@
 export interface NordnetInstrument {
     mifid2_category: number;
     price_type?: string;
-    tradables?: {};
+    tradables?: Record<string, unknown>;
     instrument_id: number;
     asset_class?: string;
     instrument_type?: string;
