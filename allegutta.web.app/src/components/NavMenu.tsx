@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
@@ -23,6 +23,11 @@ export class NavMenu extends Component<any, any> {
     });
   }
 
+  closeNavbar() {
+    if (this.state.collapsed !== true) {
+      this.toggleNavbar();
+    }
+  }
   componentDidMount() {
     if (this._renderedScript)
       return;
@@ -56,33 +61,42 @@ export class NavMenu extends Component<any, any> {
     return (
       <header>
         <Navbar className="navbar navbar-expand-lg" container light>
-          <div className='d-flex align-items-start'>
-            <NavbarBrand tag={Link} to="/" className='' >AlleGutta!</NavbarBrand>
-          </div>
-          <div className='d-lg-flex justify-content-end'>
-            <button type='button' className="btn btn-link" onClick={() => window.location.reload()} title="Oppdatere side"><i className="bi bi-arrow-clockwise"></i></button>
-            <a id="darkmode-button" className="btn btn-outline-secondary">
-              <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
-              <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
-            </a>
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" data-toggle="collapse" />
-            <Collapse className="d-lg-inline-flex flex-lg-row-reverse" id="navbarCollapse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <NavLink tag={Link} to="/" data-toggle="collapse" data-target="#navbarCollapse">Hjem</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} to="/news" data-toggle="collapse" data-target="#navbarCollapse">Nyheter</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} to="/vedtekter" data-toggle="collapse" data-target="#navbarCollapse">Vedtekter</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} to="/portfolio" data-toggle="collapse" data-target="#navbarCollapse">Portefølje</NavLink>
-                </NavItem>
-              </ul>
-            </Collapse>
-          </div>
+          <NavbarBrand tag={Link} to="/" className='' >
+            <img
+              alt="logo"
+              src="logo192.png"
+              className="align-bottom me-2"
+              style={{
+                height: 32,
+                width: 32
+              }}
+            />
+            AlleGutta!</NavbarBrand>
+
+          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" data-toggle="collapse" />
+          <Collapse isOpen={!this.state.collapsed} navbar>
+            <Nav className="ms-auto" navbar>
+              <NavItem className="ms-auto">
+                <NavLink onClick={() => this.closeNavbar()} tag={Link} to="/" >Hjem</NavLink>
+              </NavItem>
+              <NavItem className="ms-auto">
+                <NavLink onClick={() => this.closeNavbar()} tag={Link} to="/news" >Nyheter</NavLink>
+              </NavItem>
+              <NavItem className="ms-auto">
+                <NavLink onClick={() => this.closeNavbar()} tag={Link} to="/vedtekter" >Vedtekter</NavLink>
+              </NavItem>
+              <NavItem className="ms-auto">
+                <NavLink onClick={() => this.closeNavbar()} tag={Link} to="/portfolio" >Portefølje</NavLink>
+              </NavItem>
+            </Nav>
+            <NavbarText className="d-flex justify-content-end">
+              <button type='button' className="btn btn-link" onClick={() => window.location.reload()} title="Oppdatere side"><i className="bi bi-arrow-clockwise"></i></button>
+              <a id="darkmode-button" className="btn btn-outline-secondary">
+                <i id="darkmode-moon" className="fa fa-moon-o fa-fw d-none d-light-inline" title="Switch to dark mode"></i>
+                <i id="darkmode-sun" className="fa fa-sun-o fa-fw d-none d-dark-inline" title="Switch to light mode"></i>
+              </a>
+            </NavbarText>
+          </Collapse>
         </Navbar>
       </header>
     );
