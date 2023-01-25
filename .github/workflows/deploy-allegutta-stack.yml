@@ -161,7 +161,7 @@ jobs:
 
     steps:
       - name: Update stack on Portainer
-        uses: bisand/fast-webhook@master
+        uses: jasongitmail/fast-webhook@v1
         with:
           url: ${{ secrets.PORTAINER_WEBHOOK_URL }}
           json: '{}'
