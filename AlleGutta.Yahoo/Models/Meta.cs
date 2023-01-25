@@ -51,7 +51,7 @@ public class Meta
     public CurrentTradingPeriod? CurrentTradingPeriod { get; init; }
 
     [JsonPropertyName("tradingPeriods")]
-    public IEnumerable<TradingPeriod>? TradingPeriods { get; init; }
+    public IEnumerable<IEnumerable<TradingPeriod>>? TradingPeriods { get; init; }
 
     [JsonPropertyName("dataGranularity")]
     public string? DataGranularity { get; init; }

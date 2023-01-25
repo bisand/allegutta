@@ -41,7 +41,7 @@ export class PortfolioComponent extends Component<any, any> {
       return;
     this._didMount = true;
 
-    this.fetchWeather();
+    this.fetchData();
     this._hubConnection.on('PortfolioUpdated', (portfolio: any) => {
       this.setState({ portfolio: portfolio, loading: false, portfolioUpdated: new Date() });
       console.log('Portfolio updated.');
@@ -334,7 +334,7 @@ export class PortfolioComponent extends Component<any, any> {
     );
   }
 
-  async fetchWeather() {
+  async fetchData() {
     try {
       this.setState({ ...this.state, loading: true });
       const response = await axios.get('api/portfolio/allegutta');
@@ -344,6 +344,7 @@ export class PortfolioComponent extends Component<any, any> {
       this.setState({ ...this.state, loading: false });
     }
   }
+
   async populateWeatherData() {
     const response = await fetch('api/weatherforecast');
     const data = await response.json();

@@ -41,6 +41,7 @@ public sealed class YahooApi
 
     public async Task<IEnumerable<ChartResult>> GetChartData(string symbol, string range, string interval)
     {
+        symbol = symbol.EndsWith(".OL", StringComparison.OrdinalIgnoreCase) ? symbol : $"{symbol.ToUpper()}.OL";
         // var searchParams = { symbol, range, interval, region: 'NO', lang: 'nb-NO', includePrePost: false, events: 'div|split|earn' };
         var builder = new UriBuilder(chartUrl)
         {
