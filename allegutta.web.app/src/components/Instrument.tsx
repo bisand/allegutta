@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from 'react';
-import { testData } from '../data/test-data';
 import Chart from "react-apexcharts";
 import axios from 'axios';
 
