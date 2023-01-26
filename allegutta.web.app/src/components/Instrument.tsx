@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from 'react';
-import Chart from "react-apexcharts";
 import axios from 'axios';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 
 export class Instrument extends Component<any, any> {
@@ -13,50 +13,6 @@ export class Instrument extends Component<any, any> {
     this.state = {
       currentInstrument: {},
       currentCount: 0,
-      options: {
-        chart: {
-          height: 350,
-          type: "line",
-        },
-        title: {
-          text: "CandleStick Chart",
-          align: "left"
-        },
-        stroke: {
-          width: [1, 1],
-          curve: "stepline"
-        },
-        markers: {
-          showNullDataPoints: true
-        },
-        xaxis: {
-          type: "datetime"
-        },
-        yaxis: [{
-          seriesName: 'values',
-          decimalsInFloat: 2,
-          showForNullSeries: true,
-          forceNiceScale: true,
-          title: {
-            text: 'Website Blog',
-          },
-
-        }, {
-          opposite: true,
-          decimalsInFloat: 0,
-          axisTicks: {
-            show: true
-          },
-          axisBorder: {
-            show: true,
-          },    
-          seriesName: 'volume',
-          title: {
-            text: 'Social Media'
-          }
-        }]
-      },
-      series: [{}]
     };
     this.incrementCounter = this.incrementCounter.bind(this);
   }
@@ -95,13 +51,40 @@ export class Instrument extends Component<any, any> {
     return items;
   }
 
-  private getVolumeData(data: any) {
+  private getSimpleData(data: any) {
     // const diff_minutes = (dt2: Date, dt1: Date) => {
     //   return Math.abs(((dt2.getTime() - dt1.getTime()) / 1000) / 60);
     // };
     const items = data.timestamp.map((time: Date, index: number) => {
       return {
         x: time,
+        o: Math.round((data.indicators.quote[0].open[index] + Number.EPSILON) * 100) / 100,
+        h: Math.round((data.indicators.quote[0].high[index] + Number.EPSILON) * 100) / 100,
+        l: Math.round((data.indicators.quote[0].low[index] + Number.EPSILON) * 100) / 100,
+        c: Math.round((data.indicators.quote[0].close[index] + Number.EPSILON) * 100) / 100,
+        v: Math.round((data.indicators.quote[0].volume[index] + Number.EPSILON) * 100) / 100
+      }
+    }).reduce((acc: any, current: any, i: number, arr: any[]) => {
+      if (i > 0 && !current?.c) {
+        current.o = arr[i - 1].o;
+        current.h = arr[i - 1].h;
+        current.l = arr[i - 1].l;
+        current.c = arr[i - 1].c;
+      }
+
+      acc.push(current);
+      return acc;
+    }, []);
+    return items;
+  }
+
+  private getVolumeData(data: any) {
+    // const diff_minutes = (dt2: Date, dt1: Date) => {
+    //   return Math.abs(((dt2.getTime() - dt1.getTime()) / 1000) / 60);
+    // };
+    const items = data.timestamp.map((time: Date, index: number) => {
+      return {
+        time,
         y: data.indicators.quote[0].volume[index]
       }
     });
@@ -111,9 +94,10 @@ export class Instrument extends Component<any, any> {
   async fetchData(symbol: string) {
     try {
       const response = await axios.get(`api/instruments/${symbol}/chart/1d/2m`);
-      const valueData = this.getValueData(response.data[0], 'stepline');
-      const volumeData = this.getVolumeData(response.data[0]);
-      this.setState({ series: [{ name: "values", type: "line", data: valueData }, { name: "volume", type: "column", data: volumeData }] });
+      // const valueData = this.getValueData(response.data[0], 'stepline');
+      // const volumeData = this.getVolumeData(response.data[0]);
+      const simpleData = this.getSimpleData(response.data[0]);
+      this.setState({ simpleData });
     } catch (e) {
       console.log(e);
     }
@@ -128,12 +112,15 @@ export class Instrument extends Component<any, any> {
 
   private renderChart() {
     return (
-      <Chart
-        options={this.state.options}
-        series={this.state.series}
-        type="line"
-        width="1000"
-      />
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={this.state.simpleData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+          <Line type="stepAfter" dataKey="c" stroke="#8884d8" dot={false} activeDot={{ r: 2 }} connectNulls={true} />
+          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+          <XAxis dataKey="x" />
+          <YAxis type="number" domain={['dataMin - (dataMin*1.9)', 'dataMax + (dataMax*1.1)']} />
+          <Tooltip />
+        </LineChart>
+      </ResponsiveContainer>
     );
   }
 
