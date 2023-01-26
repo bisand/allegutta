@@ -41,8 +41,11 @@ public sealed class YahooApi
 
     public async Task<IEnumerable<ChartResult>> GetChartData(string symbol, string range, string interval)
     {
-        symbol = symbol.EndsWith(".OL", StringComparison.OrdinalIgnoreCase) ? symbol : $"{symbol.ToUpper()}.OL";
+        // https://query1.finance.yahoo.com/v8/finance/chart/RECSI.OL
+        // ?region=US&lang=en-US&includePrePost=false&interval=2m&useYfid=true&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance
         // var searchParams = { symbol, range, interval, region: 'NO', lang: 'nb-NO', includePrePost: false, events: 'div|split|earn' };
+
+        symbol = symbol.EndsWith(".OL", StringComparison.OrdinalIgnoreCase) ? symbol : $"{symbol.ToUpper()}.OL";
         var builder = new UriBuilder(chartUrl)
         {
             Port = -1

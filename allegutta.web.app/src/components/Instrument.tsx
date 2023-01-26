@@ -16,18 +16,45 @@ export class Instrument extends Component<any, any> {
       options: {
         chart: {
           height: 350,
-          type: "line"
+          type: "line",
         },
         title: {
           text: "CandleStick Chart",
           align: "left"
         },
         stroke: {
-          width: [3, 1]
+          width: [1, 1],
+          curve: "stepline"
+        },
+        markers: {
+          showNullDataPoints: true
         },
         xaxis: {
           type: "datetime"
-        }
+        },
+        yaxis: [{
+          seriesName: 'values',
+          decimalsInFloat: 2,
+          showForNullSeries: true,
+          forceNiceScale: true,
+          title: {
+            text: 'Website Blog',
+          },
+
+        }, {
+          opposite: true,
+          decimalsInFloat: 0,
+          axisTicks: {
+            show: true
+          },
+          axisBorder: {
+            show: true,
+          },    
+          seriesName: 'volume',
+          title: {
+            text: 'Social Media'
+          }
+        }]
       },
       series: [{}]
     };
@@ -44,7 +71,10 @@ export class Instrument extends Component<any, any> {
     this.fetchData(symbol);
   }
 
-  private transformData(data: any) {
+  private getValueData(data: any, chartType: string) {
+    // const diff_minutes = (dt2: Date, dt1: Date) => {
+    //   return Math.abs(((dt2.getTime() - dt1.getTime()) / 1000) / 60);
+    // };
     const items = data.timestamp.map((time: Date, index: number) => {
       return {
         x: time,
@@ -56,14 +86,34 @@ export class Instrument extends Component<any, any> {
         ]
       }
     });
+    if (chartType === 'stepline') {
+      return items.map((item: any) => {
+        item.y = item.y[3];
+        return item;
+      });
+    }
+    return items;
+  }
+
+  private getVolumeData(data: any) {
+    // const diff_minutes = (dt2: Date, dt1: Date) => {
+    //   return Math.abs(((dt2.getTime() - dt1.getTime()) / 1000) / 60);
+    // };
+    const items = data.timestamp.map((time: Date, index: number) => {
+      return {
+        x: time,
+        y: data.indicators.quote[0].volume[index]
+      }
+    });
     return items;
   }
 
   async fetchData(symbol: string) {
     try {
-      const response = await axios.get(`api/instruments/${symbol}/chart/1d/1m`);
-      const series = this.transformData(response.data[0]);
-      this.setState({ series: [{ data: series }] });
+      const response = await axios.get(`api/instruments/${symbol}/chart/1d/2m`);
+      const valueData = this.getValueData(response.data[0], 'stepline');
+      const volumeData = this.getVolumeData(response.data[0]);
+      this.setState({ series: [{ name: "values", type: "line", data: valueData }, { name: "volume", type: "column", data: volumeData }] });
     } catch (e) {
       console.log(e);
     }
@@ -81,7 +131,7 @@ export class Instrument extends Component<any, any> {
       <Chart
         options={this.state.options}
         series={this.state.series}
-        type="candlestick"
+        type="line"
         width="1000"
       />
     );
