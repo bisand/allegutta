@@ -19,12 +19,12 @@ export class Instrument extends Component<any, any> {
       simpleData: [],
       series: [],
       options: {
+        colors: ['#5e7f5782', '#257cda'],
         theme: {
           mode: this.getCurrentTheme(),
-          palette: this.getCurrentTheme() === 'light' ? 'palette3' : 'palette1',
         },
         stroke: {
-          width: [3, 2],
+          width: [2, 2],
           curve: 'stepline',
         },
         fill: {
@@ -105,7 +105,6 @@ export class Instrument extends Component<any, any> {
           theme: {
             ...this.state.options.theme,
             mode: theme,
-            palette: theme === 'light' ? 'palette3' : 'palette1',
           }
         }
       });
@@ -235,15 +234,10 @@ export class Instrument extends Component<any, any> {
 
     return (
       <div>
-        <h1>Counter</h1>
-        <div>Id: {symbol}</div>
-        <p>This is a simple example of a React component.</p>
-
-        <p aria-live="polite">Current count: <strong>{this.state.currentCount}</strong></p>
+        <h1>{symbol}</h1>
         <div>
           {chartView}
         </div>
-        <button className="btn btn-primary" onClick={this.incrementCounter}>Increment</button>
       </div>
     );
   }
