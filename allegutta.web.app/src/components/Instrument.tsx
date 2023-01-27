@@ -25,7 +25,7 @@ export class Instrument extends Component<any, any> {
         },
         stroke: {
           width: [2, 2],
-          curve: 'stepline',
+          curve: 'smooth',
         },
         fill: {
         },
@@ -159,14 +159,15 @@ export class Instrument extends Component<any, any> {
         v: (data.indicators.quote[0].volume[index])
       }
     }).reduce((acc: any, current: any, i: number, arr: any[]) => {
-      if (i > 0 && !current?.c) {
+      if (i > 0 && !current?.c && current.v) {
         current.o = arr[i - 1].o;
         current.h = arr[i - 1].h;
         current.l = arr[i - 1].l;
         current.c = arr[i - 1].c;
       }
 
-      acc.push(current);
+      if (current.v)
+        acc.push(current);
       return acc;
     }, []);
     return items;
