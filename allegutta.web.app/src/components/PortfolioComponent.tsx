@@ -199,7 +199,7 @@ export class PortfolioComponent extends Component<any, any> {
                 <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "avgPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
-            <th className='d-none d-lg-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "costValue")}>
+            <th className='d-none d-xs-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "costValue")}>
               Kost
               <span className="ms-1" style={{ display: "inline-block" }}>
                 <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "costValue" ? "d-none" : "d-inline")}>&nbsp;</i>
@@ -220,16 +220,15 @@ export class PortfolioComponent extends Component<any, any> {
                 <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "lastPrice" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
-            <th className='d-none d-lg-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "currentValue")}>
+            <th className='d-none d-md-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "currentValue")}>
               Verdi
               <span className="ms-1" style={{ display: "inline-block" }}>
                 <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "currentValue" ? "d-none" : "d-inline")}>&nbsp;</i>
                 <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "currentValue" ? "d-none" : "d-inline")}>&nbsp;</i>
               </span>
             </th>
-            <th className='d-none d-md-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "returnValue")}>
+            <th className='d-none d-lg-table-cell text-end text-nowrap' onClick={e => this.sortClick(e, "returnValue")}>
               <span className='d-none d-lg-inline'>Avkastning</span>
-              <span className='d-lg-none'>Avk.</span>
               <span className="ms-1" style={{ display: "inline-block" }}>
                 <i className={"bi " + (this._sortOrder[this._sortProperty] === "asc" ? "bi-sort-down-alt " : "bi-sort-up ") + (this._sortProperty !== "returnValue" ? "d-none" : "d-inline")}>&nbsp;</i>
                 <i className={"bi bi-chevron-expand text-secondary " + (this._sortProperty === "returnValue" ? "d-none" : "d-inline")}>&nbsp;</i>
@@ -252,7 +251,7 @@ export class PortfolioComponent extends Component<any, any> {
               <td title={position.name}><a href={'instrument/' + position.symbol} style={{ textDecoration: "unset", color: "unset" }}>{position.symbol}</a></td>
               <td className='d-none d-md-table-cell text-end'>{this.sumAndPresent(position, "shares", 0)}</td>
               <td className='d-none d-lg-table-cell text-end'>{this.sumAndPresent(position, "avgPrice", 2)}</td>
-              <td className='d-none d-lg-table-cell text-end'>{this.sumAndPresent(position, "costValue", 2)}</td>
+              <td className='d-none d-xs-table-cell text-end'>{this.sumAndPresent(position, "costValue", 0)},-</td>
               <td className={'text-nowrap text-end ' + (position.changeTodayPercent >= 0 ? 'text-success' : 'text-danger')}>{position.changeTodayPercent.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %</td>
               <td className='d-none d-xs-table-cell text-end'>{position.lastPrice.toLocaleString('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               <td className='d-none d-lg-table-cell text-end'>{this.sumAndPresent(position, "currentValue", 0)},-</td>
@@ -267,13 +266,13 @@ export class PortfolioComponent extends Component<any, any> {
             <th className={'d-xl-none'}></th>
             <th className={'d-none d-md-table-cell text-end '}>{this.presentSum("shares", 0)}</th>
             <th className={'d-none d-lg-table-cell text-end '}></th>
-            <th className={'d-none d-lg-table-cell text-end '}>{this.presentSum("costValue", 0)},-</th>
+            <th className={'d-none d-xs-table-cell text-end '}>{this.presentSum("costValue", 0)},-</th>
             <th></th>
             <th className='d-none d-xs-table-cell'></th>
-            <th className={'d-none d-lg-table-cell text-end ' + (portfolio?.changeTotalPercent ?? 0 >= 0 ? "text-success" : "text-danger")}>
+            <th className={'d-none d-md-table-cell text-end ' + (portfolio?.changeTotalPercent ?? 0 >= 0 ? "text-success" : "text-danger")}>
               {this.presentSum("currentValue", 0)},-
             </th>
-            <th className={'d-none d-md-table-cell text-end ' + (this._dataSummary["returnValue"] >= 0 ? "text-success" : "text-danger")}>
+            <th className={'d-none d-lg-table-cell text-end ' + (this._dataSummary["returnValue"] >= 0 ? "text-success" : "text-danger")}>
               <i className={"bi " + (this._dataSummary["returnValue"] >= 0 ? "bi-graph-up-arrow" : "bi-graph-down-arrow")}>&nbsp;</i>
               {this.presentSum("returnValue", 0)},-
             </th>
