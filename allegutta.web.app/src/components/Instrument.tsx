@@ -159,14 +159,14 @@ export class Instrument extends Component<any, any> {
         v: (data.indicators.quote[0].volume[index])
       }
     }).reduce((acc: any, current: any, i: number, arr: any[]) => {
-      if (i > 0 && current && current.v && !current.c) {
+      if (i > 0 && current?.v && !current?.c) {
         current.o = arr[i - 1].o;
         current.h = arr[i - 1].h;
         current.l = arr[i - 1].l;
         current.c = arr[i - 1].c;
       }
 
-      if (current.v)
+      if (current?.v)
         acc.push(current);
       return acc;
     }, []);
