@@ -190,8 +190,8 @@ export class Instrument extends Component<any, any> {
     try {
       const response = await axios.get(`api/instruments/${symbol}/chart/1d/2m`);
       const simpleData = this.getSimpleData(response.data[0]);
-      this._lineYMin = Math.min(...simpleData?.map((x: any) => x.c) ?? []) ?? 0;
-      this._lineYMax = Math.max(...simpleData?.map((x: any) => x.c) ?? []) ?? 0;
+      this._lineYMin = simpleData ? Math.min(...simpleData.map((x: any) => x.c)) : 0;
+      this._lineYMax = simpleData ? Math.max(...simpleData.map((x: any) => x.c)) : 0;
       this.setState({ simpleData });
     } catch (e) {
       console.log(e);
