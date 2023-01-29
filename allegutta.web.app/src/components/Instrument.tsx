@@ -33,9 +33,9 @@ export class Instrument extends Component<any, any> {
               const prevData = this.state.simpleData[opts.dataPointIndex - 1];
               const data = this.state.simpleData[opts.dataPointIndex];
               if (data && prevData && data.c >= prevData.c) {
-                return '#067a00d9'
+                return '#067a0080'
               } else {
-                return '#ff5757d9'
+                return '#ff575780'
               }
             }
           },
@@ -46,7 +46,7 @@ export class Instrument extends Component<any, any> {
           mode: this.getCurrentTheme(),
         },
         stroke: {
-          width: [1, 2],
+          width: [0, 2],
           curve: 'stepline', //stepline, straight, smooth
         },
         fill: {
