@@ -19,25 +19,46 @@ export class Instrument extends Component<any, any> {
       simpleData: [],
       series: [],
       options: {
-        colors: ['#5e7f5782', '#257cda'],
+        chart: {
+          events: {
+            // updated: () => {
+            // }
+          }
+        },
+        colors: [
+          (opts: any) => {
+            if (opts.seriesIndex === 0) {
+              if (opts.value === 0 && this.state.simpleData?.length < 1)
+                return '#000000';
+              const prevData = this.state.simpleData[opts.dataPointIndex - 1];
+              const data = this.state.simpleData[opts.dataPointIndex];
+              if (data && prevData && data.c >= prevData.c) {
+                return '#067a00d9'
+              } else {
+                return '#ff5757d9'
+              }
+            }
+          },
+          '#257cda',
+          '#257cda'
+        ],
         theme: {
           mode: this.getCurrentTheme(),
         },
         stroke: {
-          width: [2, 2],
-          curve: 'smooth',
+          width: [1, 2],
+          curve: 'stepline', //stepline, straight, smooth
         },
         fill: {
         },
         tooltip: {
-          followCursor: true,
+          followCursor: false,
           x: {
             show: true,
             format: 'yyyy-MM-dd HH:mm',
             formatter: undefined,
           },
           y: {
-            formatter: undefined,
             title: {
               formatter: (seriesName: string) => seriesName,
             },
@@ -165,9 +186,9 @@ export class Instrument extends Component<any, any> {
         current.l = arr[i - 1].l;
         current.c = arr[i - 1].c;
       }
-
-      if (current.v)
+      if (current.v) {
         acc.push(current);
+      }
       return acc;
     }, []);
     return items;
@@ -188,7 +209,7 @@ export class Instrument extends Component<any, any> {
 
   async fetchData(symbol: string) {
     try {
-      const response = await axios.get(`api/instruments/${symbol}/chart/1d/2m`);
+      const response = await axios.get(`api/instruments/${symbol}/chart/1d/1m`);
       const simpleData = this.getSimpleData(response.data[0]);
       this._lineYMin = simpleData ? Math.min(...simpleData.map((x: any) => x.c)) : 0;
       this._lineYMax = simpleData ? Math.max(...simpleData.map((x: any) => x.c)) : 0;
