@@ -7,11 +7,13 @@ public sealed class YahooApi
 {
     private readonly string quotesUrl;
     private readonly string chartUrl;
+    private readonly string optionsUrl;
 
     public YahooApi()
     {
         quotesUrl = "https://query2.finance.yahoo.com/v7/finance/quote";
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
+        optionsUrl = "https://query2.finance.yahoo.com/v7/finance/options/";
     }
 
     public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers)
@@ -67,5 +69,22 @@ public sealed class YahooApi
         var chart = JsonConvert.DeserializeObject<ChartQueryResult>(response, new[] { new InvalidDataFormatJsonConverter() });
 
         return chart?.Chart?.Result ?? Array.Empty<ChartResult>();
+    }
+
+    public async Task<OptionQuote?> GetInstrumentData(string symbol)
+    {
+        symbol = symbol.EndsWith(".OL", StringComparison.OrdinalIgnoreCase) ? symbol : $"{symbol.ToUpper()}.OL";
+        var builder = new UriBuilder(optionsUrl + symbol)
+        {
+            Port = -1
+        };
+        string url = builder.ToString();
+
+        using var client = new HttpClient();
+        var response = await client.GetStringAsync(url);
+        var optionRoot = JsonConvert.DeserializeObject<OptionRoot>(response, new[] { new InvalidDataFormatJsonConverter() });
+
+        var result = optionRoot?.OptionChain?.Result?.Select(x => x.Quote);
+        return result?.FirstOrDefault();
     }
 }

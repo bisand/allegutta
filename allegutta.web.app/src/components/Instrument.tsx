@@ -137,10 +137,12 @@ export class Instrument extends Component<any, any> {
     return theme ?? 'dark';
   }
 
+  private round(value: number, decimals = 1) {
+    const calc = Number(String('1').padEnd(decimals + 1, '0'));
+    return Math.round((value + Number.EPSILON) * calc) / calc;
+  }
+
   private getCandleStickData(data: any, chartType: string) {
-    // const diff_minutes = (dt2: Date, dt1: Date) => {
-    //   return Math.abs(((dt2.getTime() - dt1.getTime()) / 1000) / 60);
-    // };
     const items = data.timestamp.map((time: Date, index: number) => {
       return {
         x: time,
@@ -161,15 +163,7 @@ export class Instrument extends Component<any, any> {
     return items;
   }
 
-  private round(value: number, decimals = 1) {
-    const calc = Number(String('1').padEnd(decimals + 1, '0'));
-    return Math.round((value + Number.EPSILON) * calc) / calc;
-  }
-
   private getSimpleData(data: any) {
-    // const diff_minutes = (dt2: Date, dt1: Date) => {
-    //   return Math.abs(((dt2.getTime() - dt1.getTime()) / 1000) / 60);
-    // };
     const items = data?.timestamp?.map((time: Date, index: number) => {
       return {
         x: time,
@@ -194,19 +188,6 @@ export class Instrument extends Component<any, any> {
     return items;
   }
 
-  private getVolumeData(data: any) {
-    // const diff_minutes = (dt2: Date, dt1: Date) => {
-    //   return Math.abs(((dt2.getTime() - dt1.getTime()) / 1000) / 60);
-    // };
-    const items = data.timestamp.map((time: Date, index: number) => {
-      return {
-        time,
-        y: data.indicators.quote[0].volume[index]
-      }
-    });
-    return items;
-  }
-
   async fetchData(symbol: string) {
     try {
       const response = await axios.get(`api/instruments/${symbol}/chart/1d/1m`);
@@ -218,12 +199,6 @@ export class Instrument extends Component<any, any> {
       console.log(e);
     }
     return {};
-  }
-
-  incrementCounter() {
-    this.setState((prevState: any) => {
-      return { currentCount: prevState.currentCount + 1 };
-    });
   }
 
   private renderChart() {
@@ -262,5 +237,11 @@ export class Instrument extends Component<any, any> {
         </div>
       </div>
     );
+  }
+
+  incrementCounter() {
+    this.setState((prevState: any) => {
+      return { currentCount: prevState.currentCount + 1 };
+    });
   }
 }

@@ -21,8 +21,5 @@ public class InfoController : ControllerBase
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<object> GetUsersAsync()
-    {
-        return null;
-    }
+    public Task<object> GetUsersAsync() => Task.FromResult(new object());
 }
