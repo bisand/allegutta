@@ -22,6 +22,9 @@ public sealed class PortfolioWorker : BackgroundService
     private readonly TimeSpan _runIntervalMarkedData;
     private DateTime _nextRunMarketData = DateTime.MinValue;
 
+    private readonly TimeSpan _runTimeInstrumentHistory;
+    private DateTime _nextRunInstrumentHistory = DateTime.MinValue;
+
     private readonly PortfolioProcessor _portfolioProcessor;
     private readonly NordnetWebScraper _webScraper;
     private readonly YahooApi _yahoo;
@@ -47,6 +50,10 @@ public sealed class PortfolioWorker : BackgroundService
         _executionInterval = _options.ExecutionInterval;
         _runIntervalNordnet = _options.RunIntervalNordnet;
         _runIntervalMarkedData = _options.RunIntervalMarkedData;
+        _runTimeInstrumentHistory = _options.RunTimeInstrumentHistory;
+
+        _nextRunInstrumentHistory = DateTime.Now.Date.Add(_runTimeInstrumentHistory);
+
         _portfolioHub = portfolioHub;
     }
 
@@ -56,6 +63,7 @@ public sealed class PortfolioWorker : BackgroundService
         {
             await UpdatePortfolioFromNordnet();
             await UpdatePortfolioWithMarketData();
+            await UpdateInstrumentHistory();
             await Task.Delay(_executionInterval, stoppingToken);
         }
     }
@@ -103,6 +111,34 @@ public sealed class PortfolioWorker : BackgroundService
                 }
                 _logger.LogDebug("Worker done updating Market Data at: {time}", DateTimeOffset.Now);
                 _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
+                _runningUpdateTask = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while retrieving market data from Yahoo!");
+            _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
+            _runningUpdateTask = false;
+        }
+    }
+
+    private async Task UpdateInstrumentHistory()
+    {
+        try
+        {
+            if (!_runningUpdateTask && _nextRunInstrumentHistory < DateTime.Now)
+            {
+                _runningUpdateTask = true;
+                _logger.LogDebug("Worker running Instrument History update at: {time}", DateTimeOffset.Now);
+                var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
+                if (portfolio?.Positions is not null)
+                {
+                    var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
+                    // await _repository.SavePortfolioAsync(portfolio);
+                    // await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
+                }
+                _logger.LogDebug("Worker done updating Instrument History at: {time}", DateTimeOffset.Now);
+                _nextRunInstrumentHistory = _nextRunInstrumentHistory.Date.AddDays(1).Date.Add(_runTimeInstrumentHistory);
                 _runningUpdateTask = false;
             }
         }

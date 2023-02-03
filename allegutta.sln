@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Yahoo", "AlleGutt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Common", "AlleGutta.Common\AlleGutta.Common.csproj", "{F90D7A28-43F4-42CE-A2F6-B4D42AF67914}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlleGutta.Models", "AlleGutta.Models\AlleGutta.Models.csproj", "{9FA3E85A-C909-4AF1-97C0-0BA761C1C87D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{F90D7A28-43F4-42CE-A2F6-B4D42AF67914}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F90D7A28-43F4-42CE-A2F6-B4D42AF67914}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F90D7A28-43F4-42CE-A2F6-B4D42AF67914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FA3E85A-C909-4AF1-97C0-0BA761C1C87D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FA3E85A-C909-4AF1-97C0-0BA761C1C87D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FA3E85A-C909-4AF1-97C0-0BA761C1C87D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FA3E85A-C909-4AF1-97C0-0BA761C1C87D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

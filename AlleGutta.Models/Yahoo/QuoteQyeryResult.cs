@@ -1,7 +1,7 @@
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
 using System.Text.Json.Serialization;
 
-namespace AlleGutta.Yahoo.Models;
+namespace AlleGutta.Models.Yahoo;
 
 public record QuoteQyeryResult
 {

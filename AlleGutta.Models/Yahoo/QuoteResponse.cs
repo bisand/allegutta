@@ -1,13 +1,13 @@
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
 using System.Text.Json.Serialization;
 
-namespace AlleGutta.Yahoo.Models;
+namespace AlleGutta.Models.Yahoo;
 
-public class ChartResponse
+public record QuoteResponse
 {
     [JsonPropertyName("result")]
-    public IEnumerable<ChartResult>? Result { get; init; }
+    public IEnumerable<QuoteResult>? Result { get; init; }
 
     [JsonPropertyName("error")]
-    public object? Error { get; init; }
+    public object? Error { get; set; }
 }

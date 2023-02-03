@@ -1,5 +1,5 @@
 ﻿using System.Web;
-using AlleGutta.Yahoo.Models;
+using AlleGutta.Models.Yahoo;
 using Newtonsoft.Json;
 
 namespace AlleGutta.Yahoo;

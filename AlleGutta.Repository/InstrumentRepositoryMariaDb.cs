@@ -1,76 +1,45 @@
 using System.Data.Common;
 using AlleGutta.Portfolios.Models;
+using AlleGutta.Models.Yahoo;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MySqlConnector;
 
 namespace AlleGutta.Repository;
-public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepository
+public class InstrumentRepositoryMariaDb : BaseRepositoryMariaDb, IInstrumentRepository
 {
-    public PortfolioRepositoryMariaDb(IOptions<DatabaseOptionsMariaDb> options, ILogger<PortfolioRepositoryMariaDb> logger) : base(options, logger)
+    public InstrumentRepositoryMariaDb(IOptions<DatabaseOptionsMariaDb> options, ILogger<PortfolioRepositoryMariaDb> logger) : base(options, logger)
     {
     }
 
-    public async Task<Portfolio> SavePortfolioAsync(Portfolio portfolio, bool performSummaryUpdate = true, bool performPositionsUpdate = true)
+    public IAsyncEnumerable<OptionQuote> GetInstrumentInfoAsync(IEnumerable<string> symbols)
     {
-        if (portfolio is null) throw new ArgumentNullException(nameof(portfolio), "Portfolio can not be null");
-        if (string.IsNullOrWhiteSpace(portfolio.Name)) throw new ArgumentNullException("portfolio.Name", "Portfolio name can not be empty");
+        if (symbols?.Any() != false) throw new ArgumentOutOfRangeException(nameof(symbols), "Portfolio can not be null or empty");
 
-        using var connection = new MySqlConnection(ConnectionString);
-        await connection.OpenAsync();
-        using var transaction = await connection.BeginTransactionAsync();
+        return GetInstrumentInfoInternalAsync();
 
-        try
+        async IAsyncEnumerable<OptionQuote> GetInstrumentInfoInternalAsync()
         {
-            var existingPortfolio = await GetPortfolioAsync(portfolio.Name);
-            if (existingPortfolio is null)
+            await foreach (var item in GetDataAsync<OptionQuote>(@"
+                SELECT
+                    i.Id,
+                    i.Symbol,
+                    i.Currency,
+                    i.FinancialCurrency,
+                    i.ShortName,
+                    i.LongName,
+                    i.Exchange,
+                    i.ExchangeFullName,
+                    i.InstrumentType,
+                    i.AvgAnalystRating
+                FROM Instruments i
+                WHERE i.Symbol in @Symbols;
+            ", new[] { new MySqlParameter("@Symbols", symbols) }))
             {
-                const string sqlPortfolio = @"
-                    INSERT INTO Portfolio
-                    (Name, Cash, Ath, Equity, CostValue, MarketValue, MarketValuePrev, MarketValueMax, MarketValueMin, ChangeTodayTotal, ChangeTodayPercent, ChangeTotal, ChangeTotalPercent)
-                    VALUES (@Name, @Cash, @Ath, @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent);
-                    SELECT LAST_INSERT_ID();
-                ";
-                portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio, transaction);
+                yield return item;
             }
-            else if (performSummaryUpdate)
-            {
-                const string sqlPortfolio = @"
-                    UPDATE Portfolio SET
-                        Name = @Name,
-                        Cash = @Cash,
-                        Ath = @Ath,
-                        Equity = @Equity,
-                        CostValue = @CostValue,
-                        MarketValue = @MarketValue,
-                        MarketValuePrev = @MarketValuePrev,
-                        MarketValueMax = @MarketValueMax,
-                        MarketValueMin = @MarketValueMin,
-                        ChangeTodayTotal = @ChangeTodayTotal,
-                        ChangeTodayPercent = @ChangeTodayPercent,
-                        ChangeTotal = @ChangeTotal,
-                        ChangeTotalPercent = @ChangeTotalPercent
-                    WHERE
-                        Name = @Name;
-                    SELECT Id FROM Portfolio WHERE Name = @Name;
-                ";
-                portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio, transaction);
-            }
-            else if (existingPortfolio != null)
-            {
-                portfolio.Id = existingPortfolio.Id;
-            }
-
-            await SavePortfolioPositionsAsync(portfolio, connection, transaction, performPositionsUpdate);
-            await transaction.CommitAsync();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while trying to save portfolio data.");
-            await transaction.RollbackAsync();
-        }
-        return portfolio;
     }
 
     private async Task SavePortfolioPositionsAsync(Portfolio portfolio, MySqlConnection connection, DbTransaction? transaction = null, bool performUpdate = true)
@@ -161,7 +130,7 @@ public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepos
         }
     }
 
-    public async Task<Portfolio?> GetPortfolioAsync(string portfolioName)
+    public async Task<Portfolio?> GetInstrumentInfoAsync(string portfolioName)
     {
         if (string.IsNullOrWhiteSpace(portfolioName)) throw new ArgumentNullException(nameof(portfolioName), "Portfolio name can not be empty");
 
@@ -245,4 +214,8 @@ public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepos
         }
     }
 
+    public Task<Portfolio> SavePortfolioAsync(Portfolio portfolio, bool performSummaryUpdate = true, bool performPositionsUpdate = true)
+    {
+        throw new NotImplementedException();
+    }
 }

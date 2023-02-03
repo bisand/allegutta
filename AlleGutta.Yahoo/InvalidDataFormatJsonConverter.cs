@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AlleGutta.Yahoo.Models;
+namespace AlleGutta.Yahoo;
 
 public class InvalidDataFormatJsonConverter : JsonConverter
 {

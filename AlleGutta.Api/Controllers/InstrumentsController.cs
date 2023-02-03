@@ -1,7 +1,7 @@
 ﻿using AlleGutta.Portfolios.Models;
 using AlleGutta.Repository;
 using AlleGutta.Yahoo;
-using AlleGutta.Yahoo.Models;
+using AlleGutta.Models.Yahoo;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

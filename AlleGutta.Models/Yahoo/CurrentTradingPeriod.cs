@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace AlleGutta.Yahoo.Models;
+namespace AlleGutta.Models.Yahoo;
 
 public class CurrentTradingPeriod
 {

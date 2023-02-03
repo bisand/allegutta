@@ -1,7 +1,7 @@
 using AlleGutta.Nordnet;
 using AlleGutta.Nordnet.Models;
 using AlleGutta.Portfolios.Models;
-using AlleGutta.Yahoo.Models;
+using AlleGutta.Models.Yahoo;
 using Microsoft.Extensions.Logging;
 
 namespace AlleGutta.Portfolios;
