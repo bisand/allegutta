@@ -1,4 +1,4 @@
-using AlleGutta.Portfolios.Models;
+using AlleGutta.Models.Portfolio;
 using System.Data.Common;
 
 namespace AlleGutta.Repository;

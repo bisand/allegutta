@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Dapper;
-using AlleGutta.Portfolios.Models;
+using AlleGutta.Models.Portfolio;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Data.Common;

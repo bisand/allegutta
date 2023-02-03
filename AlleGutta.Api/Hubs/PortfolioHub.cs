@@ -1,5 +1,5 @@
 using AlleGutta.Api.Hubs.Clients;
-using AlleGutta.Portfolios.Models;
+using AlleGutta.Models.Portfolio;
 using Microsoft.AspNetCore.SignalR;
 
 namespace AlleGutta.Api.Hubs;

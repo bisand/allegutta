@@ -1,4 +1,4 @@
-using AlleGutta.Portfolios.Models;
+using AlleGutta.Models.Portfolio;
 
 namespace AlleGutta.Api.Hubs.Clients
 {

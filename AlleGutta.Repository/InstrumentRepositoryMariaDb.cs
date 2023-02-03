@@ -1,5 +1,5 @@
 using System.Data.Common;
-using AlleGutta.Portfolios.Models;
+using AlleGutta.Models.Portfolio;
 using AlleGutta.Models.Yahoo;
 using Dapper;
 using Microsoft.Extensions.Logging;

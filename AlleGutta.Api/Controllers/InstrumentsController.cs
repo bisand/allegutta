@@ -1,4 +1,4 @@
-﻿using AlleGutta.Portfolios.Models;
+﻿using AlleGutta.Models.Portfolio;
 using AlleGutta.Repository;
 using AlleGutta.Yahoo;
 using AlleGutta.Models.Yahoo;

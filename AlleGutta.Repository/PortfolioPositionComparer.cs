@@ -1,4 +1,4 @@
-using AlleGutta.Portfolios.Models;
+using AlleGutta.Models.Portfolio;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AlleGutta.Repository;
