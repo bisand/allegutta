@@ -29,7 +29,8 @@
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "PUPPETEER_EXECUTABLE_PATH": "/usr/usr/bin/google-chrome"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

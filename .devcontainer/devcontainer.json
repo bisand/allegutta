@@ -4,12 +4,13 @@
 		"dockerfile": "Dockerfile.debian",
 		"args": {
 			"VARIANT": "lts-slim",
-			"USERNAME": "node"
+			"USERNAME": "node",
+			"BUILDKIT_INLINE_CACHE": "0"
 		},
 		"context": ".."
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5000, 5001],
+	"forwardPorts": [3306],
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "dotnet restore",
 	// Configure tool-specific properties.

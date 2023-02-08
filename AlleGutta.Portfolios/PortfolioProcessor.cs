@@ -111,6 +111,8 @@ public class PortfolioProcessor
                     portfolio.ChangeTodayTotal += currentDay == symbolDay ? result.Shares * element.RegularMarketChange ?? 0.0m : 0.0m;
                 }
                 portfolio.Equity = portfolio.MarketValue + portfolio.Cash;
+                if (portfolio.Equity > portfolio.Ath)
+                    portfolio.Ath = portfolio.Equity;
                 if (portfolio.MarketValuePrev != 0)
                     portfolio.ChangeTodayPercent = portfolio.ChangeTodayTotal / portfolio.MarketValuePrev * 100;
                 portfolio.ChangeTotal = portfolio.MarketValue - portfolio.CostValue;

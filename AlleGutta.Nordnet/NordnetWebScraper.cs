@@ -39,97 +39,104 @@ public class NordnetWebScraper
             // ExecutablePath = "/usr/bin/chromium"
         };
 
-        using var browser = await Puppeteer.LaunchAsync(options);
-        using var page = await browser.NewPageAsync();
-        await Login(page);
-
-        var dataCollected = 0;
-        page.Response += async (sender, responseEvent) =>
+        try
         {
-            var response = responseEvent.Response;
+            using var browser = await Puppeteer.LaunchAsync(options).ConfigureAwait(false);
+            using var page = await browser.NewPageAsync().ConfigureAwait(false);
+            await Login(page);
 
-            if (!response.Ok)
+            var dataCollected = 0;
+            page.Response += async (sender, responseEvent) =>
             {
-                _logger.LogWarning("Login response NOT OK", response.StatusText);
-                return;
-            }
+                var response = responseEvent.Response;
 
-            try
-            {
-                var request = response.Request;
-                var headers = response.Headers;
-
-                var url = request.Url;
-                var postDataText = (request.PostData ?? string.Empty).ToString();
-                var isAPI = url != null && (url.Contains("/api/2/batch") || url.Contains("/api/2/accounts"));
-                var isPOST = request.Method == HttpMethod.Post;
-                var isJson = headers.TryGetValue("content-type", out string? contentType) && (contentType?.Contains("application/json") == true);
-
-                if (isAPI && isPOST && isJson)
+                if (!response.Ok)
                 {
-                    try
-                    {
-                        var strBatch = JsonConvert.DeserializeObject<NordnetRequestStringBatch>(postDataText ?? string.Empty);
-                        var postData = JsonConvert.DeserializeObject<NordnetRequest[]>(strBatch?.Batch ?? string.Empty);
+                    _logger.LogWarning("Login response NOT OK", response.StatusText);
+                    return;
+                }
 
-                        if (postData?.GetType().IsArray == true)
+                try
+                {
+                    var request = response.Request;
+                    var headers = response.Headers;
+
+                    var url = request.Url;
+                    var postDataText = (request.PostData ?? string.Empty).ToString();
+                    var isAPI = url != null && (url.Contains("/api/2/batch") || url.Contains("/api/2/accounts"));
+                    var isPOST = request.Method == HttpMethod.Post;
+                    var isJson = headers.TryGetValue("content-type", out string? contentType) && (contentType?.Contains("application/json") == true);
+
+                    if (isAPI && isPOST && isJson)
+                    {
+                        try
                         {
-                            for (var i = 0; i < postData.Length; i++)
+                            var strBatch = JsonConvert.DeserializeObject<NordnetRequestStringBatch>(postDataText ?? string.Empty);
+                            var postData = JsonConvert.DeserializeObject<NordnetRequest[]>(strBatch?.Batch ?? string.Empty);
+
+                            if (postData?.GetType().IsArray == true)
                             {
-                                if (postData[i].RelativeUrl.Contains("accounts/2/positions"))
+                                for (var i = 0; i < postData.Length; i++)
                                 {
-                                    var txt = await response.TextAsync();
-                                    var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetPosition[]>[]>(txt);
-                                    dataCollected = CollectPositions(json?[i].Body, dataCollected);
-                                }
-                                else if (postData[i].RelativeUrl.Contains("accounts/2/info"))
-                                {
-                                    var txt = await response.TextAsync();
-                                    var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt);
-                                    dataCollected = CollectAccountInfo(json?[i].Body?[0], dataCollected);
+                                    if (postData[i].RelativeUrl.Contains("accounts/2/positions"))
+                                    {
+                                        var txt = await response.TextAsync();
+                                        var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetPosition[]>[]>(txt);
+                                        dataCollected = CollectPositions(json?[i].Body, dataCollected);
+                                    }
+                                    else if (postData[i].RelativeUrl.Contains("accounts/2/info"))
+                                    {
+                                        var txt = await response.TextAsync();
+                                        var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt);
+                                        dataCollected = CollectAccountInfo(json?[i].Body?[0], dataCollected);
+                                    }
                                 }
                             }
                         }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "An error ocurred while handling POST batch data.");
+                        }
                     }
-                    catch (Exception e)
+                    else if (isAPI && isJson)
                     {
-                        _logger.LogError(e, "An error ocurred while handling POST batch data.");
+                        try
+                        {
+                            if (url?.Contains("accounts/2/positions") == true)
+                            {
+                                var txt = await response.TextAsync();
+                                var json = JsonConvert.DeserializeObject<NordnetPosition[]>(txt);
+                                dataCollected = CollectPositions(json, dataCollected);
+                            }
+                            else if (url?.Contains("accounts/2/info") == true)
+                            {
+                                var txt = await response.TextAsync();
+                                var json = JsonConvert.DeserializeObject<NordnetAccountInfo[]>(txt);
+                                dataCollected = CollectAccountInfo(json?[0], dataCollected);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "An error ocurred while handling JSON batch data.");
+                        }
                     }
                 }
-                else if (isAPI && isJson)
+                catch (Exception e)
                 {
-                    try
-                    {
-                        if (url?.Contains("accounts/2/positions") == true)
-                        {
-                            var txt = await response.TextAsync();
-                            var json = JsonConvert.DeserializeObject<NordnetPosition[]>(txt);
-                            dataCollected = CollectPositions(json, dataCollected);
-                        }
-                        else if (url?.Contains("accounts/2/info") == true)
-                        {
-                            var txt = await response.TextAsync();
-                            var json = JsonConvert.DeserializeObject<NordnetAccountInfo[]>(txt);
-                            dataCollected = CollectAccountInfo(json?[0], dataCollected);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, "An error ocurred while handling JSON batch data.");
-                    }
+                    _logger.LogError(e, "An error occurred while processing Nordnet data.");
                 }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "An error occurred while processing Nordnet data.");
-            }
-        };
-        Task.WaitAll(new[] {
+            };
+            Task.WaitAll(new[] {
                 page.GoToAsync("https://www.nordnet.no/overview/details/2", WaitUntilNavigation.Networkidle0),
                 WaitFor(() => dataCollected >= 2)
             });
 
-        await browser.CloseAsync();
+            await browser.CloseAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while processing Nordnet data.");
+        }
         return BatchData;
     }
 
