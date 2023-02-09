@@ -40,7 +40,10 @@ public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepos
                     UPDATE Portfolio SET
                         Name = @Name,
                         Cash = @Cash,
-                        Ath = @Ath,
+                        Ath = CASE
+                            WHEN @Ath > Ath THEN @Ath
+                            ELSE Ath
+                        END,
                         Equity = @Equity,
                         CostValue = @CostValue,
                         MarketValue = @MarketValue,
