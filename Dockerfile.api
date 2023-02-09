@@ -9,6 +9,7 @@ RUN chown -R pptruser:pptruser /home/pptruser
 WORKDIR /app
 RUN chown -R pptruser:pptruser /app
 EXPOSE 80
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 WORKDIR /src
 COPY ./AlleGutta.Api/AlleGutta.Api.csproj ./AlleGutta.Api/
@@ -16,6 +17,7 @@ RUN dotnet restore "./AlleGutta.Api/AlleGutta.Api.csproj"
 COPY . .
 WORKDIR "/src/."
 RUN dotnet build "AlleGutta.Api/AlleGutta.Api.csproj" -c Release -o /app/build
+
 FROM build AS publish
 RUN dotnet publish "AlleGutta.Api/AlleGutta.Api.csproj" -c Release -o /app/publish
 
