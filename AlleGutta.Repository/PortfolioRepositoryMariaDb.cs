@@ -28,8 +28,8 @@ public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepos
             {
                 const string sqlPortfolio = @"
                     INSERT INTO Portfolio
-                    (Name, Cash, Ath, Equity, CostValue, MarketValue, MarketValuePrev, MarketValueMax, MarketValueMin, ChangeTodayTotal, ChangeTodayPercent, ChangeTotal, ChangeTotalPercent)
-                    VALUES (@Name, @Cash, @Ath, @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent);
+                    (Name, Cash, Ath, AthDate, Equity, CostValue, MarketValue, MarketValuePrev, MarketValueMax, MarketValueMin, ChangeTodayTotal, ChangeTodayPercent, ChangeTotal, ChangeTotalPercent)
+                    VALUES (@Name, @Cash, @Ath, NOW(), @Equity, @CostValue, @MarketValue, @MarketValuePrev, @MarketValueMax, @MarketValueMin, @ChangeTodayTotal, @ChangeTodayPercent, @ChangeTotal, @ChangeTotalPercent);
                     SELECT LAST_INSERT_ID();
                 ";
                 portfolio.Id = await connection.ExecuteScalarAsync<int>(sqlPortfolio, portfolio, transaction);
@@ -40,6 +40,10 @@ public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepos
                     UPDATE Portfolio SET
                         Name = @Name,
                         Cash = @Cash,
+                        AthDate = CASE
+                            WHEN @Ath > Ath THEN NOW()
+                            ELSE AthDate
+                        END,
                         Ath = CASE
                             WHEN @Ath > Ath THEN @Ath
                             ELSE Ath
@@ -174,6 +178,7 @@ public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepos
                 p.Name,
                 p.Cash,
                 p.Ath,
+                p.AthDate,
                 p.Equity,
                 p.CostValue,
                 p.MarketValue,

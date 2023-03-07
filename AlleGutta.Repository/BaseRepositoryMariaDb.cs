@@ -34,6 +34,7 @@ public class BaseRepositoryMariaDb
             UserID = _options.UserID,
             Password = mariaDbPassword,
             SslMode = _options.SslMode,
+            ConvertZeroDateTime = true,
         };
         ConnectionString = _builder.ConnectionString;
     }

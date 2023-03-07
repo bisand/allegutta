@@ -5,6 +5,7 @@ public record Portfolio
     public int Id { get; set; }
     public string? Name { get; set; }
     public decimal Ath { get; set; }
+    public DateTime AthDate { get; set; }
     public decimal Cash { get; set; }
     public decimal ChangeTodayTotal { get; set; }
     public decimal ChangeTodayPercent { get; set; }

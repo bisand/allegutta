@@ -30,3 +30,19 @@ public class CreatePortfolioTable : Migration
         Delete.Table("Portfolio");
     }
 }
+
+[Migration(202303070630)]
+public class AddAthDateToPortfolioTable : Migration
+{
+    public override void Up()
+    {
+        Alter.Table("Portfolio")
+            .AddColumn("AthDate").AsDateTime()
+            ;
+    }
+
+    public override void Down()
+    {
+        Delete.Column("AthDate").FromTable("Portfolio");
+    }
+}

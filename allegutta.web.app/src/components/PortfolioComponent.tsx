@@ -92,6 +92,7 @@ export class PortfolioComponent extends Component<any, any> {
             <p className='fs-4 text-secondary mb-0'>ATH</p>
             <p className='fs-3'>
               {portfolio.ath.toLocaleString('nb-NO', { maximumFractionDigits: 0 })},-
+              <span className='d-block fs-6 text-secondary'>{new Date(portfolio.athDate).toLocaleString('nb-NO', {dateStyle: 'medium', timeStyle: 'medium'})}</span>
             </p>
           </div>
           <div className="flex-item-3">
