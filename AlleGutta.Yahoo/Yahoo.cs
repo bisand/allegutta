@@ -11,7 +11,7 @@ public sealed class YahooApi
 
     public YahooApi()
     {
-        quotesUrl = "https://query2.finance.yahoo.com/v7/finance/quote";
+        quotesUrl = "https://query2.finance.yahoo.com/v6/finance/quote";
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
         optionsUrl = "https://query2.finance.yahoo.com/v7/finance/options/";
     }
