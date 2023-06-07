@@ -1,19 +1,28 @@
-﻿using System.Web;
+﻿using System.Net;
+using System.Web;
 using AlleGutta.Models.Yahoo;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace AlleGutta.Yahoo;
 public sealed class YahooApi
 {
+    private readonly string scrapeUrl;
+    private readonly string crumbUrl;
     private readonly string quotesUrl;
     private readonly string chartUrl;
     private readonly string optionsUrl;
+    private readonly ILogger _logger;
 
-    public YahooApi()
+    public YahooApi(ILoggerFactory loggerFactory)
     {
-        quotesUrl = "https://query2.finance.yahoo.com/v6/finance/quote";
+        scrapeUrl = "https://finance.yahoo.com/quote/%5EGSPC/options";
+        crumbUrl = "https://query1.finance.yahoo.com/v1/test/getcrumb";
+        quotesUrl = "https://query2.finance.yahoo.com/v7/finance/quote";
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
         optionsUrl = "https://query2.finance.yahoo.com/v7/finance/options/";
+        CrumbManager.Logger = loggerFactory.CreateLogger("AlleGutta.Yahoo.CrumbManager");
+        _logger = loggerFactory.CreateLogger<YahooApi>();
     }
 
     public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers)
@@ -31,12 +40,18 @@ public sealed class YahooApi
         query["symbols"] = tickers.Any() ? tickers.Select(x => x).Aggregate((x, y) => $"{x},{y}") : string.Empty;
         query["fields"] = "shortName,longName,regularMarketChange,regularMarketChangePercent,regularMarketTime,regularMarketPrice,regularMarketDayHigh,regularMarketDayRange,regularMarketDayLow,regularMarketVolume,regularMarketPreviousClose";
         query["corsDomain"] = "finance.yahoo.com";
+        query["crumb"] = await CrumbManager.GetCrumbAsync();
         builder.Query = query.ToString();
         string url = builder.ToString();
 
-        using var client = new HttpClient();
-        var response = await client.GetStringAsync(url);
-        var quotes = JsonConvert.DeserializeObject<QuoteQyeryResult>(response, new[] { new InvalidDataFormatJsonConverter() });
+        using var client = CrumbManager.GetHttpClient();
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        CrumbManager.FillHeaders(request, "https://finance.yahoo.com/quote/OSEBX.OL");
+
+        using var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var quotes = JsonConvert.DeserializeObject<QuoteQyeryResult>(responseBody, new[] { new InvalidDataFormatJsonConverter() });
 
         return quotes?.QuoteResponse?.Result ?? Array.Empty<QuoteResult>();
     }
