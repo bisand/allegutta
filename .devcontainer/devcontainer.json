@@ -32,7 +32,11 @@
 				"fernandoescolar.vscode-solution-explorer",
 				"hbenl.vscode-test-explorer",
 				"josefpihrt-vscode.roslynator",
-				"dbaeumer.vscode-eslint"
+				"dbaeumer.vscode-eslint",
+				"GitHub.copilot-nightly",
+				"GitHub.copilot-chat",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"ms-azuretools.vscode-docker"
 			]
 		}
 	},
