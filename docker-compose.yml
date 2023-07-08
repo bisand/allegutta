@@ -10,21 +10,24 @@ services:
 
   allegutta-proxy:
     image: bisand/allegutta-proxy:latest
-    container_name: allegutta-proxy
     ports:
       - '8080:80'
     restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
 
   allegutta-web:
     image: bisand/allegutta-web:latest
-    container_name: allegutta-web
     depends_on:
       - allegutta-api
     restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
 
   allegutta-api:
     image: bisand/allegutta-api:latest
-    container_name: allegutta-api
     depends_on:
       - allegutta-proxy
       - allegutta-db
@@ -39,10 +42,12 @@ services:
       - api-data:/app/data
       - api-logs:/app/logs
     restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
 
   allegutta-db:
     image: yobasystems/alpine-mariadb:latest
-    container_name: allegutta-db
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -53,3 +58,6 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
