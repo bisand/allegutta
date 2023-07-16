@@ -1,23 +1,6 @@
 version: '3.8'
 
-volumes:
-  api-data:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: nfsvers=4,addr=192.168.86.80,rw
-      device: ":/srv/nfs/allegutta/api-data"
-  api-logs:
-  db-data:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: nfsvers=4,addr=192.168.86.80,rw
-      device: ":/srv/nfs/allegutta/db-data"
-  proxy:
-
 services:
-
   allegutta-proxy:
     image: bisand/allegutta-proxy:latest
     ports:
@@ -71,3 +54,29 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+
+volumes:
+  api-data:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.86.80,rw
+      device: ":/srv/nfs/allegutta/api-data"
+  api-logs:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.86.80,rw
+      device: ":/srv/nfs/allegutta/api-logs"
+  db-data:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.86.80,rw
+      device: ":/srv/nfs/allegutta/db-data"
+  proxy:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.86.80,rw
+      device: ":/srv/nfs/allegutta/proxy"
