@@ -60,17 +60,17 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: nfsvers=4,addr=192.168.86.175,rw
+      o: nfsvers=4,addr=192.168.86.175,rw,noatime,nolock,rsize=32768,wsize=32768,tcp,timeo=14
       device: ":/srv/nfs/allegutta/api-data"
   api-logs:
     driver: local
     driver_opts:
       type: nfs
-      o: nfsvers=4,addr=192.168.86.175,rw
+      o: nfsvers=4,addr=192.168.86.175,rw,noatime,nolock,rsize=32768,wsize=32768,tcp,timeo=14
       device: ":/srv/nfs/allegutta/api-logs"
   db-data:
     driver: local
     driver_opts:
       type: nfs
-      o: nfsvers=4,addr=192.168.86.175,rw
+      o: nfsvers=4,addr=192.168.86.175,rw,noatime,nolock,rsize=32768,wsize=32768,tcp,timeo=14
       device: ":/srv/nfs/allegutta/db-data"
