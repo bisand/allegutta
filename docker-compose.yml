@@ -74,9 +74,3 @@ volumes:
       type: nfs
       o: nfsvers=4,addr=192.168.86.80,rw
       device: ":/srv/nfs/allegutta/db-data"
-  proxy:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: nfsvers=4,addr=192.168.86.80,rw
-      device: ":/srv/nfs/allegutta/proxy"
