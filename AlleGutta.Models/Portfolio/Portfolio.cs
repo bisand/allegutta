@@ -17,5 +17,7 @@ public record Portfolio
     public decimal MarketValuePrev { get; set; }
     public decimal MarketValueMax { get; set; }
     public decimal MarketValueMin { get; set; }
+    public DateTime DateCreated { get; set; }
+    public DateTime DateModified { get; set; }
     public IEnumerable<PortfolioPosition>? Positions { get; set; }
 }

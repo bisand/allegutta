@@ -46,3 +46,21 @@ public class AddAthDateToPortfolioTable : Migration
         Delete.Column("AthDate").FromTable("Portfolio");
     }
 }
+
+[Migration(202308250611)]
+public class AddDateFieldsToPortfolioTable : Migration
+{
+    public override void Up()
+    {
+        Alter.Table("Portfolio")
+            .AddColumn("DateCreated").AsDateTime().WithDefaultValue(SystemMethods.CurrentDateTime)
+            .AddColumn("DateModified").AsDateTime().WithDefaultValue(SystemMethods.CurrentDateTime)
+            ;
+    }
+
+    public override void Down()
+    {
+        Delete.Column("DateCreated").FromTable("Portfolio");
+        Delete.Column("DateModified").FromTable("Portfolio");
+    }
+}

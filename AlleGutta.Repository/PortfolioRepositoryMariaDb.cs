@@ -57,7 +57,8 @@ public class PortfolioRepositoryMariaDb : BaseRepositoryMariaDb, IPortfolioRepos
                         ChangeTodayTotal = @ChangeTodayTotal,
                         ChangeTodayPercent = @ChangeTodayPercent,
                         ChangeTotal = @ChangeTotal,
-                        ChangeTotalPercent = @ChangeTotalPercent
+                        ChangeTotalPercent = @ChangeTotalPercent,
+                        DateModified = NOW()
                     WHERE
                         Name = @Name;
                     SELECT Id FROM Portfolio WHERE Name = @Name;
