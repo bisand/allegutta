@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
 RUN apk add --no-cache chromium nss freetype harfbuzz ca-certificates ttf-freefont
 RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
     && mkdir -p /home/pptruser/Downloads /app \
@@ -10,7 +10,7 @@ WORKDIR /app
 RUN chown -R pptruser:pptruser /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
 COPY ./AlleGutta.Api/AlleGutta.Api.csproj ./AlleGutta.Api/
 RUN dotnet restore "./AlleGutta.Api/AlleGutta.Api.csproj"
