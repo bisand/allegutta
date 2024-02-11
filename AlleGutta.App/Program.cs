@@ -19,14 +19,19 @@ static class Program
         var dotenv = Path.Combine(root, "../.env");
         DotEnv.Load(dotenv);
 
-        var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
-        var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
+        var username = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? throw new InvalidOperationException("NORDNET_USERNAME environment variable is missing");
+        var password = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? throw new InvalidOperationException("NORDNET_PASSWORD environment variable is missing");
+        var accountNoString = Environment.GetEnvironmentVariable("NORDNET_ACCOUNT") ?? throw new InvalidOperationException("NORDNET_ACCOUNT environment variable is missing");
+        if (!int.TryParse(accountNoString, out var accountNo))
+        {
+            throw new InvalidOperationException("NORDNET_ACCOUNT environment variable is not a valid integer");
+        }
 
         var builder = Host.CreateApplicationBuilder(args);
 
         builder.Services.Configure<DatabaseOptionsSQLite>(builder.Configuration.GetSection(DatabaseOptionsSQLite.SectionName));
 
-        builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password));
+        builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", username, password, accountNo));
         builder.Services.AddTransient<IPortfolioRepository, PortfolioRepositoryMariaDb>();
         builder.Services.AddTransient<YahooApi>();
         builder.Services.AddTransient<NordnetWebScraper>();

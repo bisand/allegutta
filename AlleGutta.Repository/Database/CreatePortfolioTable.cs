@@ -64,3 +64,19 @@ public class AddDateFieldsToPortfolioTable : Migration
         Delete.Column("DateModified").FromTable("Portfolio");
     }
 }
+
+[Migration(202402101032)]
+public class AddAccountFieldsToPortfolioTable : Migration
+{
+    public override void Up()
+    {
+        Alter.Table("Portfolio")
+            .AddColumn("AccountNo").AsInt32().Nullable()
+            ;
+    }
+
+    public override void Down()
+    {
+        Delete.Column("AccountNo").FromTable("Portfolio");
+    }
+}

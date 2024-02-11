@@ -3,6 +3,7 @@ namespace AlleGutta.Models.Portfolio;
 public record Portfolio
 {
     public int Id { get; set; }
+    public string? AccountNo { get; set; }
     public string? Name { get; set; }
     public decimal Ath { get; set; }
     public DateTime AthDate { get; set; }

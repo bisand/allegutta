@@ -21,9 +21,14 @@ DotEnv.Load(dotenv);
 if (new[] { "NORDNET_USERNAME", "NORDNET_PASSWORD" }.Any(x => Environment.GetEnvironmentVariable(x)?.Length == 0))
     throw new ArgumentException("Missing Nordnet username or password. Use environment variables: NORDNET_USERNAME & NORDNET_PASSWORD");
 
-var nordnetUsername = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? string.Empty;
-var nordnetPassword = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? string.Empty;
-var mariaDbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? string.Empty;
+var nordnetUsername = Environment.GetEnvironmentVariable("NORDNET_USERNAME") ?? throw new InvalidOperationException("NORDNET_USERNAME environment variable is missing");
+var nordnetPassword = Environment.GetEnvironmentVariable("NORDNET_PASSWORD") ?? throw new InvalidOperationException("NORDNET_PASSWORD environment variable is missing");
+var mariaDbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? throw new InvalidOperationException("MYSQL_PASSWORD environment variable is missing");
+var accountNoString = Environment.GetEnvironmentVariable("NORDNET_ACCOUNT") ?? throw new InvalidOperationException("NORDNET_ACCOUNT environment variable is missing");
+if (!int.TryParse(accountNoString, out var accountNo))
+{
+    throw new InvalidOperationException("NORDNET_ACCOUNT environment variable is not a valid integer");
+}
 
 // Add services to the container.
 
@@ -36,7 +41,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", nordnetUsername, nordnetPassword));
+builder.Services.AddTransient(_ => new NordNetConfig("https://www.nordnet.no/login-next", nordnetUsername, nordnetPassword, accountNo));
 builder.Services.AddTransient<IPortfolioRepository, PortfolioRepositoryMariaDb>();
 builder.Services.AddTransient<YahooApi>();
 builder.Services.AddTransient<NordnetWebScraper>();

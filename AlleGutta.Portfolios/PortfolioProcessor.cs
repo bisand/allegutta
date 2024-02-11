@@ -20,6 +20,7 @@ public class PortfolioProcessor
         _logger.LogDebug("Generating '{name}' portfolio from batch data.", name);
         return new Portfolio()
         {
+            AccountNo = $"{nordnetBatchData.AccountInfo?.Accno}",
             Name = name,
             Ath = 0,
             Cash = nordnetBatchData.AccountInfo?.AccountSum?.Value ?? 0,
