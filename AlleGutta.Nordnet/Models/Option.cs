@@ -1,3 +1,3 @@
 namespace AlleGutta.Nordnet.Models;
 
-public record Option(int Timeout = 60, int Interval = 60, string TimeoutMessage = "");
+public record Option(int TimeoutMs = 60000, int IntervalMs = 60, string TimeoutMessage = "");

@@ -24,20 +24,18 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-dotnettools.csharp",
+				"ms-dotnettools.csdevkit",
 				"ms-vscode.vs-keybindings",
+				"ms-azuretools.vscode-docker",
+				"GitHub.copilot-nightly",
+				"GitHub.copilot-chat",
 				"github.vscode-pull-request-github",
 				"eamodio.gitlens",
 				"k--kato.docomment",
 				"aaron-bond.better-comments",
-				"fernandoescolar.vscode-solution-explorer",
-				"hbenl.vscode-test-explorer",
 				"josefpihrt-vscode.roslynator",
 				"dbaeumer.vscode-eslint",
-				"GitHub.copilot-nightly",
-				"GitHub.copilot-chat",
 				"VisualStudioExptTeam.vscodeintellicode",
-				"ms-azuretools.vscode-docker",
-				"ms-dotnettools.csdevkit",
 				"formulahendry.vscode-mysql"
 			]
 		}
