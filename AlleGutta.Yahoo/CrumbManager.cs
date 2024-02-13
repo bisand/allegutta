@@ -4,7 +4,10 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace AlleGutta.Yahoo
 {
@@ -135,14 +138,27 @@ namespace AlleGutta.Yahoo
 
         public static HttpClient GetHttpClient()
         {
-            return new HttpClient(new HttpClientHandler
+            var retryPolicy = HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+            var socketHandler = new SocketsHttpHandler
             {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(60),
                 AllowAutoRedirect = true,
                 UseCookies = true,
                 CookieContainer = _cookieContainer,
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                MaxConnectionsPerServer = 10,
                 MaxResponseHeadersLength = 1024,
-            });
+            };
+            var pollyHandler = new PolicyHttpMessageHandler(retryPolicy)
+            {
+                InnerHandler = socketHandler,
+            };
+
+            var httpClient = new HttpClient(pollyHandler);
+            return httpClient;
         }
 
         public static async Task RefreshAsync()
