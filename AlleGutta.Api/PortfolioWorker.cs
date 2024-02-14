@@ -110,7 +110,7 @@ public sealed class PortfolioWorker : BackgroundService
                     var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
                     if (portfolio?.Positions is not null)
                     {
-                        var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
+                        var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"), _requestTimeoutSeconds);
                         if (quotes.Any())
                         {
                             portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
