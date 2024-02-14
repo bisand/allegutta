@@ -49,12 +49,24 @@ public sealed class YahooApi
         CrumbManager.FillHeaders(request, "https://finance.yahoo.com/quote/OSEBX.OL");
 
         client.Timeout = TimeSpan.FromSeconds(10);
-        using var response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var quotes = JsonConvert.DeserializeObject<QuoteQyeryResult>(responseBody, new[] { new InvalidDataFormatJsonConverter() });
+        try
+        {
+            using var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var quotes = JsonConvert.DeserializeObject<QuoteQyeryResult>(responseBody, new[] { new InvalidDataFormatJsonConverter() });
 
-        return quotes?.QuoteResponse?.Result ?? Array.Empty<QuoteResult>();
+            return quotes?.QuoteResponse?.Result ?? [];
+        }
+        catch (TimeoutException ex)
+        {
+            _logger.LogWarning($"Timeout when fetching quotes ({ex.Message}).");
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Error when fetching quotes.");
+        }
+        return [];
     }
 
     public async Task<IEnumerable<ChartResult>> GetChartData(string symbol, string range, string interval)

@@ -77,11 +77,11 @@ public sealed class PortfolioWorker : BackgroundService
             if (!_runningUpdateTask && _nextRunNordnet < DateTime.Now)
             {
                 _runningUpdateTask = true;
-                _logger.LogInformation("Worker running Nordnet update at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Worker running Nordnet update at: {time}", DateTime.Now);
                 var batchData = await _webScraper.GetBatchData();
                 var nordnetPortfolio = _portfolioProcessor.GetPortfolioFromBatchData("AlleGutta", batchData);
                 await _repository.SavePortfolioAsync(nordnetPortfolio, true, false);
-                _logger.LogInformation("Worker done updating Nordnet data at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Worker done updating Nordnet data at: {time}", DateTime.Now);
                 _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
                 _runningUpdateTask = false;
             }
@@ -109,10 +109,18 @@ public sealed class PortfolioWorker : BackgroundService
                     if (portfolio?.Positions is not null)
                     {
                         var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
-                        portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
-                        portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
-                        await _repository.SavePortfolioAsync(portfolio);
-                        await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
+                        if (quotes.Any())
+                        {
+                            portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
+                            portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
+                            await _repository.SavePortfolioAsync(portfolio);
+                            await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
+                            _logger.LogDebug("Portfolio updated with market data and saved to database.");
+                        }
+                        else
+                        {
+                            _logger.LogWarning("No quotes found for portfolio positions.");
+                        }
                     }
                     _logger.LogDebug("Worker done updating Market Data at: {time}", DateTime.Now);
                     _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
@@ -139,7 +147,7 @@ public sealed class PortfolioWorker : BackgroundService
             if (!_runningUpdateTask && _nextRunInstrumentHistory < DateTime.Now)
             {
                 _runningUpdateTask = true;
-                _logger.LogDebug("Worker running Instrument History update at: {time}", DateTimeOffset.Now);
+                _logger.LogDebug("Worker running Instrument History update at: {time}", DateTime.Now);
                 var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
                 if (portfolio?.Positions is not null)
                 {
@@ -147,7 +155,7 @@ public sealed class PortfolioWorker : BackgroundService
                     // await _repository.SavePortfolioAsync(portfolio);
                     // await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
                 }
-                _logger.LogDebug("Worker done updating Instrument History at: {time}", DateTimeOffset.Now);
+                _logger.LogDebug("Worker done updating Instrument History at: {time}", DateTime.Now);
                 _nextRunInstrumentHistory = _nextRunInstrumentHistory.Date.AddDays(1).Date.Add(_runTimeInstrumentHistory);
                 _runningUpdateTask = false;
             }
