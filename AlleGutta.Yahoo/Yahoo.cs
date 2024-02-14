@@ -48,6 +48,7 @@ public sealed class YahooApi
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
         CrumbManager.FillHeaders(request, "https://finance.yahoo.com/quote/OSEBX.OL");
 
+        client.Timeout = TimeSpan.FromSeconds(10);
         using var response = await client.SendAsync(request);
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();

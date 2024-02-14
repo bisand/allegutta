@@ -151,6 +151,7 @@ namespace AlleGutta.Yahoo
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
                 MaxConnectionsPerServer = 10,
                 MaxResponseHeadersLength = 1024,
+                ConnectTimeout = TimeSpan.FromSeconds(10),
             };
             var pollyHandler = new PolicyHttpMessageHandler(retryPolicy)
             {

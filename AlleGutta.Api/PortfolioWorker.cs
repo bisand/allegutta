@@ -25,6 +25,8 @@ public sealed class PortfolioWorker : BackgroundService
     private readonly TimeSpan _runTimeInstrumentHistory;
     private DateTime _nextRunInstrumentHistory = DateTime.MinValue;
 
+    private static readonly SemaphoreSlim _mutex = new(1);
+    
     private readonly PortfolioProcessor _portfolioProcessor;
     private readonly NordnetWebScraper _webScraper;
     private readonly YahooApi _yahoo;
@@ -96,22 +98,30 @@ public sealed class PortfolioWorker : BackgroundService
     {
         try
         {
-            if (!_runningUpdateTask && _nextRunMarketData < DateTime.Now)
+            await _mutex.WaitAsync();
+            try
             {
-                _runningUpdateTask = true;
-                _logger.LogDebug("Worker running Market Data update at: {time}", DateTimeOffset.Now);
-                var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
-                if (portfolio?.Positions is not null)
+                if (!_runningUpdateTask && _nextRunMarketData < DateTime.Now)
                 {
-                    var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
-                    portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
-                    portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
-                    await _repository.SavePortfolioAsync(portfolio);
-                    await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
+                    _runningUpdateTask = true;
+                    _logger.LogDebug("Worker running Market Data update at: {time}", DateTime.Now);
+                    var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
+                    if (portfolio?.Positions is not null)
+                    {
+                        var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"));
+                        portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
+                        portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
+                        await _repository.SavePortfolioAsync(portfolio);
+                        await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
+                    }
+                    _logger.LogDebug("Worker done updating Market Data at: {time}", DateTime.Now);
+                    _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
+                    _runningUpdateTask = false;
                 }
-                _logger.LogDebug("Worker done updating Market Data at: {time}", DateTimeOffset.Now);
-                _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
-                _runningUpdateTask = false;
+            }
+            finally
+            {
+                _mutex.Release();
             }
         }
         catch (Exception ex)
