@@ -13,13 +13,13 @@ namespace AlleGutta.Yahoo
 {
     public static partial class CrumbManager
     {
-        private static string crumb = "";
-        private static string cookie = "";
+        private static string _crumb = "";
+        private static string _cookie = "";
         private static readonly Regex _crumbCookieRegex = CrumbCookieRegex();
 
         private static readonly CookieContainer _cookieContainer = new CookieContainer();
 
-        public static ILogger Logger { get; internal set; }
+        public static ILogger? Logger { get; internal set; }
 
         private static async Task SetCookieAsync()
         {
@@ -43,8 +43,8 @@ namespace AlleGutta.Yahoo
                         {
                             if (_crumbCookieRegex.IsMatch(cookieValue))
                             {
-                                cookie = cookieValue;
-                                Logger.LogDebug($"Set cookie from http request: {cookie}");
+                                _cookie = cookieValue;
+                                Logger?.LogDebug($"Set cookie from http request: {_cookie}");
                                 return;
                             }
                         }
@@ -97,11 +97,11 @@ namespace AlleGutta.Yahoo
                 using var response2 = await client.SendAsync(request2);
                 // response.EnsureSuccessStatusCode();
                 responseBody = await response2.Content.ReadAsStringAsync();
-                Logger.LogDebug($"Set cookie from http request: {cookie}");
+                Logger?.LogDebug($"Set cookie from http request: {_cookie}");
                 return;
             }
 
-            Logger.LogError("Failed to set cookie from http request. Historical quote requests will most likely fail.");
+            Logger?.LogError("Failed to set cookie from http request. Historical quote requests will most likely fail.");
         }
 
         private static async Task SetCrumbAsync()
@@ -117,12 +117,12 @@ namespace AlleGutta.Yahoo
 
             if (!string.IsNullOrEmpty(crumbResult))
             {
-                crumb = crumbResult.Trim();
-                Logger.LogDebug($"Set crumb from http request: {crumb}");
+                _crumb = crumbResult.Trim();
+                Logger?.LogDebug($"Set crumb from http request: {_crumb}");
             }
             else
             {
-                Logger.LogError("Failed to set crumb from http request. Historical quote requests will most likely fail.");
+                Logger?.LogError("Failed to set crumb from http request. Historical quote requests will most likely fail.");
             }
         }
 
@@ -144,14 +144,12 @@ namespace AlleGutta.Yahoo
 
             var socketHandler = new SocketsHttpHandler
             {
-                PooledConnectionLifetime = TimeSpan.FromMinutes(60),
+                PooledConnectionLifetime = TimeSpan.FromHours(12),
                 AllowAutoRedirect = true,
                 UseCookies = true,
                 CookieContainer = _cookieContainer,
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-                MaxConnectionsPerServer = 10,
-                MaxResponseHeadersLength = 1024,
-                ConnectTimeout = TimeSpan.FromSeconds(10),
+                MaxConnectionsPerServer = 1,
             };
             var pollyHandler = new PolicyHttpMessageHandler(retryPolicy)
             {
@@ -170,20 +168,20 @@ namespace AlleGutta.Yahoo
 
         public static async Task<string> GetCrumbAsync()
         {
-            if (string.IsNullOrEmpty(crumb))
+            if (string.IsNullOrEmpty(_crumb))
             {
                 await RefreshAsync();
             }
-            return crumb;
+            return _crumb;
         }
 
         public static async Task<string> GetCookieAsync()
         {
-            if (string.IsNullOrEmpty(cookie))
+            if (string.IsNullOrEmpty(_cookie))
             {
                 await RefreshAsync();
             }
-            return cookie;
+            return _cookie;
         }
 
         [GeneratedRegex("B=.*")]

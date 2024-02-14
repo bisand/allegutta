@@ -25,9 +25,9 @@ public sealed class YahooApi
         _logger = loggerFactory.CreateLogger<YahooApi>();
     }
 
-    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers)
+    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers, int requestTimeoutSeconds = 100)
     {
-        if (!tickers.Any()) return Array.Empty<QuoteResult>();
+        if (!tickers.Any()) return [];
 
         var builder = new UriBuilder(quotesUrl)
         {
@@ -48,7 +48,7 @@ public sealed class YahooApi
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
         CrumbManager.FillHeaders(request, "https://finance.yahoo.com/quote/OSEBX.OL");
 
-        client.Timeout = TimeSpan.FromSeconds(10);
+        client.Timeout = TimeSpan.FromSeconds(requestTimeoutSeconds);
         try
         {
             using var response = await client.SendAsync(request);
@@ -58,13 +58,26 @@ public sealed class YahooApi
 
             return quotes?.QuoteResponse?.Result ?? [];
         }
-        catch (TimeoutException ex)
+        // Filter by InnerException.
+        catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
         {
+            // Handle timeout.
             _logger.LogWarning($"Timeout when fetching quotes ({ex.Message}).");
+        }
+        catch (TaskCanceledException ex)
+        {
+            // Handle other task canceled exceptions.
+            _logger.LogWarning($"Task canceled when fetching quotes ({ex.Message}).");
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Error when fetching quotes.");
+            // Handle other http request exceptions.
+            _logger.LogWarning($"Http request exception when fetching quotes ({ex.Message}).");
+        }
+        catch (Exception ex)
+        {
+            // Handle other exceptions.
+            _logger.LogError(ex, "An error occurred when fetching quotes.");
         }
         return [];
     }

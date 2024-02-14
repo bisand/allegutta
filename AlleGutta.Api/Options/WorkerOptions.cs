@@ -9,4 +9,5 @@ public record WorkerOptions
     public TimeSpan RunIntervalMarkedData { get; init; } = new(0, 0, 10);
     public TimeSpan RunTimeInstrumentHistory { get; init; } = new(0, 0, 0);
     public decimal InitialAth { get; init; }
+    public int RequestTimeoutSeconds { get; init; } = 100;
 }

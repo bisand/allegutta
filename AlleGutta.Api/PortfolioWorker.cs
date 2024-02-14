@@ -23,6 +23,7 @@ public sealed class PortfolioWorker : BackgroundService
     private DateTime _nextRunMarketData = DateTime.MinValue;
 
     private readonly TimeSpan _runTimeInstrumentHistory;
+    private readonly int _requestTimeoutSeconds;
     private DateTime _nextRunInstrumentHistory = DateTime.MinValue;
 
     private static readonly SemaphoreSlim _mutex = new(1);
@@ -53,6 +54,7 @@ public sealed class PortfolioWorker : BackgroundService
         _runIntervalNordnet = _options.RunIntervalNordnet;
         _runIntervalMarkedData = _options.RunIntervalMarkedData;
         _runTimeInstrumentHistory = _options.RunTimeInstrumentHistory;
+        _requestTimeoutSeconds = _options.RequestTimeoutSeconds;
 
         _nextRunInstrumentHistory = DateTime.Now.Date.Add(_runTimeInstrumentHistory);
 
@@ -115,7 +117,7 @@ public sealed class PortfolioWorker : BackgroundService
                             portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
                             await _repository.SavePortfolioAsync(portfolio);
                             await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
-                            _logger.LogDebug("Portfolio updated with market data and saved to database.");
+                            _logger.LogInformation("Portfolio updated with market data and saved to database.");
                         }
                         else
                         {

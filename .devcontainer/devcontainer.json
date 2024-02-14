@@ -36,7 +36,8 @@
 				"josefpihrt-vscode.roslynator",
 				"dbaeumer.vscode-eslint",
 				"VisualStudioExptTeam.vscodeintellicode",
-				"formulahendry.vscode-mysql"
+				"formulahendry.vscode-mysql",
+				"github.vscode-github-actions"
 			]
 		}
 	},
