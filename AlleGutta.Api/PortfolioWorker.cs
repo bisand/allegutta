@@ -24,10 +24,11 @@ public sealed class PortfolioWorker : BackgroundService
 
     private readonly TimeSpan _runTimeInstrumentHistory;
     private readonly int _requestTimeoutSeconds;
+    private readonly string[]? _proxyServers;
     private DateTime _nextRunInstrumentHistory = DateTime.MinValue;
 
     private static readonly SemaphoreSlim _mutex = new(1);
-    
+
     private readonly PortfolioProcessor _portfolioProcessor;
     private readonly NordnetWebScraper _webScraper;
     private readonly YahooApi _yahoo;
@@ -55,6 +56,7 @@ public sealed class PortfolioWorker : BackgroundService
         _runIntervalMarkedData = _options.RunIntervalMarkedData;
         _runTimeInstrumentHistory = _options.RunTimeInstrumentHistory;
         _requestTimeoutSeconds = _options.RequestTimeoutSeconds;
+        _proxyServers = _options.ProxyServers;
 
         _nextRunInstrumentHistory = DateTime.Now.Date.Add(_runTimeInstrumentHistory);
 
@@ -110,7 +112,9 @@ public sealed class PortfolioWorker : BackgroundService
                     var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
                     if (portfolio?.Positions is not null)
                     {
-                        var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"), _requestTimeoutSeconds);
+                        // Get a random proxy server from the list
+                        var proxy = _proxyServers?.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+                        var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"), _requestTimeoutSeconds, proxy);
                         if (quotes.Any())
                         {
                             portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);

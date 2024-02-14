@@ -25,7 +25,7 @@ public sealed class YahooApi
         _logger = loggerFactory.CreateLogger<YahooApi>();
     }
 
-    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers, int requestTimeoutSeconds = 100)
+    public async Task<IEnumerable<QuoteResult>> GetQuotes(IEnumerable<string> tickers, int requestTimeoutSeconds = 100, string? proxy = null)
     {
         if (!tickers.Any()) return [];
 
@@ -40,13 +40,13 @@ public sealed class YahooApi
         query["symbols"] = tickers.Any() ? tickers.Select(x => x).Aggregate((x, y) => $"{x},{y}") : string.Empty;
         query["fields"] = "shortName,longName,regularMarketChange,regularMarketChangePercent,regularMarketTime,regularMarketPrice,regularMarketDayHigh,regularMarketDayRange,regularMarketDayLow,regularMarketVolume,regularMarketPreviousClose";
         query["corsDomain"] = "finance.yahoo.com";
-        query["crumb"] = await CrumbManager.GetCrumbAsync();
+        query["crumb"] = await CrumbManager.GetCrumbAsync(proxy);
         builder.Query = query.ToString();
         string url = builder.ToString();
 
-        using var client = CrumbManager.GetHttpClient();
+        using var client = CrumbManager.GetHttpClient(proxy);
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
-        CrumbManager.FillHeaders(request, "https://finance.yahoo.com/quote/OSEBX.OL");
+        CrumbManager.FillHeaders(request, "https://finance.yahoo.com/quote/TSLA");
 
         client.Timeout = TimeSpan.FromSeconds(requestTimeoutSeconds);
         try
@@ -93,15 +93,18 @@ public sealed class YahooApi
         {
             Port = -1
         };
+        //https://query1.finance.yahoo.com/v8/finance/chart/TSLA?region=US&lang=en-US&includePrePost=false&interval=2m&useYfid=true&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance
+
         var query = HttpUtility.ParseQueryString(builder.Query);
         query["symbol"] = symbol;
         query["range"] = range;
         query["interval"] = interval;
-        query["region"] = "NO";
-        query["lang"] = "nb-NO";
+        query["region"] = "US";
+        query["lang"] = "en-US";
         query["includePrePost"] = "false";
         query["events"] = "div|split|earn";
         query["corsDomain"] = "finance.yahoo.com";
+        query[".tsrc"] = "finance";
         builder.Query = query.ToString();
         string url = builder.ToString();
 

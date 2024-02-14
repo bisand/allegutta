@@ -10,4 +10,5 @@ public record WorkerOptions
     public TimeSpan RunTimeInstrumentHistory { get; init; } = new(0, 0, 0);
     public decimal InitialAth { get; init; }
     public int RequestTimeoutSeconds { get; init; } = 100;
+    public string[]? ProxyServers { get; init; } = [];
 }

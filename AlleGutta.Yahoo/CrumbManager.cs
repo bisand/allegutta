@@ -21,9 +21,9 @@ namespace AlleGutta.Yahoo
 
         public static ILogger? Logger { get; internal set; }
 
-        private static async Task SetCookieAsync()
+        private static async Task SetCookieAsync(string? proxyURL)
         {
-            using HttpClient client = GetHttpClient();
+            using HttpClient client = GetHttpClient(proxyURL);
             using var request1 = new HttpRequestMessage(HttpMethod.Get, YahooFinance.HISTQUOTES2_SCRAPE_URL);
 
             FillHeaders(request1, "https://www.yahoo.com/");
@@ -104,9 +104,9 @@ namespace AlleGutta.Yahoo
             Logger?.LogError("Failed to set cookie from http request. Historical quote requests will most likely fail.");
         }
 
-        private static async Task SetCrumbAsync()
+        private static async Task SetCrumbAsync(string? proxyURL)
         {
-            using HttpClient client = GetHttpClient();
+            using HttpClient client = GetHttpClient(proxyURL);
             using var request1 = new HttpRequestMessage(HttpMethod.Get, YahooFinance.HISTQUOTES2_CRUMB_URL);
 
             FillHeaders(request1, YahooFinance.HISTQUOTES2_SCRAPE_URL);
@@ -136,11 +136,13 @@ namespace AlleGutta.Yahoo
             request.Headers.Add("Connection", "keep-alive");
         }
 
-        public static HttpClient GetHttpClient()
+        public static HttpClient GetHttpClient(string? proxyURL)
         {
             var retryPolicy = HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+            WebProxy? webProxy = string.IsNullOrEmpty(proxyURL) ? null : new WebProxy(proxyURL);
 
             var socketHandler = new SocketsHttpHandler
             {
@@ -150,7 +152,10 @@ namespace AlleGutta.Yahoo
                 CookieContainer = _cookieContainer,
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
                 MaxConnectionsPerServer = 1,
+                UseProxy = !string.IsNullOrEmpty(proxyURL),
+                Proxy = webProxy,
             };
+
             var pollyHandler = new PolicyHttpMessageHandler(retryPolicy)
             {
                 InnerHandler = socketHandler,
@@ -160,26 +165,26 @@ namespace AlleGutta.Yahoo
             return httpClient;
         }
 
-        public static async Task RefreshAsync()
+        public static async Task RefreshAsync(string? proxyURL)
         {
-            await SetCookieAsync();
-            await SetCrumbAsync();
+            await SetCookieAsync(proxyURL);
+            await SetCrumbAsync(proxyURL);
         }
 
-        public static async Task<string> GetCrumbAsync()
+        public static async Task<string> GetCrumbAsync(string? proxyURL)
         {
             if (string.IsNullOrEmpty(_crumb))
             {
-                await RefreshAsync();
+                await RefreshAsync(proxyURL);
             }
             return _crumb;
         }
 
-        public static async Task<string> GetCookieAsync()
+        public static async Task<string> GetCookieAsync(string? proxyURL)
         {
             if (string.IsNullOrEmpty(_cookie))
             {
-                await RefreshAsync();
+                await RefreshAsync(proxyURL);
             }
             return _cookie;
         }
