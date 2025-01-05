@@ -29,7 +29,8 @@ public class NordnetWebScraper
     /// <returns>NordnetBatchData</returns>
     public async Task<NordnetBatchData> GetBatchData(bool forceRun = false, int refreshIntervalMinutes = 60, bool headless = true)
     {
-        if (!forceRun && BatchData.CacheUpdated != null && DateTime.Now.AddMinutes(refreshIntervalMinutes * -1) > BatchData.CacheUpdated)
+        bool isCacheValid = BatchData.CacheUpdated is not null && BatchData.CacheUpdated.Value.AddMinutes(refreshIntervalMinutes) > DateTime.Now;
+        if (!forceRun && BatchData.CacheUpdated != null && isCacheValid)
         {
             return BatchData;
         }
@@ -301,7 +302,7 @@ public class NordnetWebScraper
     private static int CollectAccountInfo(NordnetAccountInfo? json, int dataCollected)
     {
         BatchData.AccountInfo = json;
-        BatchData.CacheUpdated = new DateTime();
+        BatchData.CacheUpdated = DateTime.Now;
         dataCollected++;
         return dataCollected;
     }
@@ -309,7 +310,7 @@ public class NordnetWebScraper
     private static int CollectPositions(NordnetPosition[]? json, int dataCollected)
     {
         BatchData.Positions = json;
-        BatchData.CacheUpdated = new DateTime();
+        BatchData.CacheUpdated = DateTime.Now;
         dataCollected++;
         return dataCollected;
     }

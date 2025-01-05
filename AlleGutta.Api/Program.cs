@@ -9,8 +9,6 @@ using AlleGutta.Repository;
 using AlleGutta.Repository.Database.Configuration;
 using AlleGutta.Yahoo;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Microsoft.Extensions.Options;
-using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 

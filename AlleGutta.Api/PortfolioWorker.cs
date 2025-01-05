@@ -76,25 +76,26 @@ public sealed class PortfolioWorker : BackgroundService
 
     private async Task UpdatePortfolioFromNordnet()
     {
-        try
+        if (!_runningUpdateTask && _nextRunNordnet < DateTime.Now)
         {
-            if (!_runningUpdateTask && _nextRunNordnet < DateTime.Now)
+            _runningUpdateTask = true;
+            try
             {
-                _runningUpdateTask = true;
                 _logger.LogInformation("Worker running Nordnet update at: {time}", DateTime.Now);
                 var batchData = await _webScraper.GetBatchData();
                 var nordnetPortfolio = _portfolioProcessor.GetPortfolioFromBatchData("AlleGutta", batchData);
                 await _repository.SavePortfolioAsync(nordnetPortfolio, true, false);
                 _logger.LogInformation("Worker done updating Nordnet data at: {time}", DateTime.Now);
-                _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
-                _runningUpdateTask = false;
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while retrieving data from Nordnet!");
-            _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
-            _runningUpdateTask = false;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving data from Nordnet!");
+            }
+            finally
+            {
+                _runningUpdateTask = false;
+                _nextRunNordnet = DateTime.Now.Add(_runIntervalNordnet);
+            }
         }
     }
 
