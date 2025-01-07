@@ -102,49 +102,46 @@ public sealed class PortfolioWorker : BackgroundService
 
     private async Task UpdatePortfolioWithMarketData()
     {
+        await _mutex.WaitAsync();
         try
         {
-            await _mutex.WaitAsync();
-            try
+            if (!_runningUpdateTask && _nextRunMarketData < DateTime.Now)
             {
-                if (!_runningUpdateTask && _nextRunMarketData < DateTime.Now)
+                _runningUpdateTask = true;
+                _logger.LogDebug("Worker running Market Data update at: {time}", DateTime.Now);
+                var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
+                if (portfolio?.Positions is not null)
                 {
-                    _runningUpdateTask = true;
-                    _logger.LogDebug("Worker running Market Data update at: {time}", DateTime.Now);
-                    var portfolio = await _repository.GetPortfolioAsync("AlleGutta");
-                    if (portfolio?.Positions is not null)
+                    // Get a random proxy server from the list
+                    var proxy = _proxyServers?.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+                    var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"), _requestTimeoutSeconds, proxy);
+                    if (quotes.Any())
                     {
-                        // Get a random proxy server from the list
-                        var proxy = _proxyServers?.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
-                        var quotes = await _yahoo.GetQuotes(portfolio.Positions.Select(x => x.Symbol + ".OL"), _requestTimeoutSeconds, proxy);
-                        if (quotes.Any())
-                        {
-                            portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
-                            portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
-                            await _repository.SavePortfolioAsync(portfolio);
-                            await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
-                            _logger.LogInformation("Portfolio updated with market data and saved to database.");
-                        }
-                        else
-                        {
-                            _logger.LogWarning("No quotes found for portfolio positions.");
-                        }
+                        portfolio = _portfolioProcessor.UpdatePortfolioWithMarketData(portfolio, quotes);
+                        portfolio.Ath = _options.InitialAth > portfolio.Ath ? _options.InitialAth : portfolio.Ath;
+                        await _repository.SavePortfolioAsync(portfolio);
+                        await _portfolioHub.Clients.All.PortfolioUpdated(portfolio);
+                        _logger.LogInformation("Portfolio updated with market data and saved to database.");
                     }
-                    _logger.LogDebug("Worker done updating Market Data at: {time}", DateTime.Now);
-                    _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
-                    _runningUpdateTask = false;
+                    else
+                    {
+                        _logger.LogWarning("No quotes found for portfolio positions.");
+                    }
                 }
-            }
-            finally
-            {
-                _mutex.Release();
+                _logger.LogDebug("Worker done updating Market Data at: {time}", DateTime.Now);
+                _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
+                _runningUpdateTask = false;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while retrieving market data from Yahoo!");
+        }
+        finally
+        {
             _nextRunMarketData = DateTime.Now.Add(_runIntervalMarkedData);
             _runningUpdateTask = false;
+            _mutex.Release();
         }
     }
 

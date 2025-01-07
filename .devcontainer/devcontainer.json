@@ -1,48 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
 {
 	"name": "C# (.NET)",
-	"build": {
-		"dockerfile": "Dockerfile.debian",
-		"args": {
-			"VARIANT": "lts-slim",
-			"USERNAME": "node",
-			"BUILDKIT_INLINE_CACHE": "0"
-		},
-		"context": ".."
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/dotnet:8.0-noble",
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {}
 	},
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [3306],
+	"forwardPorts": [
+		3306
+	],
+	// "portsAttributes": {
+	//		"5001": {
+	//			"protocol": "https"
+	//		}
+	// }
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "dotnet restore",
 	// Configure tool-specific properties.
-	"mounts": [
-		// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/>
-		// "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-		"source=tds-zshhistory,target=/commandhistory,type=volume"
-	],
 	"customizations": {
 		"vscode": {
-			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
+				"ms-vscode.vs-keybindings",
 				"ms-dotnettools.csharp",
 				"ms-dotnettools.csdevkit",
-				"ms-vscode.vs-keybindings",
 				"ms-azuretools.vscode-docker",
-				"GitHub.copilot-nightly",
-				"GitHub.copilot-chat",
-				"github.vscode-pull-request-github",
-				"eamodio.gitlens",
-				"k--kato.docomment",
-				"aaron-bond.better-comments",
-				"josefpihrt-vscode.roslynator",
-				"dbaeumer.vscode-eslint",
+				"github.vscode-github-actions",
+				"donjayamanne.githistory",
+				"ms-vscode.vscode-github-issue-notebooks",
+				"GitHub.vscode-pull-request-github",
 				"VisualStudioExptTeam.vscodeintellicode",
-				"formulahendry.vscode-mysql",
-				"github.vscode-github-actions"
+				"ms-dotnettools.vscodeintellicode-csharp"
 			]
 		}
 	},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "node",
+	// "remoteUser": "root"
 	"postCreateCommand": ".devcontainer/init-db.sh",
-	"postStartCommand": "sudo service mariadb start"
+	//"postStartCommand": "sudo service mariadb start"
 }

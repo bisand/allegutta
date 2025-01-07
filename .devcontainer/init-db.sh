@@ -1,5 +1,8 @@
 #! /bin/bash
 
+sudo apt update
+sudo apt install -y mariadb-server iputils-ping
+
 sudo service mariadb start
 
 newUser='allegutta'
