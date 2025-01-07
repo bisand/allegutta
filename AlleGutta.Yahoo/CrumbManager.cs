@@ -59,7 +59,7 @@ namespace AlleGutta.Yahoo
             var datas = new Dictionary<string, string>();
             var postFind = false;
             // Read source to get params data for post request
-            string line;
+            string? line;
             while ((line = await isReader.ReadLineAsync()) != null)
             {
                 if (patternPostForm.IsMatch(line))

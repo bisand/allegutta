@@ -20,6 +20,18 @@ public class NordnetWebScraper
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    private static void CheckCancellation(CancellationToken cancellationToken, string message = "Operation cancelled.")
+    {
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+        catch (OperationCanceledException)
+        {
+            throw new OperationCanceledException(message);
+        }
+    }
+
     /// <summary>
     /// Return Batch data from Nordnet API. Is used to retrive portfolio specific data.
     /// </summary>
@@ -27,7 +39,7 @@ public class NordnetWebScraper
     /// <param name="refreshIntervalMinutes">Refresh interval in minutes. If time is within interval, cched data are returned. Otherwise a request is being made to Nordnet.</param>
     /// <param name="headless">Indicate if Chrome should run in headless mode. Default true.</param>
     /// <returns>NordnetBatchData</returns>
-    public async Task<NordnetBatchData> GetBatchData(bool forceRun = false, int refreshIntervalMinutes = 60, bool headless = true)
+    public async Task<NordnetBatchData> GetBatchData(bool forceRun = false, int refreshIntervalMinutes = 60, bool headless = true, CancellationToken cancellationToken = default)
     {
         bool isCacheValid = BatchData.CacheUpdated is not null && BatchData.CacheUpdated.Value.AddMinutes(refreshIntervalMinutes) > DateTime.Now;
         if (!forceRun && BatchData.CacheUpdated != null && isCacheValid)
@@ -39,38 +51,52 @@ public class NordnetWebScraper
         {
             Headless = headless,
             DefaultViewport = { Width = 1024, Height = 768 },
-            Args = new[] { "--disable-dev-shm-usage", "--no-sandbox" },
+            Args = ["--disable-dev-shm-usage", "--no-sandbox"],
             // ExecutablePath = "/usr/bin/chromium"
         };
 
+        IBrowser? browser = null;
         try
         {
-            using var browser = await Puppeteer.LaunchAsync(options).ConfigureAwait(false);
+            CheckCancellation(cancellationToken);
+            browser = await Puppeteer.LaunchAsync(options).ConfigureAwait(false);
+            CheckCancellation(cancellationToken);
             using var page = await browser.NewPageAsync().ConfigureAwait(false);
+            CheckCancellation(cancellationToken);
             await Login(page);
             page.Response += GetAccountIdEventHandler;
+            CheckCancellation(cancellationToken);
             _ = await page.GoToAsync($"https://www.nordnet.no/overview/details/", WaitUntilNavigation.Networkidle2);
-            await WaitForConditionAsync(() => _accountId > 0, 60000, 100, $"Timed out while processing data from: https://www.nordnet.no/overview/details/");
+            CheckCancellation(cancellationToken);
+            await WaitForConditionAsync(() => _accountId > 0, 100, $"Timed out while processing data from: https://www.nordnet.no/overview/details/", cancellationToken);
+            CheckCancellation(cancellationToken);
             page.Response -= GetAccountIdEventHandler;
 
             page.Response += GetPortfolioEventHandler;
             _ = await page.GoToAsync($"https://www.nordnet.no/overview/details/{_accountId}", WaitUntilNavigation.Networkidle2);
-            await WaitForConditionAsync(() => _dataCollected >= 2, 60000, 100, $"Timed out while processing data from: https://www.nordnet.no/overview/details/{_accountId}");
+            CheckCancellation(cancellationToken);
+            await WaitForConditionAsync(() => _dataCollected >= 2, 100, $"Timed out while processing data from: https://www.nordnet.no/overview/details/{_accountId}", cancellationToken);
             page.Response -= GetPortfolioEventHandler;
-
-            await browser.CloseAsync();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unexpected error occurred while processing Nordnet data.");
         }
+        finally
+        {
+            if (browser != null)
+            {
+                await browser.CloseAsync();
+                await browser.DisposeAsync();
+            }
+        }
         return BatchData;
     }
 
     // Method to run GetBatchData with a cancellation token
-    public Task<NordnetBatchData> GetBatchData(CancellationToken cancellationToken)
+    public async Task<NordnetBatchData> GetBatchData(CancellationToken cancellationToken)
     {
-        return Task.Run(() => GetBatchData(false, 60, true), cancellationToken);
+        return await GetBatchData(false, 60, true, cancellationToken);
     }
 
     private async void GetAccountIdEventHandler(object? sender, ResponseCreatedEventArgs responseEvent)
@@ -243,66 +269,15 @@ public class NordnetWebScraper
             });
     }
 
-    /// <summary>
-    /// A general wait for method. It resolves when provided function returns true or if it times out.
-    /// </summary>
-    /// <param name="checkFn">The function to wait for. Return true to resolve the WaitFor method.</param>
-    /// <param name="opts">Configuration options.</param>
-    /// <returns></returns>
-    private static Task<bool> WaitFor(Func<bool> checkFn, Option? opts = null)
-    {
-        opts ??= new Option(60000, 100, "Timeout!");
-        var taskSource = new TaskCompletionSource<bool>();
-
-        var ct = new CancellationTokenSource(opts.TimeoutMs);
-        ct.Token.Register(() => taskSource.TrySetCanceled(), useSynchronizationContext: false);
-
-        Task.Run(async () =>
-        {
-            while (true)
-            {
-                if (checkFn())
-                {
-                    taskSource.TrySetResult(true);
-                    break; // Exit the loop when checkFn is true
-                }
-                await Task.Delay(opts.IntervalMs, ct.Token);
-            }
-        }, ct.Token);
-
-        return taskSource.Task;
-    }
-
-    public async Task WaitForConditionAsync(Func<bool> condition, int timeoutMs = 60000, int intervalMs = 100, string timeoutMessage = "Timeout!")
+    public async Task WaitForConditionAsync(Func<bool> condition, int intervalMs = 100, string timeoutMessage = "Timeout!", CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Waiting for condition to be true...");
-        var timer = new System.Timers.Timer(timeoutMs);
-        var taskCompletionSource = new TaskCompletionSource<bool>();
-
-        timer.Elapsed += (sender, args) =>
-        {
-            timer.Stop();
-            _logger.LogDebug("Condition did not become true within the timeout period.");
-            _logger.LogInformation(timeoutMessage);
-            taskCompletionSource.TrySetResult(false);
-        };
-
-        timer.Start();
-
         while (!condition())
         {
-            await Task.Delay(intervalMs);
-
-            if (taskCompletionSource.Task.IsCompleted)
-            {
-                _logger.LogDebug("Condition check was canceled.");
-                return;
-            }
+            CheckCancellation(cancellationToken, timeoutMessage);
+            await Task.Delay(intervalMs, cancellationToken);
         }
-
-        timer.Stop();
         _logger.LogDebug("Condition is now true.");
-        taskCompletionSource.TrySetResult(true);
     }
 
     private static int CollectAccountInfo(NordnetAccountInfo? json, int dataCollected)
