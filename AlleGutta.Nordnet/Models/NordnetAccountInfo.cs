@@ -1,43 +1,43 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AlleGutta.Nordnet.Models;
 
 public record NordnetAccountInfo
 {
-    [JsonProperty("account_credit")]
+    [JsonPropertyName("account_credit")]
     public NordnetPrice? AccountCredit { get; init; }
-    [JsonProperty("collateral")]
+    [JsonPropertyName("collateral")]
     public NordnetPrice? Collateral { get; init; }
-    [JsonProperty("pawn_value")]
+    [JsonPropertyName("pawn_value")]
     public NordnetPrice? PawnValue { get; init; }
-    [JsonProperty("trading_power")]
+    [JsonPropertyName("trading_power")]
     public NordnetPrice? TradingPower { get; init; }
-    [JsonProperty("loan_limit")]
+    [JsonPropertyName("loan_limit")]
     public NordnetPrice? LoanLimit { get; init; }
-    [JsonProperty("forward_sum")]
+    [JsonPropertyName("forward_sum")]
     public NordnetPrice? ForwardSum { get; init; }
-    [JsonProperty("future_sum")]
+    [JsonPropertyName("future_sum")]
     public NordnetPrice? FutureSum { get; init; }
-    [JsonProperty("account_currency")]
+    [JsonPropertyName("account_currency")]
     public NordnetCurrency? AccountCurrency { get; init; }
-    [JsonProperty("interest")]
+    [JsonPropertyName("interest")]
     public NordnetPrice? Interest { get; init; }
-    [JsonProperty("account_sum")]
+    [JsonPropertyName("account_sum")]
     public NordnetPrice? AccountSum { get; init; }
-    [JsonProperty("unrealized_future_profit_loss")]
+    [JsonPropertyName("unrealized_future_profit_loss")]
     public NordnetPrice? UnrealizedFutureProfitLoss { get; init; }
-    [JsonProperty("own_capital")]
+    [JsonPropertyName("own_capital")]
     public NordnetPrice? OwnCapital { get; init; }
-    [JsonProperty("own_capital_morning")]
+    [JsonPropertyName("own_capital_morning")]
     public NordnetPrice? OwnCapitalMorning { get; init; }
-    [JsonProperty("full_marketvalue")]
+    [JsonPropertyName("full_marketvalue")]
     public NordnetPrice? FullMarketvalue { get; init; }
-    [JsonProperty("account_code")]
+    [JsonPropertyName("account_code")]
     public string? AccountCode { get; init; }
-    [JsonProperty("registration_date")]
+    [JsonPropertyName("registration_date")]
     public string? RegistrationDate { get; init; }
-    [JsonProperty("accno")]
+    [JsonPropertyName("accno")]
     public int Accno { get; init; }
-    [JsonProperty("accid")]
+    [JsonPropertyName("accid")]
     public int Accid { get; init; }
 }

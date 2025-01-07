@@ -1,33 +1,33 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AlleGutta.Nordnet.Models;
 
 public record NordnetPosition
 {
-    [JsonProperty("accno")]
+    [JsonPropertyName("accno")]
     public int AccNo { get; init; }
-    [JsonProperty("accid")]
+    [JsonPropertyName("accid")]
     public int AccId { get; init; }
-    [JsonProperty("instrument")]
+    [JsonPropertyName("instrument")]
     public NordnetInstrument? Instrument { get; init; }
-    [JsonProperty("main_market_price")]
+    [JsonPropertyName("main_market_price")]
     public NordnetPrice? MainMarketPrice { get; init; }
-    [JsonProperty("morning_price")]
+    [JsonPropertyName("morning_price")]
     public NordnetPrice? MorningPrice { get; init; }
-    [JsonProperty("qty")]
+    [JsonPropertyName("qty")]
     public decimal Qty { get; init; }
-    [JsonProperty("pawn_percent")]
+    [JsonPropertyName("pawn_percent")]
     public decimal PawnPercent { get; init; }
-    [JsonProperty("market_value_acc")]
+    [JsonPropertyName("market_value_acc")]
     public NordnetPrice? MarketValueAcc { get; init; }
-    [JsonProperty("market_value")]
+    [JsonPropertyName("market_value")]
     public NordnetPrice? MarketValue { get; init; }
-    [JsonProperty("acq_price")]
+    [JsonPropertyName("acq_price")]
     public NordnetPrice? AcqPrice { get; init; }
-    [JsonProperty("acq_price_acc")]
+    [JsonPropertyName("acq_price_acc")]
     public NordnetPrice? AcqPriceAcc { get; init; }
-    [JsonProperty("is_custom_gav")]
+    [JsonPropertyName("is_custom_gav")]
     public bool IsCustomGav { get; init; }
-    [JsonProperty("margin_percent")]
+    [JsonPropertyName("margin_percent")]
     public decimal MarginPercent { get; init; }
 }

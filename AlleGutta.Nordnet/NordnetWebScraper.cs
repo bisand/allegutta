@@ -1,8 +1,8 @@
 using AlleGutta.Nordnet.Models;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using PuppeteerSharp;
 using System.Linq;
+using System.Text.Json;
 
 namespace AlleGutta.Nordnet;
 
@@ -67,6 +67,12 @@ public class NordnetWebScraper
         return BatchData;
     }
 
+    // Method to run GetBatchData with a cancellation token
+    public Task<NordnetBatchData> GetBatchData(CancellationToken cancellationToken)
+    {
+        return Task.Run(() => GetBatchData(false, 60, true), cancellationToken);
+    }
+
     private async void GetAccountIdEventHandler(object? sender, ResponseCreatedEventArgs responseEvent)
     {
         var response = responseEvent.Response;
@@ -95,7 +101,7 @@ public class NordnetWebScraper
                     try
                     {
                         var txt = await response.TextAsync();
-                        var accounts = JsonConvert.DeserializeObject<NordnetAccount[]>(txt);
+                        var accounts = JsonSerializer.Deserialize<NordnetAccount[]>(txt);
                         if (accounts != null)
                         {
                             foreach (var account in accounts)
@@ -147,8 +153,8 @@ public class NordnetWebScraper
             {
                 try
                 {
-                    var strBatch = JsonConvert.DeserializeObject<NordnetRequestStringBatch>(postDataText ?? string.Empty);
-                    var postData = JsonConvert.DeserializeObject<NordnetRequest[]>(strBatch?.Batch ?? string.Empty);
+                    var strBatch = JsonSerializer.Deserialize<NordnetRequestStringBatch>(postDataText ?? string.Empty);
+                    var postData = JsonSerializer.Deserialize<NordnetRequest[]>(strBatch?.Batch ?? string.Empty);
 
                     if (postData?.GetType().IsArray == true)
                     {
@@ -158,14 +164,14 @@ public class NordnetWebScraper
                             {
                                 _logger.LogInformation($"Found positions: {postData[i].RelativeUrl}");
                                 var txt = await response.TextAsync();
-                                var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetPosition[]>[]>(txt);
+                                var json = JsonSerializer.Deserialize<NordnetJsonContent<NordnetPosition[]>[]>(txt);
                                 _dataCollected = CollectPositions(json?[i].Body, _dataCollected);
                             }
                             else if (postData[i].RelativeUrl.Contains($"accounts/{_accountId}/info"))
                             {
                                 _logger.LogInformation($"Found account info: {postData[i].RelativeUrl}");
                                 var txt = await response.TextAsync();
-                                var json = JsonConvert.DeserializeObject<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt);
+                                var json = JsonSerializer.Deserialize<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt);
                                 _dataCollected = CollectAccountInfo(json?[i].Body?[0], _dataCollected);
                             }
                         }
@@ -183,13 +189,13 @@ public class NordnetWebScraper
                     if (url?.Contains($"accounts/{_accountId}/positions") == true)
                     {
                         var txt = await response.TextAsync();
-                        var json = JsonConvert.DeserializeObject<NordnetPosition[]>(txt);
+                        var json = JsonSerializer.Deserialize<NordnetPosition[]>(txt);
                         _dataCollected = CollectPositions(json, _dataCollected);
                     }
                     else if (url?.Contains($"accounts/{_accountId}/info") == true)
                     {
                         var txt = await response.TextAsync();
-                        var json = JsonConvert.DeserializeObject<NordnetAccountInfo[]>(txt);
+                        var json = JsonSerializer.Deserialize<NordnetAccountInfo[]>(txt);
                         _dataCollected = CollectAccountInfo(json?[0], _dataCollected);
                     }
                 }
@@ -214,14 +220,14 @@ public class NordnetWebScraper
     {
         await page.GoToAsync(_config.Url);
         await page.ClickAsync("button#cookie-accept-all-secondary");
-        await page.WaitForXPathAsync("//button[contains(., 'innloggingsmetode')]", new() { Timeout = 10000 });
-        var button1 = (await page.XPathAsync("//button[contains(., 'innloggingsmetode')]")).FirstOrDefault();
+        await page.WaitForSelectorAsync("button:contains('innloggingsmetode')", new() { Timeout = 10000 });
+        var button1 = await page.QuerySelectorAsync("button:contains('innloggingsmetode')");
         if (button1 != null)
         {
             await button1.ClickAsync();
         }
-        await page.WaitForXPathAsync("//button[contains(., 'brukernavn og passord')]", new() { Timeout = 10000 });
-        var button2 = (await page.XPathAsync("//button[contains(., 'brukernavn og passord')]")).FirstOrDefault();
+        await page.WaitForSelectorAsync("button:contains('brukernavn og passord')", new() { Timeout = 10000 });
+        var button2 = await page.QuerySelectorAsync("button:contains('brukernavn og passord')");
         if (button2 != null)
         {
             await button2.ClickAsync();

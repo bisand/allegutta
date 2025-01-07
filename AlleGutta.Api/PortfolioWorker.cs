@@ -76,13 +76,14 @@ public sealed class PortfolioWorker : BackgroundService
 
     private async Task UpdatePortfolioFromNordnet()
     {
+        var cancellationToken = new CancellationTokenSource(_requestTimeoutSeconds * 1000).Token;
         if (!_runningUpdateTask && _nextRunNordnet < DateTime.Now)
         {
             _runningUpdateTask = true;
             try
             {
                 _logger.LogInformation("Worker running Nordnet update at: {time}", DateTime.Now);
-                var batchData = await _webScraper.GetBatchData();
+                var batchData = await _webScraper.GetBatchData(cancellationToken);
                 var nordnetPortfolio = _portfolioProcessor.GetPortfolioFromBatchData("AlleGutta", batchData);
                 await _repository.SavePortfolioAsync(nordnetPortfolio, true, false);
                 _logger.LogInformation("Worker done updating Nordnet data at: {time}", DateTime.Now);

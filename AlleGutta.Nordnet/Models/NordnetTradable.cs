@@ -1,19 +1,19 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AlleGutta.Nordnet.Models;
 
 public record NordnetTradable
 {
-    [JsonProperty("market_id")]
+    [JsonPropertyName("market_id")]
     public int MarketId { get; init; }
-    [JsonProperty("tick_size_id")]
+    [JsonPropertyName("tick_size_id")]
     public int TickSizeId { get; init; }
-    [JsonProperty("display_order")]
+    [JsonPropertyName("display_order")]
     public int DisplayOrder { get; init; }
-    [JsonProperty("lot_size")]
+    [JsonPropertyName("lot_size")]
     public decimal LotSize { get; init; }
-    [JsonProperty("mic")]
+    [JsonPropertyName("mic")]
     public string? Mic { get; init; }
-    [JsonProperty("identifier")]
+    [JsonPropertyName("identifier")]
     public string? Identifier { get; init; }
 }

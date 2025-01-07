@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AlleGutta.Nordnet.Models;
 
 public record NordnetJsonContent<T>
 {
-    [JsonProperty("body")]
+    [JsonPropertyName("body")]
     public T? Body { get; init; }
 }

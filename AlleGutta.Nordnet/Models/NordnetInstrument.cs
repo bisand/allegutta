@@ -1,39 +1,39 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AlleGutta.Nordnet.Models;
 
 public record NordnetInstrument
 {
-    [JsonProperty("mifid2_category")]
+    [JsonPropertyName("mifid2_category")]
     public int Mifid2Category { get; init; }
-    [JsonProperty("price_type")]
+    [JsonPropertyName("price_type")]
     public string? PriceType { get; init; }
-    [JsonProperty("tradables")]
+    [JsonPropertyName("tradables")]
     public NordnetTradable[]? Tradables { get; init; }
-    [JsonProperty("instrument_id")]
+    [JsonPropertyName("instrument_id")]
     public int InstrumentId { get; init; }
-    [JsonProperty("asset_class")]
+    [JsonPropertyName("asset_class")]
     public string? AssetClass { get; init; }
-    [JsonProperty("instrument_type")]
+    [JsonPropertyName("instrument_type")]
     public string? InstrumentType { get; init; }
-    [JsonProperty("instrument_group_type")]
+    [JsonPropertyName("instrument_group_type")]
     public string? InstrumentGroupType { get; init; }
-    [JsonProperty("currency")]
+    [JsonPropertyName("currency")]
     public string? Currency { get; init; }
-    [JsonProperty("multiplier")]
+    [JsonPropertyName("multiplier")]
     public decimal Multiplier { get; init; }
-    [JsonProperty("pawn_percentage")]
+    [JsonPropertyName("pawn_percentage")]
     public decimal PawnPercentage { get; init; }
-    [JsonProperty("margin_percentage")]
+    [JsonPropertyName("margin_percentage")]
     public decimal MarginPercentage { get; init; }
-    [JsonProperty("symbol")]
+    [JsonPropertyName("symbol")]
     public string? Symbol { get; init; }
-    [JsonProperty("isin_code")]
+    [JsonPropertyName("isin_code")]
     public string? IsinCode { get; init; }
-    [JsonProperty("sector")]
+    [JsonPropertyName("sector")]
     public string? Sector { get; init; }
-    [JsonProperty("sector_group")]
+    [JsonPropertyName("sector_group")]
     public string? SectorGroup { get; init; }
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string? Name { get; init; }
 }

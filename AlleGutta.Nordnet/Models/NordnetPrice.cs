@@ -1,11 +1,11 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AlleGutta.Nordnet.Models;
 
 public record NordnetPrice
 {
-    [JsonProperty("currency")]
+    [JsonPropertyName("currency")]
     public NordnetCurrency Currency { get; init; }
-    [JsonProperty("value")]
+    [JsonPropertyName("value")]
     public decimal Value { get; init; }
 }
