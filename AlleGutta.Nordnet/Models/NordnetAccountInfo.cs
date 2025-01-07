@@ -19,7 +19,7 @@ public record NordnetAccountInfo
     [JsonPropertyName("future_sum")]
     public NordnetPrice? FutureSum { get; init; }
     [JsonPropertyName("account_currency")]
-    public NordnetCurrency? AccountCurrency { get; init; }
+    public string? AccountCurrency { get; init; }
     [JsonPropertyName("interest")]
     public NordnetPrice? Interest { get; init; }
     [JsonPropertyName("account_sum")]

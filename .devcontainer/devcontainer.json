@@ -33,7 +33,8 @@
 				"ms-vscode.vscode-github-issue-notebooks",
 				"GitHub.vscode-pull-request-github",
 				"VisualStudioExptTeam.vscodeintellicode",
-				"ms-dotnettools.vscodeintellicode-csharp"
+				"ms-dotnettools.vscodeintellicode-csharp",
+				"Gruntfuggly.todo-tree"
 			]
 		}
 	},

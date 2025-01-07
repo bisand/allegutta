@@ -11,13 +11,21 @@ public class NordnetWebScraper
     private static readonly NordnetBatchData BatchData = new();
     private readonly NordNetConfig _config;
     private readonly ILogger<NordnetWebScraper> _logger;
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
     private int _accountId = 0;
     private int _dataCollected = 0;
+    private SemaphoreSlim _accountIdSemaphore = new(1, 1);
+    private SemaphoreSlim _portfolioSemaphore = new(1, 1);
 
     public NordnetWebScraper(NordNetConfig config, ILogger<NordnetWebScraper> logger)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config), "Configuration cannot be empty!");
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
     }
 
     private static void CheckCancellation(CancellationToken cancellationToken, string message = "Operation cancelled.")
@@ -109,6 +117,8 @@ public class NordnetWebScraper
             return;
         }
 
+        await _accountIdSemaphore.WaitAsync();
+
         try
         {
             var request = response.Request;
@@ -126,8 +136,9 @@ public class NordnetWebScraper
                 {
                     try
                     {
+                        // TODO: Fix this to handle multiple accounts or apply better error handling
                         var txt = await response.TextAsync();
-                        var accounts = JsonSerializer.Deserialize<NordnetAccount[]>(txt);
+                        var accounts = JsonSerializer.Deserialize<NordnetAccount[]>(txt, _jsonSerializerOptions);
                         if (accounts != null)
                         {
                             foreach (var account in accounts)
@@ -151,6 +162,10 @@ public class NordnetWebScraper
         {
             _logger.LogError(e, "An error occurred while processing Nordnet data.");
         }
+        finally
+        {
+            _accountIdSemaphore.Release();
+        }
     }
 
     private async void GetPortfolioEventHandler(object? sender, ResponseCreatedEventArgs responseEvent)
@@ -162,6 +177,8 @@ public class NordnetWebScraper
             _logger.LogWarning($"Response NOT OK: {response.Status}: {response.StatusText}");
             return;
         }
+
+        await _portfolioSemaphore.WaitAsync();
 
         try
         {
@@ -179,8 +196,8 @@ public class NordnetWebScraper
             {
                 try
                 {
-                    var strBatch = JsonSerializer.Deserialize<NordnetRequestStringBatch>(postDataText ?? string.Empty);
-                    var postData = JsonSerializer.Deserialize<NordnetRequest[]>(strBatch?.Batch ?? string.Empty);
+                    var strBatch = JsonSerializer.Deserialize<NordnetRequestStringBatch>(postDataText ?? string.Empty, _jsonSerializerOptions);
+                    var postData = JsonSerializer.Deserialize<NordnetRequest[]>(strBatch?.Batch ?? string.Empty, _jsonSerializerOptions);
 
                     if (postData?.GetType().IsArray == true)
                     {
@@ -190,14 +207,14 @@ public class NordnetWebScraper
                             {
                                 _logger.LogInformation($"Found positions: {postData[i].RelativeUrl}");
                                 var txt = await response.TextAsync();
-                                var json = JsonSerializer.Deserialize<NordnetJsonContent<NordnetPosition[]>[]>(txt);
+                                var json = JsonSerializer.Deserialize<NordnetJsonContent<NordnetPosition[]>[]>(txt, _jsonSerializerOptions);
                                 _dataCollected = CollectPositions(json?[i].Body, _dataCollected);
                             }
                             else if (postData[i].RelativeUrl.Contains($"accounts/{_accountId}/info"))
                             {
                                 _logger.LogInformation($"Found account info: {postData[i].RelativeUrl}");
                                 var txt = await response.TextAsync();
-                                var json = JsonSerializer.Deserialize<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt);
+                                var json = JsonSerializer.Deserialize<NordnetJsonContent<NordnetAccountInfo[]>[]>(txt, _jsonSerializerOptions);
                                 _dataCollected = CollectAccountInfo(json?[i].Body?[0], _dataCollected);
                             }
                         }
@@ -215,13 +232,13 @@ public class NordnetWebScraper
                     if (url?.Contains($"accounts/{_accountId}/positions") == true)
                     {
                         var txt = await response.TextAsync();
-                        var json = JsonSerializer.Deserialize<NordnetPosition[]>(txt);
+                        var json = JsonSerializer.Deserialize<NordnetPosition[]>(txt, _jsonSerializerOptions);
                         _dataCollected = CollectPositions(json, _dataCollected);
                     }
                     else if (url?.Contains($"accounts/{_accountId}/info") == true)
                     {
                         var txt = await response.TextAsync();
-                        var json = JsonSerializer.Deserialize<NordnetAccountInfo[]>(txt);
+                        var json = JsonSerializer.Deserialize<NordnetAccountInfo[]>(txt, _jsonSerializerOptions);
                         _dataCollected = CollectAccountInfo(json?[0], _dataCollected);
                     }
                 }
@@ -235,6 +252,10 @@ public class NordnetWebScraper
         {
             _logger.LogError(e, "An error occurred while processing Nordnet data.");
         }
+        finally
+        {
+            _portfolioSemaphore.Release();
+        }
     }
 
     /// <summary>
@@ -246,14 +267,14 @@ public class NordnetWebScraper
     {
         await page.GoToAsync(_config.Url);
         await page.ClickAsync("button#cookie-accept-all-secondary");
-        await page.WaitForSelectorAsync("button:contains('innloggingsmetode')", new() { Timeout = 10000 });
-        var button1 = await page.QuerySelectorAsync("button:contains('innloggingsmetode')");
+        await page.WaitForSelectorAsync("xpath///button[contains(., 'innloggingsmetode')]", new() { Timeout = 10000 });
+        var button1 = await page.QuerySelectorAsync("xpath///button[contains(., 'innloggingsmetode')]");
         if (button1 != null)
         {
             await button1.ClickAsync();
         }
-        await page.WaitForSelectorAsync("button:contains('brukernavn og passord')", new() { Timeout = 10000 });
-        var button2 = await page.QuerySelectorAsync("button:contains('brukernavn og passord')");
+        await page.WaitForSelectorAsync("xpath///button[contains(., 'brukernavn og passord')]", new() { Timeout = 10000 });
+        var button2 = await page.QuerySelectorAsync("xpath///button[contains(., 'brukernavn og passord')]");
         if (button2 != null)
         {
             await button2.ClickAsync();
@@ -263,10 +284,10 @@ public class NordnetWebScraper
         await page.TypeAsync("input[name='username']", _config.Username);
         await page.TypeAsync("input[name='password']", _config.Password);
 
-        Task.WaitAll(new[] {
+        Task.WaitAll([
                 page.ClickAsync("button[type='submit']"),
                 page.WaitForNavigationAsync()
-            });
+            ]);
     }
 
     public async Task WaitForConditionAsync(Func<bool> condition, int intervalMs = 100, string timeoutMessage = "Timeout!", CancellationToken cancellationToken = default)
