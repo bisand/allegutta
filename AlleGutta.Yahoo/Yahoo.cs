@@ -7,8 +7,6 @@ using Newtonsoft.Json;
 namespace AlleGutta.Yahoo;
 public sealed class YahooApi
 {
-    private readonly string scrapeUrl;
-    private readonly string crumbUrl;
     private readonly string quotesUrl;
     private readonly string chartUrl;
     private readonly string optionsUrl;
@@ -16,8 +14,6 @@ public sealed class YahooApi
 
     public YahooApi(ILoggerFactory loggerFactory)
     {
-        scrapeUrl = "https://finance.yahoo.com/quote/%5EGSPC/options";
-        crumbUrl = "https://query1.finance.yahoo.com/v1/test/getcrumb";
         quotesUrl = "https://query2.finance.yahoo.com/v7/finance/quote";
         chartUrl = "https://query1.finance.yahoo.com/v8/finance/chart/";
         optionsUrl = "https://query2.finance.yahoo.com/v7/finance/options/";
