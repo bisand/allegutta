@@ -34,7 +34,8 @@
 				"GitHub.vscode-pull-request-github",
 				"VisualStudioExptTeam.vscodeintellicode",
 				"ms-dotnettools.vscodeintellicode-csharp",
-				"Gruntfuggly.todo-tree"
+				"Gruntfuggly.todo-tree",
+				"formulahendry.vscode-mysql"
 			]
 		}
 	},
