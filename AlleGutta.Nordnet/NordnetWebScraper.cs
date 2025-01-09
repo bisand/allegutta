@@ -74,9 +74,9 @@ public class NordnetWebScraper
             await Login(page);
             page.Response += GetAccountIdEventHandler;
             CheckCancellation(cancellationToken);
-            _ = await page.GoToAsync($"https://www.nordnet.no/overview/details/", WaitUntilNavigation.Networkidle2);
+            _ = await page.GoToAsync($"https://www.nordnet.no/overview/details", WaitUntilNavigation.Networkidle2);
             CheckCancellation(cancellationToken);
-            await WaitForConditionAsync(() => _accountId > 0, 100, $"Timed out while processing data from: https://www.nordnet.no/overview/details/", cancellationToken);
+            await WaitForConditionAsync(() => _accountId > 0, 100, $"Timed out while processing data from: https://www.nordnet.no/overview/details", cancellationToken);
             CheckCancellation(cancellationToken);
             page.Response -= GetAccountIdEventHandler;
 
