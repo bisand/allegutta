@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-bullseye-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-bullseye-slim AS base
 # Install Chrome
 RUN apt-get update \
     && apt-get install -y wget gnupg \
@@ -19,7 +19,7 @@ WORKDIR /app
 RUN chown -R pptruser:pptruser /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-bullseye-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-bullseye-slim AS build
 WORKDIR /src
 COPY ./AlleGutta.Api/AlleGutta.Api.csproj ./AlleGutta.Api/
 RUN dotnet restore "./AlleGutta.Api/AlleGutta.Api.csproj"
